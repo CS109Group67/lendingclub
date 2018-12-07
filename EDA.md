@@ -1,7 +1,7 @@
 ---
-title:  LoanStats Preprocessing
-notebook: ls_processing2.ipynb
-nav_include: 2
+title:  EDA & Preprocessing
+notebook: EDA.ipynb
+nav_include: 1
 ---
 
 ## Contents
@@ -9,7 +9,6 @@ nav_include: 2
 *  
 {: toc}
 
-Group #67 - Lending Club
 
 0. **Imports and Functions**
 1. **Inconsequential Variable Removal**: removal of non-existant, empty, constant or otherwise unmeaningful variables
@@ -194,7 +193,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_18_2.png)
+![png](EDA_files/EDA_18_2.png)
 
 
 
@@ -226,7 +225,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_20_2.png)
+![png](EDA_files/EDA_20_2.png)
 
 
 
@@ -325,7 +324,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_27_2.png)
+![png](EDA_files/EDA_27_2.png)
 
 
 
@@ -377,7 +376,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_31_2.png)
+![png](EDA_files/EDA_31_2.png)
 
 
 
@@ -393,7 +392,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_32_2.png)
+![png](EDA_files/EDA_32_2.png)
 
 
 
@@ -409,7 +408,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_33_2.png)
+![png](EDA_files/EDA_33_2.png)
 
 
 
@@ -425,7 +424,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_34_2.png)
+![png](EDA_files/EDA_34_2.png)
 
 
 
@@ -441,7 +440,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_35_2.png)
+![png](EDA_files/EDA_35_2.png)
 
 
 
@@ -457,7 +456,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_36_2.png)
+![png](EDA_files/EDA_36_2.png)
 
 
 
@@ -473,7 +472,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_37_2.png)
+![png](EDA_files/EDA_37_2.png)
 
 
 
@@ -489,7 +488,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_38_2.png)
+![png](EDA_files/EDA_38_2.png)
 
 
 
@@ -505,7 +504,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_39_2.png)
+![png](EDA_files/EDA_39_2.png)
 
 
 
@@ -521,7 +520,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_40_2.png)
+![png](EDA_files/EDA_40_2.png)
 
 
 
@@ -537,7 +536,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_41_2.png)
+![png](EDA_files/EDA_41_2.png)
 
 
 
@@ -563,7 +562,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_43_2.png)
+![png](EDA_files/EDA_43_2.png)
 
 
 
@@ -579,7 +578,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_44_2.png)
+![png](EDA_files/EDA_44_2.png)
 
 
 
@@ -595,7 +594,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_45_2.png)
+![png](EDA_files/EDA_45_2.png)
 
 
 
@@ -611,7 +610,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_46_2.png)
+![png](EDA_files/EDA_46_2.png)
 
 
 
@@ -627,7 +626,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_47_2.png)
+![png](EDA_files/EDA_47_2.png)
 
 
 
@@ -643,7 +642,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_48_2.png)
+![png](EDA_files/EDA_48_2.png)
 
 
 
@@ -659,7 +658,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_49_2.png)
+![png](EDA_files/EDA_49_2.png)
 
 
 
@@ -675,7 +674,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_50_2.png)
+![png](EDA_files/EDA_50_2.png)
 
 
 
@@ -691,7 +690,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_51_2.png)
+![png](EDA_files/EDA_51_2.png)
 
 
 
@@ -707,7 +706,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_52_2.png)
+![png](EDA_files/EDA_52_2.png)
 
 
 
@@ -723,7 +722,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_53_2.png)
+![png](EDA_files/EDA_53_2.png)
 
 
 
@@ -739,7 +738,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_54_2.png)
+![png](EDA_files/EDA_54_2.png)
 
 
 
@@ -755,7 +754,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_55_2.png)
+![png](EDA_files/EDA_55_2.png)
 
 
 
@@ -771,7 +770,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_56_2.png)
+![png](EDA_files/EDA_56_2.png)
 
 
 
@@ -787,7 +786,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_57_2.png)
+![png](EDA_files/EDA_57_2.png)
 
 
 
@@ -803,7 +802,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_58_2.png)
+![png](EDA_files/EDA_58_2.png)
 
 
 
@@ -819,7 +818,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_59_2.png)
+![png](EDA_files/EDA_59_2.png)
 
 
 
@@ -835,7 +834,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_60_2.png)
+![png](EDA_files/EDA_60_2.png)
 
 
 
@@ -851,7 +850,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_61_2.png)
+![png](EDA_files/EDA_61_2.png)
 
 
 
@@ -867,7 +866,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_62_2.png)
+![png](EDA_files/EDA_62_2.png)
 
 
 
@@ -883,7 +882,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_63_2.png)
+![png](EDA_files/EDA_63_2.png)
 
 
 
@@ -899,7 +898,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_64_2.png)
+![png](EDA_files/EDA_64_2.png)
 
 
 
@@ -915,7 +914,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_65_2.png)
+![png](EDA_files/EDA_65_2.png)
 
 
 
@@ -931,7 +930,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_66_2.png)
+![png](EDA_files/EDA_66_2.png)
 
 
 
@@ -947,7 +946,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_67_2.png)
+![png](EDA_files/EDA_67_2.png)
 
 
 
@@ -963,7 +962,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_68_2.png)
+![png](EDA_files/EDA_68_2.png)
 
 
 
@@ -979,7 +978,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_69_2.png)
+![png](EDA_files/EDA_69_2.png)
 
 
 
@@ -995,7 +994,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_70_2.png)
+![png](EDA_files/EDA_70_2.png)
 
 
 
@@ -1011,7 +1010,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_71_2.png)
+![png](EDA_files/EDA_71_2.png)
 
 
 
@@ -1027,7 +1026,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_72_2.png)
+![png](EDA_files/EDA_72_2.png)
 
 
 
@@ -1043,7 +1042,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_73_2.png)
+![png](EDA_files/EDA_73_2.png)
 
 
 
@@ -1059,7 +1058,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_74_2.png)
+![png](EDA_files/EDA_74_2.png)
 
 
 
@@ -1075,7 +1074,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_75_2.png)
+![png](EDA_files/EDA_75_2.png)
 
 
 
@@ -1091,7 +1090,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_76_2.png)
+![png](EDA_files/EDA_76_2.png)
 
 
 
@@ -1107,7 +1106,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_77_2.png)
+![png](EDA_files/EDA_77_2.png)
 
 
 
@@ -1123,7 +1122,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_78_2.png)
+![png](EDA_files/EDA_78_2.png)
 
 
 
@@ -1139,7 +1138,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_79_2.png)
+![png](EDA_files/EDA_79_2.png)
 
 
 
@@ -1155,7 +1154,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_80_2.png)
+![png](EDA_files/EDA_80_2.png)
 
 
 
@@ -1171,7 +1170,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_81_2.png)
+![png](EDA_files/EDA_81_2.png)
 
 
 
@@ -1187,7 +1186,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_82_2.png)
+![png](EDA_files/EDA_82_2.png)
 
 
 
@@ -1203,7 +1202,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_83_2.png)
+![png](EDA_files/EDA_83_2.png)
 
 
 
@@ -1219,7 +1218,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_84_2.png)
+![png](EDA_files/EDA_84_2.png)
 
 
 
@@ -1235,7 +1234,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_85_2.png)
+![png](EDA_files/EDA_85_2.png)
 
 
 
@@ -1251,7 +1250,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_86_2.png)
+![png](EDA_files/EDA_86_2.png)
 
 
 
@@ -1283,7 +1282,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_88_2.png)
+![png](EDA_files/EDA_88_2.png)
 
 
 
@@ -1299,7 +1298,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_89_2.png)
+![png](EDA_files/EDA_89_2.png)
 
 
 
@@ -1315,7 +1314,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_90_2.png)
+![png](EDA_files/EDA_90_2.png)
 
 
 
@@ -1331,7 +1330,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_91_2.png)
+![png](EDA_files/EDA_91_2.png)
 
 
 
@@ -1347,7 +1346,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_92_2.png)
+![png](EDA_files/EDA_92_2.png)
 
 
 
@@ -1363,7 +1362,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_93_2.png)
+![png](EDA_files/EDA_93_2.png)
 
 
 
@@ -1379,7 +1378,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_94_2.png)
+![png](EDA_files/EDA_94_2.png)
 
 
 
@@ -1395,7 +1394,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_95_2.png)
+![png](EDA_files/EDA_95_2.png)
 
 
 
@@ -1411,7 +1410,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_96_2.png)
+![png](EDA_files/EDA_96_2.png)
 
 
 
@@ -1427,7 +1426,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_97_2.png)
+![png](EDA_files/EDA_97_2.png)
 
 
 
@@ -1443,7 +1442,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_98_2.png)
+![png](EDA_files/EDA_98_2.png)
 
 
 <hr style="height:2pt">
@@ -1478,7 +1477,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_101_2.png)
+![png](EDA_files/EDA_101_2.png)
 
 
 
@@ -1494,7 +1493,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_102_2.png)
+![png](EDA_files/EDA_102_2.png)
 
 
 
@@ -1510,7 +1509,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_103_2.png)
+![png](EDA_files/EDA_103_2.png)
 
 
 
@@ -1526,7 +1525,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_104_2.png)
+![png](EDA_files/EDA_104_2.png)
 
 
 
@@ -1542,7 +1541,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_105_2.png)
+![png](EDA_files/EDA_105_2.png)
 
 
 
@@ -1568,7 +1567,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_107_2.png)
+![png](EDA_files/EDA_107_2.png)
 
 
 
@@ -1584,7 +1583,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_108_2.png)
+![png](EDA_files/EDA_108_2.png)
 
 
 
@@ -1600,7 +1599,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_109_2.png)
+![png](EDA_files/EDA_109_2.png)
 
 
 
@@ -1616,7 +1615,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_110_2.png)
+![png](EDA_files/EDA_110_2.png)
 
 
 
@@ -1632,7 +1631,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_111_2.png)
+![png](EDA_files/EDA_111_2.png)
 
 
 
@@ -1648,7 +1647,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_112_2.png)
+![png](EDA_files/EDA_112_2.png)
 
 
 
@@ -1664,7 +1663,7 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
-![png](ls_processing2_files/ls_processing2_113_2.png)
+![png](EDA_files/EDA_113_2.png)
 
 
 

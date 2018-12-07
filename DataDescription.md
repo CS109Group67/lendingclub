@@ -1,7 +1,7 @@
 ---
 title:  Data Description
-notebook: datadescription.ipynb
-nav_include: 1
+notebook: DataDescription.ipynb
+nav_include: 2
 ---
 
 ## Contents
@@ -17,14 +17,14 @@ We are utilizing the following three aggregated datasets in service of our proje
 ## 1. LoanStats
 **Funded LC loans**
 
-Lending Club publishes funded loan data (`LoanStats`) which are updated each quarter. We merged these quarterly datasets to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
+Lending Club publishes funded loan data (`LoanStats`) which are updated each quarter. We accessed the data as the Q2 2018 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
 
 
 
 
 
 
-![png](datadescription_files/datadescription_5_0.png)
+![png](DataDescription_files/DataDescription_5_0.png)
 
 
 
@@ -35,7 +35,7 @@ The number and notional of LC loan issuances over time is visualized below. The 
 
 
 
-![png](datadescription_files/datadescription_7_0.png)
+![png](DataDescription_files/DataDescription_7_0.png)
 
 
 
@@ -51,7 +51,7 @@ Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 
 
 
 
-![png](datadescription_files/datadescription_11_0.png)
+![png](DataDescription_files/DataDescription_11_0.png)
 
 
 
