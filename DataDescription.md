@@ -17,7 +17,7 @@ We are utilizing the following three aggregated datasets in service of our proje
 ## 1. LoanStats
 **Funded LC loans**
 
-Lending Club publishes funded loan data (`LoanStats`) which are updated each quarter. We accessed the data as the Q2 2018 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
+Lending Club publishes funded loan data (`LoanStats`) which are updated each quarter. We accessed the data as of the 2018Q2 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
 
 
 

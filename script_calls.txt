@@ -6,10 +6,7 @@
 {% endif %}
 
 jupyter nbconvert --output-dir . --to markdown --template _support/markdown.tpl notebooks/EDA.ipynb
-
 jupyter nbconvert --output-dir . --to markdown --template _support/markdown.tpl notebooks/DataDescription.ipynb
-
-
 python _support/nbmd.py EDA.md
 python _support/nbmd.py DataDescription.md
 

@@ -10,21 +10,7 @@ nav_include: 2
 {: toc}
 
 
-0. **Imports and Functions**
-1. **Inconsequential Variable Removal**: removal of non-existant, empty, constant or otherwise unmeaningful variables
-2. **Independent Variable Preprocessing**: type conversions, outlier identification, dummy creation
-    - 2A. *Loan Characteristics* (6)
-    - 2B. *Borrower Demographics* (4)
-    - 2C. *Borrower Credit History* (68)
-    - 2D. *Co-Borrower Information* (15)
-  
-  
-3. **Dependent Variable Feature Design**: feature design of outcome variable
-4. **Final Processing**: final cleaning and export
-
 Note: **`ls`** is DataFrame used for EDA and never modified. **`ls_clean`** is DataFrame updated progressively to create final processed dataset
-
-<hr style="height:5pt">
 
 ## 0. Imports and Functions
 
@@ -44,141 +30,22 @@ Note: **`ls`** is DataFrame used for EDA and never modified. **`ls_clean`** is D
 
 
 
-<hr style="height:5pt">
+## 1. Inconsequential Variable Removal (20 Variables)
 
-## 1. Inconsequential Variable Removal
-
-Removal of non-existant, empty, constant or otherwise unmeaningful variables
-
-**Do Not Exist** (6): 
-- `fico_range_high`, `fico_range_low`, `last_fico_range_high`, `last_fico_range_low`, `sec_app_fico_range_high`, `sec_app_fico_range_low`
-
-**Empty/Constant** (already dropped) (4): 
-- `id`, `member_id`, `url`, `policy_code`
-
-**Not Meaningful**:
-- `dataset`: just indicates the dataset
-- `desc`: non-standard text description
-- `disbursement_method`: just indicates cash or direct_pay
-- `emp_title`: non-standard text description
-- `funded_amnt`: redundant with loan_amount (?)
-- `funded_amnt_inv` redundany with loan_amount (?)
-- `grade`: redundant when using sub_grade
-- `initial_list_status`: possible values are w or f (?)
-- `title`: non-standard text description
-- `zip_code`: we could make it a dummy, but there would be 954 of them
+First, we drop non-existant, empty, constant or otherwise unmeaningful variables:
 
 
 
-<hr style="height:5pt">
+Second, we remove the loan instances that are not term-complete:
 
-## 2. Preprocessing of Independent Variables (93 Variables)
 
-**2A. Loan Characteristics (6)**:
-- `installment`: scaling
-- `int_rate`: mapping, scaling
-- `loan_amnt`: scaling
-- `purpose`: dummy(14)
-- `sub_grade`: mapping, scaling
-- `term`: dummy(2)
-- `verification_status`: dummy(3)
 
-**2B. Borrower Demographics (4)**:
-- `addr_state`: dummy(51)
-- `annual_inc`: outliers, scaling
-- `emp_length`: mapping, scaling
-- `home_ownership`: mapping, dummy(4)
+## 2. Independent Variable Preprocessing (93 Variables)
 
-**2C. Borrower Credit History (68)**
-- `acc_now_delinq`: outliers,  scaling
-- `acc_open_past_24mths`: scaling
-- `all_util`: scaling
-- `avg_cur_bal`: scaling
-- `bc_open_to_buy`: scaling
-- `bc_util`: scaling
-- `chargeoff_within_12_mths`: scaling
-- `collections_12_mths_ex_med`: outliers, scaling
-- `delinq_2yrs`: scaling
-- `delinq_amnt`: standard scaling
-- `dti`: mapping, scaling
-- `earliest_cr_line`: mapping, scaling
-- `il_util`: scaling
-- `inq_fi`: scaling
-- `inq_last_12m`: scaling
-- `inq_last_6mths`: scaling
-- `max_bal_bc`: scaling
-- `mo_sin_old_il_acct`: scaling
-- `mo_sin_old_rev_tl_op`: scaling
-- `mo_sin_rcnt_rev_tl_op`: scaling
-- `mo_sin_rcnt_tl`: scaling
-- `mort_acc`: scaling
-- `mths_since_last_delinq`: scaling
-- `mths_since_last_major_derog`: scaling
-- `mths_since_last_record`: scaling
-- `mths_since_rcnt_il`: scaling
-- `mths_since_recent_bc`: scaling
-- `mths_since_recent_bc_dlq`: scaling
-- `mths_since_recent_inq`: scaling
-- `mths_since_recent_revol_delinq`: scaling
-- `num_accts_ever_120_pd`: scaling
-- `num_actv_bc_tl`: scaling
-- `num_actv_rev_tl`: scaling
-- `num_bc_sats`: scaling
-- `num_bc_tl`: scaling
-- `num_il_tl`: scaling
-- `num_op_rev_tl`: scaling
-- `num_rev_accts`: scaling
-- `num_rev_tl_bal_gt_0`: scaling
-- `num_sats`: scaling
-- `num_tl_120dpd_2m`: scaling
-- `num_tl_30dpd`: scaling
-- `num_tl_90g_dpd_24m`: scaling
-- `num_tl_op_past_12m`: scaling
-- `open_acc`: scaling
-- `open_acc_6m`: scaling
-- `open_act_il`: scaling
-- `open_il_12m`: scaling
-- `open_il_24m`: scaling
-- `open_rv_12m`: scaling
-- `open_rv_24m`: scaling
-- `pct_tl_nvr_dlq`: scaling
-- `percent_bc_gt_75`: scaling
-- `pub_rec`: scaling
-- `pub_rec_bankruptcies`: scaling
-- `revol_bal`: scaling
-- `revol_util`: mapping, scaling
-- `tax_liens`: scaling
-- `tot_coll_amt`: scaling
-- `tot_cur_bal`: scaling
-- `tot_hi_cred_lim`: scaling
-- `total_acc`: scaling
-- `total_bal_ex_mort`: scaling
-- `total_bal_il`: scaling
-- `total_bc_limit`: scaling
-- `total_cu_tl`: scaling
-- `total_il_high_credit_limit`: scaling
-- `total_rev_hi_lim`: scaling
-
-**2D. Co-Borrower Information (15)**
-- `application_type`: dummy(2)
-- `annual_inc_joint`: outliers, scaling
-- `dti_joint`: scaling
-- `revol_bal_joint`: scaling
-- `sec_app_chargeoff_within_12_mths`: scaling
-- `sec_app_collections_12_mths_ex_med`: outliers, scaling
-- `sec_app_earliest_cr_line`: mapping, scaling
-- `sec_app_inq_last_6mths`: scaling
-- `sec_app_mort_acc`: outliers, scaling
-- `sec_app_mths_since_last_major_derog`: scaling
-- `sec_app_num_rev_accts`: scaling
-- `sec_app_open_acc`: scaling
-- `sec_app_open_act_il`: scaling
-- `sec_app_revol_util`: scaling
-- `verification_status_joint`: dummy(3)
-
-<hr style="height:1pt">
+We perform type conversions, outlier identification, scaling and dummy creation for each of the independent variables:
 
 ### 2A. Loan Characteristics
+`installment`, `int_rate`, `loan_amnt`, `purpose`, `sub_grade`, `term`, `verification_status`
 
 
 
@@ -291,9 +158,9 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     Verified             583187 10031892075.000
 
 
-<hr style="height:1pt">
-
 ### 2B. Borrower Demographics
+
+`addr_state`, `annual_inc`, `emp_length`, `home_ownership`
 
 
 
@@ -359,9 +226,73 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     OWN             223846  3197386500.000
 
 
-<hr style="height:1pt">
-
 ### 2C. Credit History Information
+`acc_now_delinq`, `acc_open_past_24mths`, `all_util`,
+- `avg_cur_bal`: scaling
+- `bc_open_to_buy`: scaling
+- `bc_util`: scaling
+- `chargeoff_within_12_mths`: scaling
+- `collections_12_mths_ex_med`: outliers, scaling
+- `delinq_2yrs`: scaling
+- `delinq_amnt`: standard scaling
+- `dti`: mapping, scaling
+- `earliest_cr_line`: mapping, scaling
+- `il_util`: scaling
+- `inq_fi`: scaling
+- `inq_last_12m`: scaling
+- `inq_last_6mths`: scaling
+- `max_bal_bc`: scaling
+- `mo_sin_old_il_acct`: scaling
+- `mo_sin_old_rev_tl_op`: scaling
+- `mo_sin_rcnt_rev_tl_op`: scaling
+- `mo_sin_rcnt_tl`: scaling
+- `mort_acc`: scaling
+- `mths_since_last_delinq`: scaling
+- `mths_since_last_major_derog`: scaling
+- `mths_since_last_record`: scaling
+- `mths_since_rcnt_il`: scaling
+- `mths_since_recent_bc`: scaling
+- `mths_since_recent_bc_dlq`: scaling
+- `mths_since_recent_inq`: scaling
+- `mths_since_recent_revol_delinq`: scaling
+- `num_accts_ever_120_pd`: scaling
+- `num_actv_bc_tl`: scaling
+- `num_actv_rev_tl`: scaling
+- `num_bc_sats`: scaling
+- `num_bc_tl`: scaling
+- `num_il_tl`: scaling
+- `num_op_rev_tl`: scaling
+- `num_rev_accts`: scaling
+- `num_rev_tl_bal_gt_0`: scaling
+- `num_sats`: scaling
+- `num_tl_120dpd_2m`: scaling
+- `num_tl_30dpd`: scaling
+- `num_tl_90g_dpd_24m`: scaling
+- `num_tl_op_past_12m`: scaling
+- `open_acc`: scaling
+- `open_acc_6m`: scaling
+- `open_act_il`: scaling
+- `open_il_12m`: scaling
+- `open_il_24m`: scaling
+- `open_rv_12m`: scaling
+- `open_rv_24m`: scaling
+- `pct_tl_nvr_dlq`: scaling
+- `percent_bc_gt_75`: scaling
+- `pub_rec`: scaling
+- `pub_rec_bankruptcies`: scaling
+- `revol_bal`: scaling
+- `revol_util`: mapping, scaling
+- `tax_liens`: scaling
+- `tot_coll_amt`: scaling
+- `tot_cur_bal`: scaling
+- `tot_hi_cred_lim`: scaling
+- `total_acc`: scaling
+- `total_bal_ex_mort`: scaling
+- `total_bal_il`: scaling
+- `total_bc_limit`: scaling
+- `total_cu_tl`: scaling
+- `total_il_high_credit_limit`: scaling
+- `total_rev_hi_lim`: scaling
 
 
 
@@ -1445,9 +1376,8 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_98_2.png)
 
 
-<hr style="height:2pt">
-
 ### 2D. Co-Borrower Information
+`application_type`, `annual_inc_joint`, `dti_joint`, `revol_bal_joint`, `sec_app_chargeoff_within_12_mths`, `sec_app_collections_12_mths_ex_med`, `sec_app_earliest_cr_line`, `sec_app_inq_last_6mths`, `sec_app_mort_acc`, `sec_app_mths_since_last_major_derog`, `sec_app_num_rev_accts`, `sec_app_open_acc`, `sec_app_open_act_il`, `sec_app_revol_util`, `verification_status_joint`
 
 
 
@@ -1682,9 +1612,9 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     Verified                   16874 371509725.000
 
 
-<hr style="height:5pt">
-
 ## 3. Dependent Variable Feature Design (36 variables)
+
+**feature design of outcome variable**
 
 
 
@@ -1695,7 +1625,7 @@ There are three features that we will design to represent the outcome of loan:
 
 Our focus will be on loans that have completed their terms. This subset of loans provides the most complete outcome information. In-force loans cannot provide conclusive inferences on loan outcomes because the full term has not completed. Therefore information
 
-### A. `OUT_Class`
+### 3A. `OUT_Class`
 
 
 
@@ -1736,7 +1666,7 @@ Our focus will be on loans that have completed their terms. This subset of loans
 
 
 
-### B. `OUT_Prncp_Repaid_Percentage`
+### 3B. `OUT_Prncp_Repaid_Percentage`
 
 
 
@@ -1757,15 +1687,13 @@ Our focus will be on loans that have completed their terms. This subset of loans
 
 
 
-### C. `OUT_APR`
+### 3C. `OUT_APR`
 
 
 
 <hr style="height:5pt">
 
 ## 4. Final Processing
-
-
 
 
 
