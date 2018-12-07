@@ -23,8 +23,7 @@ Lending Club publishes funded loan data (`LoanStats`) which are updated each qua
 
 
 
-![png](DataDescription_files/DataDescription_5_0.png)
-
+![png](EDA_files/EDA_18_2.png)
 
 
 The number and notional of LC loan issuances over time is visualized below. The monthly amount of loans has been trending upwards.
