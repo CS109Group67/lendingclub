@@ -1,8 +1,5 @@
 ---
 title: Lending Club Data-Driven Investing
-nav_include: 1
-
-
 ---
 
 
