@@ -1,9 +1,4 @@
-{% if cell.metadata.hide == True %}
-{% else %}
-```{% if nb.metadata.language_info %}{{ nb.metadata.language_info.name }}{% endif %}
-{{ cell.source}}
-```
-{% endif %}
+
 
 jupyter nbconvert --output-dir . --to markdown --template _support/markdown.tpl notebooks/EDA.ipynb
 python _support/nbmd.py EDA.md
@@ -12,3 +7,12 @@ jupyter nbconvert --output-dir . --to markdown --template _support/markdown.tpl 
 python _support/nbmd.py DataDescription.md
 
 nav_include: 1
+
+
+
+{% if cell.metadata.hide == True %}
+{% else %}
+```{% if nb.metadata.language_info %}{{ nb.metadata.language_info.name }}{% endif %}
+{{ cell.source}}
+```
+{% endif %}

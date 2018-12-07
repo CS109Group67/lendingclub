@@ -12,9 +12,6 @@ nav_include: 1
 
 
 
-```python
-from IPython.display import Image
-```
 
 
 We are utilizing the following three aggregated datasets in service of our project goals:
@@ -35,13 +32,10 @@ Lending Club publishes funded loan data (`LoanStats`) which are updated each qua
 
 
 
-The number and notional of LC loan issuances over time is visualized below. The monthly amount of loans has been trending upwards.
+The loan issue dates range from June 2007 to June 2018. The loan terms are 36 months or 60 months, which means **'term-complete' loans** are only those issued prior to June 2013 for 60-month terms and prior to June 2015 for 36-month terms. The number and notional of LC loan issuances over time is visualized below. The monthly amount of loans has been trending upwards.
 
 
 
-```python
-Image(filename="LS_OverTime.png")
-```
 
 
 
@@ -51,8 +45,6 @@ Image(filename="LS_OverTime.png")
 
 
 
-The loan issue dates range from June 2007 to June 2018. The loan terms are 36 months or 60 months, which means **term-complete loans** are only those issued prior to June 2013 for 60- month terms and prior to June 2015 for 36-month terms. These 56% of the funded loans form the ‘term complete’ subset from which we can draw significant inferences for a potential investor.
-
 ## 2. RejectStats
 **Loan applications that failed to meet LC underwriting policy**
 
@@ -60,15 +52,12 @@ Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 
 
 
 
-```python
-Image(filename="RS_FileSummary.png")
-```
 
 
 
 
 
-![png](DataDescription_files/DataDescription_11_0.png)
+![png](DataDescription_files/DataDescription_10_0.png)
 
 
 

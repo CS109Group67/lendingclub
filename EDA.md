@@ -1,6 +1,7 @@
 ---
-title: EXPORT DATASET
+title: EDA & Preprocessing
 notebook: EDA.ipynb
+nav_include: 2
 ---
 
 ## Contents
@@ -78,7 +79,7 @@ def EDA_attr(attr):
     if attr_type == 'float64':  # numerical variables
         print('\tMean: \t\t\t{:.2f}'.format(ls_clean[attr].mean()))
         print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls_clean[attr].min(), ls_clean[attr].max()))
-        plt.hist(ls_clean[attr]); plt.show()
+        plt.hist(ls_clean[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
     
     if attr_type == 'object':   # categorical variables
         print('\tNumber of Categories: \t{}'.format(len(ls_clean.groupby(attr))))
@@ -95,6 +96,13 @@ scaler_list = [] # list to store variables to be scaled
 def scale_attr(attr, fit_data=None, scaler=None):
     """ Scales attribute with StandardScaler (default) or MinMaxScaler"""
     scaler_list.append(attr)
+    # if fit_data is None:
+    #     fit_data = ls_clean[[attr]]
+    # if scaler is None:
+    #     scaler = StandardScaler()
+    # scaler = scaler.fit(fit_data)
+    # ls_clean[attr] = scaler.transform(ls_clean[[attr]])
+    # scaler_dict[attr] = scaler
 ```
 
 
@@ -126,15 +134,16 @@ def outlier_attr(attr, threshold):
 ```
 
 
-## 1. Inconsequential Variable Removal (20 Variables)
+## 1. Inconsequential Variable Removal
 
-First, we drop non-existant, empty, constant or otherwise unmeaningful variables:
+First, we drop non-existant, empty, constant or otherwise unmeaningful variables.
 
 
 
 ```python
 #DROP INCONSEQUENTIAL VARIABLES
-drop = ['dataset', # just indicates the dataset
+drop = ['all_util', # all missing values
+        'dataset', # just indicates the dataset
         'desc', # non-standard text description
         'disbursement_method', # just indicates cash or direct_pay
         'emp_title', # non-standard text description
@@ -142,13 +151,26 @@ drop = ['dataset', # just indicates the dataset
         'funded_amnt_inv', # redundant with loan_amount
         'grade', # redundant when using sub_grade
         'initial_list_status', # possible values are w or f
+        'il_util', # all missing values
+        'inq_fi', # all missing values
+        'inq_last_12m', # all missing values
+        'max_bal_bc', # all missing values
+        'mths_since_rcnt_il', # all missing values
+        'open_acc_6m', # all missing values
+        'open_act_il', # all missing values
+        'open_il_12m', # all missing values
+        'open_il_24m', # all missing values
+        'open_rv_12m', # all missing values
+        'open_rv_24m', # all missing values
         'title', # non-standard text description
+        'total_bal_il', # all missing values
+        'total_cu_tl', # all missing values
         'zip_code'] # we could make it a dummy, but there would be 954 of them
 ls_clean.drop(drop, axis=1, inplace=True)
 ```
 
 
-Second, we remove the loan instances that are not term-complete:
+Our focus will be on loans that have completed their terms. This subset of **'term-complete'** loans provides the fully representative outcome information since current in-force loans can still default. Therefore, we remove the loan instances that are not term-complete:
 
 
 
@@ -160,11 +182,25 @@ ls_clean = ls_clean[completed_36 | completed_60]
 ```
 
 
-## 2. Independent Variable Preprocessing (93 Variables)
+LC only recently began accepting joint application loans, so there is no term-complete loan information for these loans. Therefore we do not include them in the modeling
+
+
+
+```python
+joint = ['application_type', 'annual_inc_joint', 'dti_joint', 'revol_bal_joint', 
+         'sec_app_chargeoff_within_12_mths', 'sec_app_collections_12_mths_ex_med', 
+         'sec_app_earliest_cr_line', 'sec_app_inq_last_6mths', 'sec_app_mort_acc', 
+         'sec_app_mths_since_last_major_derog', 'sec_app_num_rev_accts', 'sec_app_open_acc', 
+         'sec_app_open_act_il', 'sec_app_revol_util', 'verification_status_joint']
+ls_clean.drop(joint, axis=1, inplace=True)
+```
+
+
+##### 2. Independent Variable Preprocessing (65 variables)
 
 We perform type conversions, outlier identification, scaling and dummy creation for each of the independent variables:
 
-### 2A. Loan Characteristics
+### 2A. Loan Characteristics (7 variables)
 
 
 
@@ -181,7 +217,7 @@ We perform type conversions, outlier identification, scaling and dummy creation 
 
 
 
-![png](EDA_files/EDA_18_2.png)
+![png](EDA_files/EDA_20_2.png)
 
 
 
@@ -199,7 +235,7 @@ We perform type conversions, outlier identification, scaling and dummy creation 
 
 
 
-![png](EDA_files/EDA_19_2.png)
+![png](EDA_files/EDA_21_2.png)
 
 
 
@@ -217,17 +253,11 @@ We perform type conversions, outlier identification, scaling and dummy creation 
 
 
 
-![png](EDA_files/EDA_20_2.png)
+![png](EDA_files/EDA_22_2.png)
 
 
 
 
-```python
-#PURPOSE
-X = 'purpose'
-EDA_attr(X)
-dummy_attr(X)
-```
 
 
 
@@ -255,7 +285,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_22_2.png)
+![png](EDA_files/EDA_24_2.png)
 
 
 
@@ -286,7 +316,7 @@ dummy_attr(X)
     	Most Common Category: 	Not Verified
 
 
-### 2B. Borrower Demographics
+### 2B. Borrower Demographics (4 variables)
 
 
 
@@ -317,7 +347,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_27_2.png)
+![png](EDA_files/EDA_29_2.png)
 
 
 
@@ -335,7 +365,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_28_2.png)
+![png](EDA_files/EDA_30_2.png)
 
 
 
@@ -352,82 +382,10 @@ dummy_attr(X)
     	Most Common Category: 	MORTGAGE
 
 
-### 2C. Credit History Information
-`acc_now_delinq`, `acc_open_past_24mths`, `all_util`,
-- `avg_cur_bal`: scaling
-- `bc_open_to_buy`: scaling
-- `bc_util`: scaling
-- `chargeoff_within_12_mths`: scaling
-- `collections_12_mths_ex_med`: outliers, scaling
-- `delinq_2yrs`: scaling
-- `delinq_amnt`: standard scaling
-- `dti`: mapping, scaling
-- `earliest_cr_line`: mapping, scaling
-- `il_util`: scaling
-- `inq_fi`: scaling
-- `inq_last_12m`: scaling
-- `inq_last_6mths`: scaling
-- `max_bal_bc`: scaling
-- `mo_sin_old_il_acct`: scaling
-- `mo_sin_old_rev_tl_op`: scaling
-- `mo_sin_rcnt_rev_tl_op`: scaling
-- `mo_sin_rcnt_tl`: scaling
-- `mort_acc`: scaling
-- `mths_since_last_delinq`: scaling
-- `mths_since_last_major_derog`: scaling
-- `mths_since_last_record`: scaling
-- `mths_since_rcnt_il`: scaling
-- `mths_since_recent_bc`: scaling
-- `mths_since_recent_bc_dlq`: scaling
-- `mths_since_recent_inq`: scaling
-- `mths_since_recent_revol_delinq`: scaling
-- `num_accts_ever_120_pd`: scaling
-- `num_actv_bc_tl`: scaling
-- `num_actv_rev_tl`: scaling
-- `num_bc_sats`: scaling
-- `num_bc_tl`: scaling
-- `num_il_tl`: scaling
-- `num_op_rev_tl`: scaling
-- `num_rev_accts`: scaling
-- `num_rev_tl_bal_gt_0`: scaling
-- `num_sats`: scaling
-- `num_tl_120dpd_2m`: scaling
-- `num_tl_30dpd`: scaling
-- `num_tl_90g_dpd_24m`: scaling
-- `num_tl_op_past_12m`: scaling
-- `open_acc`: scaling
-- `open_acc_6m`: scaling
-- `open_act_il`: scaling
-- `open_il_12m`: scaling
-- `open_il_24m`: scaling
-- `open_rv_12m`: scaling
-- `open_rv_24m`: scaling
-- `pct_tl_nvr_dlq`: scaling
-- `percent_bc_gt_75`: scaling
-- `pub_rec`: scaling
-- `pub_rec_bankruptcies`: scaling
-- `revol_bal`: scaling
-- `revol_util`: mapping, scaling
-- `tax_liens`: scaling
-- `tot_coll_amt`: scaling
-- `tot_cur_bal`: scaling
-- `tot_hi_cred_lim`: scaling
-- `total_acc`: scaling
-- `total_bal_ex_mort`: scaling
-- `total_bal_il`: scaling
-- `total_bc_limit`: scaling
-- `total_cu_tl`: scaling
-- `total_il_high_credit_limit`: scaling
-- `total_rev_hi_lim`: scaling
+### 2C. Credit History Information (54 variables)
 
 
 
-```python
-X = 'acc_now_delinq'
-EDA_attr(X)
-outliers = outlier_attr(X, 7)
-
-```
 
 
 
@@ -441,16 +399,11 @@ outliers = outlier_attr(X, 7)
 
 
 
-![png](EDA_files/EDA_31_2.png)
+![png](EDA_files/EDA_33_2.png)
 
 
 
 
-```python
-X = 'acc_open_past_24mths'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
@@ -464,823 +417,944 @@ scale_attr(X)
 
 
 
-![png](EDA_files/EDA_32_2.png)
+![png](EDA_files/EDA_34_2.png)
 
 
 
 
-```python
-X = 'all_util'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
-**all_util**: Balance to credit limit on all trades
+**avg_cur_bal**: Average current balance of all accounts
 
 
     	Type: 			float64
-    	Missing Values: 	420181 (100.0%)
-    	Mean: 			nan
-    	Range: 			(nan, nan)
+    	Missing Values: 	70285 (16.7%)
+    	Mean: 			12685.60
+    	Range: 			(0.00, 958084.00)
 
 
 
-    ---------------------------------------------------------------------------
+![png](EDA_files/EDA_35_2.png)
 
-    ValueError                                Traceback (most recent call last)
 
-    <ipython-input-24-b7981050f85b> in <module>()
-          1 # ALL_UTIL
-          2 X = 'all_util'
-    ----> 3 EDA_attr(X)
-          4 scale_attr(X)
 
 
-    <ipython-input-5-01117813923a> in EDA_attr(attr)
-         13         print('\tMean: \t\t\t{:.2f}'.format(ls_clean[attr].mean()))
-         14         print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls_clean[attr].min(), ls_clean[attr].max()))
-    ---> 15         plt.hist(ls_clean[attr]); plt.show()
-         16 
-         17     if attr_type == 'object':   # categorical variables
 
 
-    ~/anaconda3/lib/python3.6/site-packages/matplotlib/pyplot.py in hist(x, bins, range, density, weights, cumulative, bottom, histtype, align, orientation, rwidth, log, color, label, stacked, normed, data, **kwargs)
-       2617         align=align, orientation=orientation, rwidth=rwidth, log=log,
-       2618         color=color, label=label, stacked=stacked, normed=normed,
-    -> 2619         data=data, **kwargs)
-       2620 
-       2621 # Autogenerated by boilerplate.py.  Do not edit as changes will be lost.
 
+**bc_open_to_buy**: Total open to buy on revolving bankcards.
 
-    ~/anaconda3/lib/python3.6/site-packages/matplotlib/__init__.py in inner(ax, data, *args, **kwargs)
-       1783                         "the Matplotlib list!)" % (label_namer, func.__name__),
-       1784                         RuntimeWarning, stacklevel=2)
-    -> 1785             return func(ax, *args, **kwargs)
-       1786 
-       1787         inner.__doc__ = _add_data_doc(inner.__doc__,
 
+    	Type: 			float64
+    	Missing Values: 	53734 (12.8%)
+    	Mean: 			8498.77
+    	Range: 			(0.00, 497445.00)
 
-    ~/anaconda3/lib/python3.6/site-packages/matplotlib/axes/_axes.py in hist(self, x, bins, range, density, weights, cumulative, bottom, histtype, align, orientation, rwidth, log, color, label, stacked, normed, **kwargs)
-       6567             # this will automatically overwrite bins,
-       6568             # so that each histogram uses the same bins
-    -> 6569             m, bins = np.histogram(x[i], bins, weights=w[i], **hist_kwargs)
-       6570             m = m.astype(float)  # causes problems later if it's an int
-       6571             if mlast is None:
 
 
-    ~/anaconda3/lib/python3.6/site-packages/numpy/lib/function_base.py in histogram(a, bins, range, normed, weights, density)
-        665     if first_edge > last_edge:
-        666         raise ValueError(
-    --> 667             'max must be larger than min in range parameter.')
-        668     if not np.all(np.isfinite([first_edge, last_edge])):
-        669         raise ValueError(
+![png](EDA_files/EDA_36_2.png)
 
 
-    ValueError: max must be larger than min in range parameter.
 
 
 
-![png](EDA_files/EDA_33_3.png)
 
 
+**bc_util**: Ratio of total current balance to high credit/credit limit for all bankcard accounts.
 
 
-```python
-X = 'avg_cur_bal'
-EDA_attr(X)
-scale_attr(X)
-```
+    	Type: 			float64
+    	Missing Values: 	53975 (12.8%)
+    	Mean: 			64.43
+    	Range: 			(0.00, 339.60)
 
 
 
+![png](EDA_files/EDA_37_2.png)
 
-```python
-X = 'bc_open_to_buy'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'bc_util'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
+**chargeoff_within_12_mths**: Number of charge-offs within 12 months
 
 
-```python
-X = 'chargeoff_within_12_mths'
-EDA_attr(X)
-scale_attr(X)
-```
+    	Type: 			float64
+    	Missing Values: 	145 (0.0%)
+    	Mean: 			0.01
+    	Range: 			(0.00, 7.00)
 
 
 
+![png](EDA_files/EDA_38_2.png)
 
-```python
-X = 'collections_12_mths_ex_med'
-EDA_attr(X)
-outliers = outlier_attr(X, 12)
-scale_attr(X,fit_data=ls_clean[~outliers][[X]])
-```
 
 
 
 
-```python
-X = 'delinq_2yrs'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
+**collections_12_mths_ex_med**: Number of collections in 12 months excluding medical collections
 
 
-```python
-X = 'delinq_amnt'
-EDA_attr(X)
-scale_attr(X)
-```
+    	Type: 			float64
+    	Missing Values: 	145 (0.0%)
+    	Mean: 			0.01
+    	Range: 			(0.00, 20.00)
 
 
 
+![png](EDA_files/EDA_39_2.png)
 
-```python
-X = 'dti'
-EDA_attr(X)
-ls_clean[ls[X]==-1] = np.NaN
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'earliest_cr_line'
-EDA_attr(X)
 
-ls_clean[X] =  np.array((ls['issue_d'] - ls[X]).dt.days).reshape(-1,1)
 
-scale_attr(X)
-```
+**delinq_2yrs**: The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years
 
 
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			0.29
+    	Range: 			(0.00, 29.00)
 
 
-```python
-X = 'il_util'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_40_2.png)
 
 
 
-```python
-X = 'inq_fi'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'inq_last_12m'
-EDA_attr(X)
-scale_attr(X)
-```
+**delinq_amnt**: The past-due amount owed for the accounts on which the borrower is now delinquent.
 
 
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			8.69
+    	Range: 			(0.00, 86399.00)
 
 
-```python
-X = 'inq_last_6mths'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_41_2.png)
 
 
 
-```python
-X = 'max_bal_bc'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X =  'mo_sin_old_il_acct'
-EDA_attr(X)
-scale_attr(X)
-```
+**dti**: A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly income.
 
 
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			16.99
+    	Range: 			(0.00, 39.99)
 
 
-```python
-X =  'mo_sin_old_rev_tl_op'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_42_2.png)
 
 
 
-```python
-X = 'mo_sin_rcnt_rev_tl_op'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'mo_sin_rcnt_tl'
-EDA_attr(X)
-scale_attr(X)
-```
+**earliest_cr_line**: The month the borrower's earliest reported credit line was opened
 
 
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			5749.94
+    	Range: 			(184.00, 25933.00)
 
 
-```python
-X = 'mort_acc'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_43_2.png)
 
 
 
-```python
-X = 'mths_since_last_delinq'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'mths_since_last_major_derog'
-EDA_attr(X)
-scale_attr(X)
-```
+**inq_last_6mths**: The number of inquiries in past 6 months (excluding auto and mortgage inquiries)
 
 
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			0.78
+    	Range: 			(0.00, 33.00)
 
 
-```python
-X = 'mths_since_last_record'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_44_2.png)
 
 
 
-```python
-X = 'mths_since_rcnt_il'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'mths_since_recent_bc'
-EDA_attr(X)
-scale_attr(X)
-```
+**mo_sin_old_il_acct**: Months since oldest bank installment account opened
 
 
+    	Type: 			float64
+    	Missing Values: 	83911 (20.0%)
+    	Mean: 			124.94
+    	Range: 			(0.00, 649.00)
 
 
-```python
-X = 'mths_since_recent_bc_dlq'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_45_2.png)
 
 
 
-```python
-X =  'mths_since_recent_inq'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X= 'mths_since_recent_revol_delinq'
-EDA_attr(X)
-scale_attr(X)
-```
+**mo_sin_old_rev_tl_op**: Months since oldest revolving account opened
 
 
+    	Type: 			float64
+    	Missing Values: 	70277 (16.7%)
+    	Mean: 			180.39
+    	Range: 			(3.00, 851.00)
 
 
-```python
-X = 'num_accts_ever_120_pd'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_46_2.png)
 
 
 
-```python
-X = 'num_actv_bc_tl'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'num_actv_rev_tl'
-EDA_attr(X)
-scale_attr(X)
-```
+**mo_sin_rcnt_rev_tl_op**: Months since most recent revolving account opened
 
 
+    	Type: 			float64
+    	Missing Values: 	70277 (16.7%)
+    	Mean: 			13.25
+    	Range: 			(0.00, 372.00)
 
 
-```python
-X = 'num_bc_sats'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_47_2.png)
 
 
 
-```python
-X =  'num_bc_tl'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'num_il_tl'
-EDA_attr(X)
-scale_attr(X)
-```
+**mo_sin_rcnt_tl**: Months since most recent account opened
 
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			8.37
+    	Range: 			(0.00, 226.00)
 
 
-```python
-X = 'num_op_rev_tl'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_48_2.png)
 
 
 
-```python
-X = 'num_rev_accts'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'num_rev_tl_bal_gt_0'
-EDA_attr(X)
-scale_attr(X)
-```
+**mort_acc**: Number of mortgage accounts.
 
 
+    	Type: 			float64
+    	Missing Values: 	50030 (11.9%)
+    	Mean: 			1.69
+    	Range: 			(0.00, 34.00)
 
 
-```python
-X = 'num_sats'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_49_2.png)
 
 
 
-```python
-X = 'num_tl_120dpd_2m'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'num_tl_30dpd'
-EDA_attr(X)
-scale_attr(X)
-```
+**mths_since_last_delinq**: The number of months since the borrower's last delinquency.
 
 
+    	Type: 			float64
+    	Missing Values: 	224620 (53.5%)
+    	Mean: 			34.30
+    	Range: 			(0.00, 188.00)
 
 
-```python
-X = 'num_tl_90g_dpd_24m'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_50_2.png)
 
 
 
-```python
-X = 'num_tl_op_past_12m'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'open_acc'
-EDA_attr(X)
-scale_attr(X)
-```
+**mths_since_last_major_derog**: Months since most recent 90-day or worse rating
 
 
+    	Type: 			float64
+    	Missing Values: 	329015 (78.3%)
+    	Mean: 			42.46
+    	Range: 			(0.00, 188.00)
 
 
-```python
-X = 'open_acc_6m'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_51_2.png)
 
 
 
-```python
-X = 'open_act_il'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'open_il_12m'
-EDA_attr(X)
-scale_attr(X)
-```
+**mths_since_last_record**: The number of months since the last public record.
 
 
+    	Type: 			float64
+    	Missing Values: 	360872 (85.9%)
+    	Mean: 			72.88
+    	Range: 			(0.00, 129.00)
 
 
-```python
-X = 'open_il_24m'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_52_2.png)
 
 
 
-```python
-X = 'open_rv_12m'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'open_rv_24m'
-EDA_attr(X)
-scale_attr(X)
-```
+**mths_since_recent_bc**: Months since most recent bankcard account opened.
 
 
+    	Type: 			float64
+    	Missing Values: 	53373 (12.7%)
+    	Mean: 			24.53
+    	Range: 			(0.00, 616.00)
 
 
-```python
-X = 'pct_tl_nvr_dlq'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_53_2.png)
 
 
 
-```python
-X = 'percent_bc_gt_75'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X ='pub_rec'
-EDA_attr(X)
-scale_attr(X)
-```
+**mths_since_recent_bc_dlq**: Months since most recent bankcard delinquency
 
 
+    	Type: 			float64
+    	Missing Values: 	331393 (78.9%)
+    	Mean: 			40.30
+    	Range: 			(0.00, 176.00)
 
 
-```python
-X = 'pub_rec_bankruptcies'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_54_2.png)
 
 
 
-```python
-X = 'revol_bal'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'revol_util'
-EDA_attr(X)
-ls_clean[X] = ls[X].str[:-1].astype(np.float)
-scale_attr(X)
-```
+**mths_since_recent_inq**: Months since most recent inquiry.
 
 
+    	Type: 			float64
+    	Missing Values: 	88898 (21.2%)
+    	Mean: 			6.95
+    	Range: 			(0.00, 25.00)
 
 
-```python
-X = 'tax_liens'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_55_2.png)
 
 
 
-```python
-X = 'tot_coll_amt'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'tot_cur_bal'
-EDA_attr(X)
-scale_attr(X)
-```
+**mths_since_recent_revol_delinq**: Months since most recent revolving delinquency.
 
 
+    	Type: 			float64
+    	Missing Values: 	294683 (70.1%)
+    	Mean: 			36.15
+    	Range: 			(0.00, 180.00)
 
 
-```python
-X = 'tot_hi_cred_lim'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_56_2.png)
 
 
 
-```python
-X = 'total_acc'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'total_bal_ex_mort'
-EDA_attr(X)
-scale_attr(X)
-```
+**num_accts_ever_120_pd**: Number of accounts ever 120 or more days past due
 
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			0.46
+    	Range: 			(0.00, 35.00)
 
 
-```python
-X = 'total_bal_il'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_57_2.png)
 
 
 
-```python
-X = 'total_bc_limit'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
 
-```python
-X = 'total_cu_tl'
-EDA_attr(X)
-scale_attr(X)
-```
+**num_actv_bc_tl**: Number of currently active bankcard accounts
 
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			3.66
+    	Range: 			(0.00, 30.00)
 
 
-```python
-X = 'total_il_high_credit_limit'
-EDA_attr(X)
-scale_attr(X)
-```
 
+![png](EDA_files/EDA_58_2.png)
 
 
 
-```python
-X = 'total_rev_hi_lim'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
-### 2D. Co-Borrower Information
-`application_type`, `annual_inc_joint`, `dti_joint`, `revol_bal_joint`, `sec_app_chargeoff_within_12_mths`, `sec_app_collections_12_mths_ex_med`, `sec_app_earliest_cr_line`, `sec_app_inq_last_6mths`, `sec_app_mort_acc`, `sec_app_mths_since_last_major_derog`, `sec_app_num_rev_accts`, `sec_app_open_acc`, `sec_app_open_act_il`, `sec_app_revol_util`, `verification_status_joint`
 
 
+**num_actv_rev_tl**: Number of currently active revolving trades
 
-```python
-X = 'application_type'
-EDA_attr(X)
-dummy_attr(X)
-```
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			5.67
+    	Range: 			(0.00, 41.00)
 
 
 
-```python
-X = 'annual_inc_joint'
-EDA_attr(X)
-outliers = outlier_attr(X, 10000000)
-scale_attr(X, ls[~outliers][[X]])
-```
+![png](EDA_files/EDA_59_2.png)
 
 
 
 
-```python
-X = 'dti_joint'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
+**num_bc_sats**: Number of satisfactory bankcard accounts
 
-```python
-X = 'revol_bal_joint'
-EDA_attr(X)
-scale_attr(X)
-```
 
+    	Type: 			float64
+    	Missing Values: 	58590 (13.9%)
+    	Mean: 			4.61
+    	Range: 			(0.00, 46.00)
 
 
 
-```python
-X ='sec_app_chargeoff_within_12_mths'
-EDA_attr(X)
-scale_attr(X)
-```
+![png](EDA_files/EDA_60_2.png)
 
 
 
 
-```python
-X = 'sec_app_collections_12_mths_ex_med'
-EDA_attr(X)
-outliers = outlier_attr(X, 12)
-scale_attr(X, ls[~outliers][[X]])
-```
 
 
 
+**num_bc_tl**: Number of bankcard accounts
 
-```python
-X = 'sec_app_earliest_cr_line'
-EDA_attr(X)
-ls_clean[X] =  np.array((ls['issue_d'] - ls[X]).dt.days).reshape(-1,1)
-scale_attr(X)
-```
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			8.60
+    	Range: 			(0.00, 65.00)
 
 
 
-```python
-X = 'sec_app_inq_last_6mths'
-EDA_attr(X)
-scale_attr(X)
-```
+![png](EDA_files/EDA_61_2.png)
 
 
 
 
-```python
-X = 'sec_app_mort_acc'
-EDA_attr(X)
-outliers = outlier_attr(X, 15)
-scale_attr(X, ls[~outliers][[X]])
-```
 
 
 
+**num_il_tl**: Number of installment accounts
 
-```python
-X = 'sec_app_mths_since_last_major_derog'
-EDA_attr(X)
-scale_attr(X)
-```
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			7.98
+    	Range: 			(0.00, 150.00)
 
 
 
-```python
-X = 'sec_app_num_rev_accts'
-EDA_attr(X)
-scale_attr(X)
-```
+![png](EDA_files/EDA_62_2.png)
 
 
 
 
-```python
-X = 'sec_app_open_acc'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
+**num_op_rev_tl**: Number of open revolving accounts
 
-```python
-X = 'sec_app_open_act_il'
-EDA_attr(X)
-scale_attr(X)
-```
 
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			8.11
+    	Range: 			(0.00, 62.00)
 
 
 
-```python
-X = 'sec_app_revol_util'
-EDA_attr(X)
-scale_attr(X)
-```
+![png](EDA_files/EDA_63_2.png)
 
 
 
 
-```python
-X = 'verification_status_joint'
-EDA_attr(X)
-dummy_attr(X)
-```
 
 
-## 3. Dependent Variable Feature Design (36 variables)
 
-**feature design of outcome variable**
+**num_rev_accts**: Number of revolving accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			14.93
+    	Range: 			(0.00, 105.00)
+
+
+
+![png](EDA_files/EDA_64_2.png)
+
+
+
+
+
+
+
+**num_rev_tl_bal_gt_0**: Number of revolving trades with balance >0
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			5.65
+    	Range: 			(0.00, 38.00)
+
+
+
+![png](EDA_files/EDA_65_2.png)
+
+
+
+
+
+
+
+**num_sats**: Number of satisfactory accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	58590 (13.9%)
+    	Mean: 			11.22
+    	Range: 			(0.00, 84.00)
+
+
+
+![png](EDA_files/EDA_66_2.png)
+
+
+
+
+
+
+
+**num_tl_120dpd_2m**: Number of accounts currently 120 days past due (updated in past 2 months)
+
+
+    	Type: 			float64
+    	Missing Values: 	78691 (18.7%)
+    	Mean: 			0.00
+    	Range: 			(0.00, 3.00)
+
+
+
+![png](EDA_files/EDA_67_2.png)
+
+
+
+
+
+
+
+**num_tl_30dpd**: Number of accounts currently 30 days past due (updated in past 2 months)
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			0.00
+    	Range: 			(0.00, 4.00)
+
+
+
+![png](EDA_files/EDA_68_2.png)
+
+
+
+
+
+
+
+**num_tl_90g_dpd_24m**: Number of accounts 90 or more days past due in last 24 months
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			0.09
+    	Range: 			(0.00, 24.00)
+
+
+
+![png](EDA_files/EDA_69_2.png)
+
+
+
+
+
+
+
+**num_tl_op_past_12m**: Number of accounts opened in past 12 months
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			1.94
+    	Range: 			(0.00, 26.00)
+
+
+
+![png](EDA_files/EDA_70_2.png)
+
+
+
+
+
+
+
+**open_acc**: The number of open credit lines in the borrower's credit file.
+
+
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			11.01
+    	Range: 			(0.00, 84.00)
+
+
+
+![png](EDA_files/EDA_71_2.png)
+
+
+
+
+
+
+
+**pct_tl_nvr_dlq**: Percent of trades never delinquent
+
+
+    	Type: 			float64
+    	Missing Values: 	70390 (16.8%)
+    	Mean: 			94.44
+    	Range: 			(7.70, 100.00)
+
+
+
+![png](EDA_files/EDA_72_2.png)
+
+
+
+
+
+
+
+**percent_bc_gt_75**: Percentage of all bankcard accounts > 75% of limit.
+
+
+    	Type: 			float64
+    	Missing Values: 	53858 (12.8%)
+    	Mean: 			50.54
+    	Range: 			(0.00, 100.00)
+
+
+
+![png](EDA_files/EDA_73_2.png)
+
+
+
+
+
+
+
+**pub_rec**: Number of derogatory public records
+
+
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			0.17
+    	Range: 			(0.00, 63.00)
+
+
+
+![png](EDA_files/EDA_74_2.png)
+
+
+
+
+
+
+
+**pub_rec_bankruptcies**: Number of public record bankruptcies
+
+
+    	Type: 			float64
+    	Missing Values: 	1365 (0.3%)
+    	Mean: 			0.11
+    	Range: 			(0.00, 12.00)
+
+
+
+![png](EDA_files/EDA_75_2.png)
+
+
+
+
+
+
+
+**revol_bal**: Total credit revolving balance
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			15406.16
+    	Range: 			(0.00, 2568995.00)
+
+
+
+![png](EDA_files/EDA_76_2.png)
+
+
+
+
+
+
+
+**revol_util**: Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.
+
+
+    	Type: 			object
+    	Missing Values: 	296 (0.1%)
+    	Number of Categories: 	1262
+    	Most Common Category: 	0%
+
+
+
+
+
+
+
+**tax_liens**: Number of tax liens
+
+
+    	Type: 			float64
+    	Missing Values: 	105 (0.0%)
+    	Mean: 			0.04
+    	Range: 			(0.00, 63.00)
+
+
+
+![png](EDA_files/EDA_78_2.png)
+
+
+
+
+
+
+
+**tot_coll_amt**: Total collection amounts ever owed
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			213.03
+    	Range: 			(0.00, 9152545.00)
+
+
+
+![png](EDA_files/EDA_79_2.png)
+
+
+
+
+
+
+
+**tot_cur_bal**: Total current balance of all accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			128545.52
+    	Range: 			(0.00, 8000078.00)
+
+
+
+![png](EDA_files/EDA_80_2.png)
+
+
+
+
+
+
+
+**tot_hi_cred_lim**: Total high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			157552.13
+    	Range: 			(0.00, 9999999.00)
+
+
+
+![png](EDA_files/EDA_81_2.png)
+
+
+
+
+
+
+
+**total_acc**: The total number of credit lines currently in the borrower's credit file
+
+
+    	Type: 			float64
+    	Missing Values: 	29 (0.0%)
+    	Mean: 			24.49
+    	Range: 			(1.00, 162.00)
+
+
+
+![png](EDA_files/EDA_82_2.png)
+
+
+
+
+
+
+
+**total_bal_ex_mort**: Total credit balance excluding mortgage
+
+
+    	Type: 			float64
+    	Missing Values: 	50030 (11.9%)
+    	Mean: 			44002.55
+    	Range: 			(0.00, 2688920.00)
+
+
+
+![png](EDA_files/EDA_83_2.png)
+
+
+
+
+
+
+
+**total_bc_limit**: Total bankcard high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	50030 (11.9%)
+    	Mean: 			19602.34
+    	Range: 			(0.00, 760000.00)
+
+
+
+![png](EDA_files/EDA_84_2.png)
+
+
+
+
+
+
+
+**total_il_high_credit_limit**: Total installment high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			36279.50
+    	Range: 			(0.00, 1241783.00)
+
+
+
+![png](EDA_files/EDA_85_2.png)
+
+
+
+
+
+
+
+**total_rev_hi_lim**: Total revolving high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	70276 (16.7%)
+    	Mean: 			29473.47
+    	Range: 			(0.00, 9999999.00)
+
+
+
+![png](EDA_files/EDA_86_2.png)
+
+
+## 3. Dependent Variable Feature Design (3 variables)
+
+The following variables represent outcome information for the loan after it as been funded. This information is not be available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuances.
 
 
 
@@ -1292,12 +1366,13 @@ dependent_cols = [
     'next_pymnt_d', 'out_prncp', 'out_prncp_inv', 'total_pymnt', 
     'total_pymnt_inv', 'total_rec_int', 'total_rec_prncp', 
     
-    # Hardship/Collections/Settlements
-    'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 'deferral_term', 
-    'hardship_amount', 'hardship_dpd', 'hardship_end_date', 'hardship_flag', 
-    'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 'hardship_payoff_balance_amount', 
-    'hardship_reason', 'hardship_start_date', 'hardship_status', 'hardship_type',
-    'last_credit_pull_d', 'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
+    # Hardship/Collections/Settlements (27)
+    'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 
+    'deferral_term', 'hardship_amount', 'hardship_dpd', 'hardship_end_date', 
+    'hardship_flag', 'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 
+    'hardship_payoff_balance_amount', 'hardship_reason', 'hardship_start_date', 
+    'hardship_status', 'hardship_type', 'last_credit_pull_d', 
+    'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
     'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
     'settlement_status', 'settlement_term', 'total_rec_late_fee', ]
 
@@ -1305,22 +1380,14 @@ ls_clean.drop(dependent_cols, axis=1, inplace=True)
 ```
 
 
-There are three features that we will design to represent the outcome of loan:
-- A. **Outcome Classification** (Repaid/Current vs. Not Repaid/Current)
-- B. **Principal Repaid Percentage**
-- C. **Annual Percentage Rate of Return** (APR)
-
-Our focus will be on loans that have completed their terms. This subset of loans provides the most complete outcome information. In-force loans cannot provide conclusive inferences on loan outcomes because the full term has not completed. Therefore information
+We designed 3 outcome features to represent the outcome of loan:
+- A. `OUT_Class`: outcome classification of Fully Repaid (1) vs. Not Fully Repaid (0)
+- B. `OUT_Prncp_Repaid_Percentage`: percentage of principal repaid
+- C. `OUT_Monthly_Rate_of_Return`: simple monthly rate of return
 
 ### 3A. `OUT_Class`
 
-
-
-```python
-print(ls.groupby('loan_status')['loan_amnt'].count())
-len(ls['loan_status'])
-```
-
+This outcome variable is an indicator whether the loan has been fully repaid (1) or charged off/defaulted (0). Note that 85.9% percent of all loans have been fully repaid.
 
 
 
@@ -1328,59 +1395,99 @@ len(ls['loan_status'])
 ls_clean['OUT_Class'] = 0
 ls_clean.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
 ls_clean.loc[ls['loan_status'].str.contains('Current'), 'OUT_Class'] = 1
+ls_clean['OUT_Class'].describe()
 ```
 
 
 
 
-```python
-print(ls_clean.groupby('OUT_Class')['loan_amnt'].count())
-len(ls['loan_status'])
-```
+
+    count   420181.000
+    mean         0.859
+    std          0.348
+    min          0.000
+    25%          1.000
+    50%          1.000
+    75%          1.000
+    max          1.000
+    Name: OUT_Class, dtype: float64
+
 
 
 ### 3B. `OUT_Prncp_Repaid_Percentage`
 
+This outcome variable represents the percentage of loan principal that has been repaid. Note that the average principal repaid percentage is 91.5%.
+
 
 
 ```python
+#DESIGN OF 'OUT_Prncp_Repaid_Percentage'
 ls_clean['OUT_Prncp_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
-```
-
-
-
-
-```python
 ls_clean['OUT_Prncp_Repaid_Percentage'].describe()
 ```
 
 
-### 3C. `OUT_APR`
+
+
+
+    count   420181.000
+    mean         0.915
+    std          0.226
+    min          0.000
+    25%          1.000
+    50%          1.000
+    75%          1.000
+    max          1.000
+    Name: OUT_Prncp_Repaid_Percentage, dtype: float64
+
+
+
+### 3C. `OUT_Monthly_Rate_of_Return`
+
+This outcome variable represents the monthly rate of return that investors have achieved by holding the loan. This is the most comprehensive of our outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan.
 
 
 
 ```python
+Net_Repayment = ls['total_pymnt'] - ls['loan_amnt']
 
-    
+Repayment_Period = (ls['last_pymnt_d'].dt.to_period('M') - 
+                    ls['issue_d'].dt.to_period('M')).replace([pd.NaT,0], 1)
+
+ls_clean['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls_clean['loan_amnt']
+
+ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
 ```
 
 
-<hr style="height:5pt">
+
+
+
+    count   420181.000
+    mean        -0.002
+    std          0.052
+    min         -1.000
+    25%          0.004
+    50%          0.006
+    75%          0.008
+    max          0.208
+    Name: OUT_Monthly_Rate_Of_Return, dtype: float64
+
+
 
 ## 4. Final Processing
 
 
 
 ```python
-ls_clean2 = ls_clean[ls_clean['outlier']==0]
-ls_clean2 = ls_clean2.drop('outlier', axis=1)
+ls_clean = ls_clean[ls_clean['outlier']==0]
+ls_clean = ls_clean.drop('outlier', axis=1)
 ```
 
 
 
 
 ```python
-ls_clean2.to_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
-ls_clean3.to_hdf(directory + 'LS_CLEAN_COMPLETED.h5', 'LS_CLEAN_COMPLETED')
+ls_clean.to_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
 ```
 
