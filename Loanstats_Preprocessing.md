@@ -1,15 +1,6 @@
----
-title: EXPORT DATASETS BY GRADE
-notebook: loanstats_preprocessing.ipynb
-nav_include: 1
----
-
-## Contents
-{:.no_toc}
-*  
-{: toc}
 
 Group #67 - Lending Club
+# LoanStats Preprocessing
 
 0. **Imports and Functions**
 1. **Inconsequential Variable Removal**: removal of non-existant, empty, constant or otherwise unmeaningful variables
@@ -32,6 +23,7 @@ Note: **`ls`** is DataFrame used for EDA and never modified. **`ls_clean`** is D
 
 
 ```python
+# IMPORTS
 import warnings; warnings.filterwarnings('ignore')
 import numpy as np
 import pandas as pd
@@ -48,6 +40,7 @@ plt.rcParams['figure.figsize'] = (10, 2)
 
 
 ```python
+# LOAD LOANSTATS
 directory = 'data/'
 ls = pd.read_hdf(directory + 'LoanStats_clean.h5', 'full_loanstats') # HDF5
 ```
@@ -56,6 +49,7 @@ ls = pd.read_hdf(directory + 'LoanStats_clean.h5', 'full_loanstats') # HDF5
 
 
 ```python
+# CREATE 'ls_clean'
 ls.sort_index(axis=1, inplace=True)
 ls_clean = ls.copy()
 ```
@@ -64,6 +58,7 @@ ls_clean = ls.copy()
 
 
 ```python
+# LOAD DATA DICTIONARY
 sheet_dict = pd.read_excel(directory + 'LCDataDictionary.xlsx', sheet_name=None)
 data_dict = {}
 for key in sheet_dict:
@@ -76,6 +71,7 @@ for key in sheet_dict:
 
 
 ```python
+# FUNCTION FOR EDA
 def EDA_attr(attr):
     """ Prints basic EDA for given attribute (muted by commenting)"""
     num_observations = len(ls)
@@ -101,6 +97,7 @@ def EDA_attr(attr):
 
 
 ```python
+# FUNCTION FOR SCALING
 scaler_dict = {} # dictionary to store scalers, to be used for inverse transforms
 def scale_attr(attr, fit_data=None, scaler=None):
     """ Scales attribute with StandardScaler (default) or MinMaxScaler"""
@@ -117,6 +114,7 @@ def scale_attr(attr, fit_data=None, scaler=None):
 
 
 ```python
+# FUNCTION FOR DUMMY CREATION
 def dummy_attr(attr):
     """ Creates dummy variables and drops original attribute"""
     global ls_clean
@@ -131,6 +129,7 @@ def dummy_attr(attr):
 
 
 ```python
+# FUNCTION FOR OUTLIER DETECTION
 ls_clean['outlier'] = 0 # this column is incremented for identified outlier instances
 def outlier_attr(attr, threshold):
     """ Identifies outliers above threshold and updates outlier indictor""" 
@@ -165,6 +164,7 @@ def outlier_attr(attr, threshold):
 
 
 ```python
+# Drop Variables
 drop_columns = ['dataset', 
                 'desc', 
                 'disbursement_method', 
@@ -292,6 +292,7 @@ ls_clean.drop(drop_columns, axis=1, inplace=True)
 
 
 ```python
+# INSTALLMENT
 X = 'installment'
 EDA_attr(X)
 scale_attr(X)
@@ -315,6 +316,7 @@ scale_attr(X)
 
 
 ```python
+# INT_RATE
 X = 'int_rate'
 EDA_attr(X)
 ls_clean[X] = ls[X].str[:-1].astype(np.float)
@@ -383,6 +385,7 @@ scale_attr(X)
 
 
 ```python
+# LOAN_AMNT
 X = 'loan_amnt'
 EDA_attr(X)
 scale_attr(X)
@@ -406,6 +409,7 @@ scale_attr(X)
 
 
 ```python
+# PURPOSE
 X = 'purpose'
 EDA_attr(X)
 dummy_attr(X)
@@ -473,6 +477,7 @@ dummy_attr(X)
 
 
 ```python
+# SUB_GRADE
 X = 'sub_grade'
 EDA_attr(X)
 mapping = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6}
@@ -543,6 +548,7 @@ scale_attr(X)
 
 
 ```python
+# TERM
 X = 'term'
 EDA_attr(X)
 dummy_attr(X)
@@ -605,6 +611,7 @@ dummy_attr(X)
 
 
 ```python
+# VERIFICATION_STATUS
 X = 'verification_status'
 EDA_attr(X)
 dummy_attr(X)
@@ -676,6 +683,7 @@ dummy_attr(X)
 
 
 ```python
+# ADDR_STATE
 X = 'addr_state'
 EDA_attr(X)
 dummy_attr(X)
@@ -743,6 +751,7 @@ dummy_attr(X)
 
 
 ```python
+# ANNUAL_INC
 X = 'annual_inc'
 EDA_attr(X)
 outliers = outlier_attr(X, 10000000)
@@ -767,6 +776,7 @@ scale_attr(X,fit_data=ls_clean[~outliers][[X]])
 
 
 ```python
+# EMP_LENGTH
 X = 'emp_length'
 EDA_attr(X)
 mapping = {'1 year': 1, '10+ years': 10, '2 years': 2, '3 years': 3, 
@@ -838,6 +848,7 @@ scale_attr(X)
 
 
 ```python
+# HOME_OWNERSHIP
 X = 'home_ownership'
 EDA_attr(X)
 ls_clean[X] = ls_clean[X].replace({'ANY':'OTHER', 'NONE':'OTHER'})
@@ -910,6 +921,7 @@ dummy_attr(X)
 
 
 ```python
+# ACC_NOW_DELINQ
 X = 'acc_now_delinq'
 EDA_attr(X)
 outliers = outlier_attr(X, 7)
@@ -934,6 +946,7 @@ outliers = outlier_attr(X, 7)
 
 
 ```python
+# ACC_OPEN_PAST_24MTHS
 X = 'acc_open_past_24mths'
 EDA_attr(X)
 scale_attr(X)
@@ -957,6 +970,7 @@ scale_attr(X)
 
 
 ```python
+# ALL_UTIL
 X = 'all_util'
 EDA_attr(X)
 scale_attr(X)
@@ -980,6 +994,7 @@ scale_attr(X)
 
 
 ```python
+# AVG_CUR_BAL
 X = 'avg_cur_bal'
 EDA_attr(X)
 scale_attr(X)
@@ -1003,6 +1018,7 @@ scale_attr(X)
 
 
 ```python
+# BC_OPEN_TO_BUY
 X = 'bc_open_to_buy'
 EDA_attr(X)
 scale_attr(X)
@@ -1026,6 +1042,7 @@ scale_attr(X)
 
 
 ```python
+# BC_UTIL: scaling
 X = 'bc_util'
 EDA_attr(X)
 scale_attr(X)
@@ -1049,6 +1066,7 @@ scale_attr(X)
 
 
 ```python
+# CHARGEOFF_WITHIN_12_MTHS
 X = 'chargeoff_within_12_mths'
 EDA_attr(X)
 scale_attr(X)
@@ -1072,6 +1090,7 @@ scale_attr(X)
 
 
 ```python
+# COLLECTIONS_12_MTHS_EX_MED
 X = 'collections_12_mths_ex_med'
 EDA_attr(X)
 outliers = outlier_attr(X, 12)
@@ -1096,6 +1115,7 @@ scale_attr(X,fit_data=ls_clean[~outliers][[X]])
 
 
 ```python
+# DELINQ_2YRS
 X = 'delinq_2yrs'
 EDA_attr(X)
 scale_attr(X)
@@ -1119,6 +1139,7 @@ scale_attr(X)
 
 
 ```python
+# DELINQ_AMNT
 X = 'delinq_amnt'
 EDA_attr(X)
 scale_attr(X)
@@ -1142,6 +1163,7 @@ scale_attr(X)
 
 
 ```python
+# DTI
 X = 'dti'
 EDA_attr(X)
 ls_clean[ls[X]==-1] = np.NaN
@@ -1166,6 +1188,7 @@ scale_attr(X)
 
 
 ```python
+# EARLIEST_CR_LINE
 X = 'earliest_cr_line'
 EDA_attr(X)
 
@@ -1186,6 +1209,7 @@ scale_attr(X)
 
 
 ```python
+# IL_UTIL
 X = 'il_util'
 EDA_attr(X)
 scale_attr(X)
@@ -1209,6 +1233,7 @@ scale_attr(X)
 
 
 ```python
+# INQ_FI
 X = 'inq_fi'
 EDA_attr(X)
 scale_attr(X)
@@ -1232,6 +1257,7 @@ scale_attr(X)
 
 
 ```python
+# INQ_LAST_12M
 X = 'inq_last_12m'
 EDA_attr(X)
 scale_attr(X)
@@ -1255,6 +1281,7 @@ scale_attr(X)
 
 
 ```python
+# INQ_LAST_6MTHS
 X = 'inq_last_6mths'
 EDA_attr(X)
 scale_attr(X)
@@ -1278,6 +1305,7 @@ scale_attr(X)
 
 
 ```python
+# MAX_BAL_BC
 X = 'max_bal_bc'
 EDA_attr(X)
 scale_attr(X)
@@ -1301,6 +1329,7 @@ scale_attr(X)
 
 
 ```python
+# MO_SIN_OLD_IL_ACCT
 X =  'mo_sin_old_il_acct'
 EDA_attr(X)
 scale_attr(X)
@@ -1324,6 +1353,7 @@ scale_attr(X)
 
 
 ```python
+# MO_SIN_OLD_REV_TL_OP
 X =  'mo_sin_old_rev_tl_op'
 EDA_attr(X)
 scale_attr(X)
@@ -1347,6 +1377,7 @@ scale_attr(X)
 
 
 ```python
+# MO_SIN_RCNT_REV_TL_OP
 X = 'mo_sin_rcnt_rev_tl_op'
 EDA_attr(X)
 scale_attr(X)
@@ -1370,6 +1401,7 @@ scale_attr(X)
 
 
 ```python
+# MO_SIN_RCNT_TL
 X = 'mo_sin_rcnt_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -1393,6 +1425,7 @@ scale_attr(X)
 
 
 ```python
+# MORT_ACC
 X = 'mort_acc'
 EDA_attr(X)
 scale_attr(X)
@@ -1416,6 +1449,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_LAST_DELINQ
 X = 'mths_since_last_delinq'
 EDA_attr(X)
 scale_attr(X)
@@ -1439,6 +1473,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_LAST_MAJOR_DEROG
 X = 'mths_since_last_major_derog'
 EDA_attr(X)
 scale_attr(X)
@@ -1462,6 +1497,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_LAST_RECORD
 X = 'mths_since_last_record'
 EDA_attr(X)
 scale_attr(X)
@@ -1485,6 +1521,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_RCNT_IL
 X = 'mths_since_rcnt_il'
 EDA_attr(X)
 scale_attr(X)
@@ -1508,6 +1545,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_RECENT_BC
 X = 'mths_since_recent_bc'
 EDA_attr(X)
 scale_attr(X)
@@ -1531,6 +1569,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_RECENT_BC_DLQ
 X = 'mths_since_recent_bc_dlq'
 EDA_attr(X)
 scale_attr(X)
@@ -1554,6 +1593,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_RECENT_INQ
 X =  'mths_since_recent_inq'
 EDA_attr(X)
 scale_attr(X)
@@ -1577,6 +1617,7 @@ scale_attr(X)
 
 
 ```python
+# MTHS_SINCE_RECENT_REVOL_DELINQ
 X= 'mths_since_recent_revol_delinq'
 EDA_attr(X)
 scale_attr(X)
@@ -1600,6 +1641,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_ACCTS_EVER_120_PD
 X = 'num_accts_ever_120_pd'
 EDA_attr(X)
 scale_attr(X)
@@ -1623,6 +1665,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_ACTV_BC_TL
 X = 'num_actv_bc_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -1646,6 +1689,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_ACTV_REV_TL
 X = 'num_actv_rev_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -1669,6 +1713,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_BC_SATS
 X = 'num_bc_sats'
 EDA_attr(X)
 scale_attr(X)
@@ -1692,6 +1737,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_BC_TL
 X =  'num_bc_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -1715,6 +1761,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_IL_TL
 X = 'num_il_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -1738,6 +1785,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_OP_REV_TL
 X = 'num_op_rev_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -1761,6 +1809,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_REV_ACCTS
 X = 'num_rev_accts'
 EDA_attr(X)
 scale_attr(X)
@@ -1784,6 +1833,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_REV_TL_BAL_GT_0
 X = 'num_rev_tl_bal_gt_0'
 EDA_attr(X)
 scale_attr(X)
@@ -1807,6 +1857,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_SATS
 X = 'num_sats'
 EDA_attr(X)
 scale_attr(X)
@@ -1830,6 +1881,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_TL_120DPD_2M
 X = 'num_tl_120dpd_2m'
 EDA_attr(X)
 scale_attr(X)
@@ -1853,6 +1905,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_TL_30DPD
 X = 'num_tl_30dpd'
 EDA_attr(X)
 scale_attr(X)
@@ -1876,6 +1929,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_TL_90G_DPD_24M
 X = 'num_tl_90g_dpd_24m'
 EDA_attr(X)
 scale_attr(X)
@@ -1899,6 +1953,7 @@ scale_attr(X)
 
 
 ```python
+# NUM_TL_OP_PAST_12M
 X = 'num_tl_op_past_12m'
 EDA_attr(X)
 scale_attr(X)
@@ -1922,6 +1977,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_ACC
 X = 'open_acc'
 EDA_attr(X)
 scale_attr(X)
@@ -1945,6 +2001,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_ACC_6M
 X = 'open_acc_6m'
 EDA_attr(X)
 scale_attr(X)
@@ -1968,6 +2025,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_ACT_IL
 X = 'open_act_il'
 EDA_attr(X)
 scale_attr(X)
@@ -1991,6 +2049,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_ACT_12M
 X = 'open_il_12m'
 EDA_attr(X)
 scale_attr(X)
@@ -2014,6 +2073,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_ACT_24M
 X = 'open_il_24m'
 EDA_attr(X)
 scale_attr(X)
@@ -2037,6 +2097,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_RV_12M
 X = 'open_rv_12m'
 EDA_attr(X)
 scale_attr(X)
@@ -2060,6 +2121,7 @@ scale_attr(X)
 
 
 ```python
+# OPEN_RV_24M
 X = 'open_rv_24m'
 EDA_attr(X)
 scale_attr(X)
@@ -2083,6 +2145,7 @@ scale_attr(X)
 
 
 ```python
+# PCT_TL_NVR_DLQ
 X = 'pct_tl_nvr_dlq'
 EDA_attr(X)
 scale_attr(X)
@@ -2106,6 +2169,7 @@ scale_attr(X)
 
 
 ```python
+# PERCENT_BC_GT_75
 X = 'percent_bc_gt_75'
 EDA_attr(X)
 scale_attr(X)
@@ -2129,6 +2193,7 @@ scale_attr(X)
 
 
 ```python
+# PUB_REC
 X ='pub_rec'
 EDA_attr(X)
 scale_attr(X)
@@ -2152,6 +2217,7 @@ scale_attr(X)
 
 
 ```python
+# PUB_REC_BANKRUPTCIES
 X = 'pub_rec_bankruptcies'
 EDA_attr(X)
 scale_attr(X)
@@ -2175,6 +2241,7 @@ scale_attr(X)
 
 
 ```python
+# REVOL_BAL
 X = 'revol_bal'
 EDA_attr(X)
 scale_attr(X)
@@ -2198,6 +2265,7 @@ scale_attr(X)
 
 
 ```python
+# REVOL_UTIL
 X = 'revol_util'
 EDA_attr(X)
 ls_clean[X] = ls[X].str[:-1].astype(np.float)
@@ -2266,6 +2334,7 @@ scale_attr(X)
 
 
 ```python
+# TAX_LIENS
 X = 'tax_liens'
 EDA_attr(X)
 scale_attr(X)
@@ -2289,6 +2358,7 @@ scale_attr(X)
 
 
 ```python
+# TOT_COLL_AMT
 X = 'tot_coll_amt'
 EDA_attr(X)
 scale_attr(X)
@@ -2312,6 +2382,7 @@ scale_attr(X)
 
 
 ```python
+# TOT_CUR_BAL
 X = 'tot_cur_bal'
 EDA_attr(X)
 scale_attr(X)
@@ -2335,6 +2406,7 @@ scale_attr(X)
 
 
 ```python
+# TOT_HI_CRED_LIM
 X = 'tot_hi_cred_lim'
 EDA_attr(X)
 scale_attr(X)
@@ -2358,6 +2430,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_ACC
 X = 'total_acc'
 EDA_attr(X)
 scale_attr(X)
@@ -2381,6 +2454,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_BAL_EX_MORT
 X = 'total_bal_ex_mort'
 EDA_attr(X)
 scale_attr(X)
@@ -2404,6 +2478,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_BAL_IL
 X = 'total_bal_il'
 EDA_attr(X)
 scale_attr(X)
@@ -2427,6 +2502,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_BC_LIMIT
 X = 'total_bc_limit'
 EDA_attr(X)
 scale_attr(X)
@@ -2450,6 +2526,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_CU_TL
 X = 'total_cu_tl'
 EDA_attr(X)
 scale_attr(X)
@@ -2473,6 +2550,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_IL_HIGH_CREDIT_LIMIT
 X = 'total_il_high_credit_limit'
 EDA_attr(X)
 scale_attr(X)
@@ -2496,6 +2574,7 @@ scale_attr(X)
 
 
 ```python
+# TOTAL_REV_HI_LIM
 X = 'total_rev_hi_lim'
 EDA_attr(X)
 scale_attr(X)
@@ -2523,6 +2602,7 @@ scale_attr(X)
 
 
 ```python
+# APPLICATION_TYPE
 X = 'application_type'
 EDA_attr(X)
 dummy_attr(X)
@@ -2585,6 +2665,7 @@ dummy_attr(X)
 
 
 ```python
+# ANNUAL_INC_JOINT
 X = 'annual_inc_joint'
 EDA_attr(X)
 outliers = outlier_attr(X, 10000000)
@@ -2609,6 +2690,7 @@ scale_attr(X, ls[~outliers][[X]])
 
 
 ```python
+# DTI_JOINT
 X = 'dti_joint'
 EDA_attr(X)
 scale_attr(X)
@@ -2632,6 +2714,7 @@ scale_attr(X)
 
 
 ```python
+# REVOL_BAL_JOINT
 X = 'revol_bal_joint'
 EDA_attr(X)
 scale_attr(X)
@@ -2655,6 +2738,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_CHARGEOFF_WITHIN_12_MTHS
 X ='sec_app_chargeoff_within_12_mths'
 EDA_attr(X)
 scale_attr(X)
@@ -2678,6 +2762,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_COLLECTIONS_12_MTHS_EX_MED
 X = 'sec_app_collections_12_mths_ex_med'
 EDA_attr(X)
 outliers = outlier_attr(X, 12)
@@ -2702,6 +2787,7 @@ scale_attr(X, ls[~outliers][[X]])
 
 
 ```python
+# SEC_APP_EARLIEST_CR_LINE
 X = 'sec_app_earliest_cr_line'
 EDA_attr(X)
 ls_clean[X] =  np.array((ls['issue_d'] - ls[X]).dt.days).reshape(-1,1)
@@ -2720,6 +2806,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_INQ_LAST_6MTHS
 X = 'sec_app_inq_last_6mths'
 EDA_attr(X)
 scale_attr(X)
@@ -2743,6 +2830,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_MORT_ACC
 X = 'sec_app_mort_acc'
 EDA_attr(X)
 outliers = outlier_attr(X, 15)
@@ -2767,6 +2855,7 @@ scale_attr(X, ls[~outliers][[X]])
 
 
 ```python
+# SEC_APP_MTHS_SINCE_LAST_MAJOR_DEROG
 X = 'sec_app_mths_since_last_major_derog'
 EDA_attr(X)
 scale_attr(X)
@@ -2790,6 +2879,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_NUM_REV_ACCTS
 X = 'sec_app_num_rev_accts'
 EDA_attr(X)
 scale_attr(X)
@@ -2813,6 +2903,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_OPEN_ACC
 X = 'sec_app_open_acc'
 EDA_attr(X)
 scale_attr(X)
@@ -2836,6 +2927,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_OPEN_ACT_IL
 X = 'sec_app_open_act_il'
 EDA_attr(X)
 scale_attr(X)
@@ -2859,6 +2951,7 @@ scale_attr(X)
 
 
 ```python
+# SEC_APP_REVOL_UTIL
 X = 'sec_app_revol_util'
 EDA_attr(X)
 scale_attr(X)
@@ -2882,6 +2975,7 @@ scale_attr(X)
 
 
 ```python
+# VERIFICATION_STATUS_JOINT
 X = 'verification_status_joint'
 EDA_attr(X)
 dummy_attr(X)
@@ -2953,6 +3047,7 @@ dummy_attr(X)
 
 
 ```python
+# DEPENDENT VARIABLES
 dependent_cols = [
     
     # Payment Variables (11): 
@@ -3076,8 +3171,17 @@ ls_clean['OUT_Prncp_Repaid_Percentage'].describe()
 
 
 ```python
+# print(ls[['loan_amnt','term','int_rate','total_pymnt', 'installment', 'loan_status']].head(10))
 
+# def calculat_EAR():
+#     months = 36
+#     loan_amnt= 5000
+#     total_pymnt = 5863.155
+#     cashflows = np.insert(np.full(months, total_pymnt/months), 0 , -loan_amnt)
+#     monthly_IRR = np.irr(df)
     
+# print((ls['last_pymnt_d'].dt.to_period('M') - ls['issue_d'].dt.to_period('M')).head(10))
+# print(ls['loan_status'].head(10))
 ```
 
 
@@ -3088,6 +3192,7 @@ ls_clean['OUT_Prncp_Repaid_Percentage'].describe()
 
 
 ```python
+# DROP OUTLIERS
 ls_clean2 = ls_clean[ls_clean['outlier']==0]
 ls_clean2 = ls_clean2.drop('outlier', axis=1)
 ```
@@ -3096,9 +3201,12 @@ ls_clean2 = ls_clean2.drop('outlier', axis=1)
 
 
 ```python
+# DROP IN-FORCE LOANS
 
+# Completed 36-month loans
 completed_36 = (ls['issue_d'] < '2015-04-01') & (ls['term']  == ' 36 months')
 
+# Completed 60-month loans
 completed_60 = (ls['issue_d'] < '2013-04-01') & (ls['term']  == ' 60 months')
 
 ls_completed = ls_clean2[completed_36 | completed_60]
@@ -3108,6 +3216,7 @@ ls_completed = ls_clean2[completed_36 | completed_60]
 
 
 ```python
+# EXPORT DATASET
 ls_clean2.to_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
 ls_completed.to_hdf(directory + 'LS_CLEAN_COMPLETED.h5', 'LS_CLEAN_COMPLETED')
 ```
@@ -3116,11 +3225,13 @@ ls_completed.to_hdf(directory + 'LS_CLEAN_COMPLETED.h5', 'LS_CLEAN_COMPLETED')
 
 
 ```python
+# EXPORT DATASETS BY TERM
 ```
 
 
 
 
 ```python
+# EXPORT DATASETS BY GRADE
 ```
 
