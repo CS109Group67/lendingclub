@@ -10,7 +10,7 @@ Our project goal was to **create a data-driven model to power a profitable and e
 
 The contents of our report are structured as follows:
 1. **Data Description**: summary of the datasets we used in service of our project goals
-2. **Exploratory Data Analysis & Processing**: examination of the loan data and feature preprocessing
+2. **Exploratory Data Analysis & Processing**: exploration and preprocessing of the loan data
 3. **Modeling**: classification and regression models to analyze meaningful loan features
 4. **Investment Strategy**: proposed investment strategy and risk-return profile
 5. **Ethical Implications**: investigation of discrimination in LC’s practices
