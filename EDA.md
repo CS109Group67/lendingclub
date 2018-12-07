@@ -1,5 +1,5 @@
 ---
-title:  EDA & Preprocessing
+title: EDA & Preprocessing
 notebook: EDA.ipynb
 nav_include: 2
 ---
@@ -30,18 +30,108 @@ Note: **`ls`** is DataFrame used for EDA and never modified. **`ls_clean`** is D
 
 
 
+```python
+import warnings; warnings.filterwarnings('ignore')
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from IPython.display import Markdown, display
+pd.options.display.max_rows = 150
+pd.options.display.max_columns = 200
+pd.options.display.float_format = '{:.3f}'.format
+plt.rcParams['figure.figsize'] = (10, 2)
+```
 
 
 
 
+```python
+directory = '../../../data/'
+ls = pd.read_hdf(directory + 'LoanStats_clean.h5', 'full_loanstats') # HDF5
+```
 
 
 
 
+```python
+sheet_dict = pd.read_excel(directory + 'LCDataDictionary.xlsx', sheet_name=None)
+data_dict = {}
+for key in sheet_dict:
+    for index, row in sheet_dict[key].iterrows():
+        if type(row[0]) != float:
+            data_dict[row[0].strip()] = row[1]
+```
 
 
 
 
+```python
+ls.sort_index(axis=1, inplace=True)
+ls_clean = ls.copy()
+```
+
+
+
+
+```python
+def EDA_attr(attr):
+    """ Prints basic EDA for given attribute (muted by commenting)"""
+    num_observations = len(ls_clean)
+    attr_type = ls_clean[attr].dtype
+    missing_values = ls_clean[attr].isnull().sum()
+    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, "NULL"))))
+    print('\tType: \t\t\t{}'.format(attr_type))
+    print('\tMissing Values: \t{} ({:.1%})'.format(
+                    missing_values, missing_values/num_observations))    
+    
+    if attr_type == 'float64':  # numerical variables
+        print('\tMean: \t\t\t{:.2f}'.format(ls_clean[attr].mean()))
+        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls_clean[attr].min(), ls_clean[attr].max()))
+        plt.hist(ls_clean[attr]); plt.show()
+    
+    if attr_type == 'object':   # categorical variables
+        print('\tNumber of Categories: \t{}'.format(len(ls_clean.groupby(attr))))
+        print(ls_clean.groupby(attr)['loan_amnt'].agg(['count', 'sum']).sort_values(
+                        by='sum', ascending=False).nlargest(3,columns='count'))
+```
+
+
+
+
+```python
+scaler_dict = {} # dictionary to store scalers, to be used for inverse transforms
+scaler_list = [] # list to store variables to be scaled
+def scale_attr(attr, fit_data=None, scaler=None):
+    """ Scales attribute with StandardScaler (default) or MinMaxScaler"""
+    scaler_list.append(attr)
+```
+
+
+
+
+```python
+def dummy_attr(attr):
+    """ Creates dummy variables and drops original attribute"""
+    global ls_clean
+    if attr not in list(ls_clean): return
+    prefix = 'D_' + attr
+    dummies = pd.get_dummies(ls_clean[attr], prefix=prefix)
+    ls_clean.drop([attr], axis=1, inplace=True)
+    ls_clean = pd.concat([ls_clean, dummies], axis=1)
+```
+
+
+
+
+```python
+ls_clean['outlier'] = 0 # this column is incremented for identified outlier instances
+def outlier_attr(attr, threshold):
+    """ Identifies outliers above threshold and updates outlier indictor""" 
+    outliers = ls[attr] > threshold
+    ls_clean['outlier'] = ls_clean['outlier'] + outliers
+    return outliers
+```
 
 
 <hr style="height:5pt">
@@ -68,6 +158,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 - `title`: non-standard text description
 - `zip_code`: we could make it a dummy, but there would be 954 of them
 
+
+
+```python
+drop_columns = ['dataset', 'desc', 'disbursement_method', 'emp_title','funded_amnt', 
+                'funded_amnt_inv', 'grade','initial_list_status', 'title', 'zip_code']
+ls_clean.drop(drop_columns, axis=1, inplace=True)
+```
 
 
 <hr style="height:5pt">
@@ -182,6 +279,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'installment'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **installment**: The monthly payment owed by the borrower if the loan originates.
 
@@ -196,6 +300,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_18_2.png)
 
 
+
+
+```python
+X = 'int_rate'
+EDA_attr(X)
+ls_clean[X] = ls[X].str[:-1].astype(np.float)
+scale_attr(X)
+```
 
 
 
@@ -214,6 +326,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'loan_amnt'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **loan_amnt**: The listed amount of the loan applied for by the borrower. If at some point in time, the credit department reduces the loan amount, then it will be reflected in this value.
 
@@ -228,6 +347,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_20_2.png)
 
 
+
+
+```python
+X = 'purpose'
+EDA_attr(X)
+dummy_attr(X)
+```
 
 
 
@@ -246,6 +372,16 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'sub_grade'
+EDA_attr(X)
+mapping = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6}
+ls_clean[X] = (ls[X].apply(lambda x: x[0]).map(mapping).astype(int)*5 +
+               ls[X].apply(lambda x: x[1]).astype(int)).astype(int)
+scale_attr(X)
+```
+
+
 
 **sub_grade**: LC assigned loan subgrade
 
@@ -262,6 +398,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'term'
+EDA_attr(X)
+dummy_attr(X)
+```
+
+
 
 **term**: The number of payments on the loan. Values are in months and can be either 36 or 60.
 
@@ -275,6 +418,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
      60 months   572061 11773980675.000
 
 
+
+
+```python
+X = 'verification_status'
+EDA_attr(X)
+dummy_attr(X)
+```
 
 
 
@@ -297,6 +447,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'addr_state'
+EDA_attr(X)
+dummy_attr(X)
+```
+
+
 
 **addr_state**: The state provided by the borrower in the loan application
 
@@ -311,6 +468,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     TX          165147 2578213425.000
 
 
+
+
+```python
+X = 'annual_inc'
+EDA_attr(X)
+outliers = outlier_attr(X, 10000000)
+scale_attr(X,fit_data=ls_clean[~outliers][[X]])
+```
 
 
 
@@ -329,6 +494,17 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'emp_length'
+EDA_attr(X)
+mapping = {'1 year': 1, '10+ years': 10, '2 years': 2, '3 years': 3, 
+           '4 years': 4, '5 years': 5, '6 years': 6, '7 years': 7, 
+           '8 years': 8, '9 years': 9, '< 1 year': 0}
+ls_clean[X] = ls[X].map(mapping)
+scale_attr(X)
+```
+
+
 
 **emp_length**: Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years. 
 
@@ -343,6 +519,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     < 1 year    162599  2362518625.000
 
 
+
+
+```python
+X = 'home_ownership'
+EDA_attr(X)
+ls_clean[X] = ls_clean[X].replace({'ANY':'OTHER', 'NONE':'OTHER'})
+dummy_attr(X)
+```
 
 
 
@@ -365,6 +549,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'acc_now_delinq'
+EDA_attr(X)
+outliers = outlier_attr(X, 7)
+
+```
+
+
 
 **acc_now_delinq**: The number of accounts on which the borrower is now delinquent.
 
@@ -379,6 +571,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_31_2.png)
 
 
+
+
+```python
+X = 'acc_open_past_24mths'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -397,6 +596,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'all_util'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **all_util**: Balance to credit limit on all trades
 
@@ -411,6 +617,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_33_2.png)
 
 
+
+
+```python
+X = 'avg_cur_bal'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -429,6 +642,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'bc_open_to_buy'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **bc_open_to_buy**: Total open to buy on revolving bankcards.
 
@@ -443,6 +663,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_35_2.png)
 
 
+
+
+```python
+X = 'bc_util'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -461,6 +688,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'chargeoff_within_12_mths'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **chargeoff_within_12_mths**: Number of charge-offs within 12 months
 
@@ -475,6 +709,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_37_2.png)
 
 
+
+
+```python
+X = 'collections_12_mths_ex_med'
+EDA_attr(X)
+outliers = outlier_attr(X, 12)
+scale_attr(X,fit_data=ls_clean[~outliers][[X]])
+```
 
 
 
@@ -493,6 +735,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'delinq_2yrs'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **delinq_2yrs**: The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years
 
@@ -507,6 +756,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_39_2.png)
 
 
+
+
+```python
+X = 'delinq_amnt'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -525,6 +781,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'dti'
+EDA_attr(X)
+ls_clean[ls[X]==-1] = np.NaN
+scale_attr(X)
+```
+
+
 
 **dti**: A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly income.
 
@@ -541,6 +805,16 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'earliest_cr_line'
+EDA_attr(X)
+
+ls_clean[X] =  np.array((ls['issue_d'] - ls[X]).dt.days).reshape(-1,1)
+
+scale_attr(X)
+```
+
+
 
 **earliest_cr_line**: The month the borrower's earliest reported credit line was opened
 
@@ -549,6 +823,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     	Missing Values: 	31 (0.0%)
 
 
+
+
+```python
+X = 'il_util'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -567,6 +848,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'inq_fi'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **inq_fi**: Number of personal finance inquiries
 
@@ -581,6 +869,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_44_2.png)
 
 
+
+
+```python
+X = 'inq_last_12m'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -599,6 +894,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'inq_last_6mths'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **inq_last_6mths**: The number of inquiries in past 6 months (excluding auto and mortgage inquiries)
 
@@ -613,6 +915,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_46_2.png)
 
 
+
+
+```python
+X = 'max_bal_bc'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -631,6 +940,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X =  'mo_sin_old_il_acct'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mo_sin_old_il_acct**: Months since oldest bank installment account opened
 
@@ -645,6 +961,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_48_2.png)
 
 
+
+
+```python
+X =  'mo_sin_old_rev_tl_op'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -663,6 +986,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'mo_sin_rcnt_rev_tl_op'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mo_sin_rcnt_rev_tl_op**: Months since most recent revolving account opened
 
@@ -677,6 +1007,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_50_2.png)
 
 
+
+
+```python
+X = 'mo_sin_rcnt_tl'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -695,6 +1032,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'mort_acc'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mort_acc**: Number of mortgage accounts.
 
@@ -709,6 +1053,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_52_2.png)
 
 
+
+
+```python
+X = 'mths_since_last_delinq'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -727,6 +1078,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'mths_since_last_major_derog'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mths_since_last_major_derog**: Months since most recent 90-day or worse rating
 
@@ -741,6 +1099,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_54_2.png)
 
 
+
+
+```python
+X = 'mths_since_last_record'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -759,6 +1124,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'mths_since_rcnt_il'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mths_since_rcnt_il**: Months since most recent installment accounts opened
 
@@ -773,6 +1145,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_56_2.png)
 
 
+
+
+```python
+X = 'mths_since_recent_bc'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -791,6 +1170,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'mths_since_recent_bc_dlq'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mths_since_recent_bc_dlq**: Months since most recent bankcard delinquency
 
@@ -805,6 +1191,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_58_2.png)
 
 
+
+
+```python
+X =  'mths_since_recent_inq'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -823,6 +1216,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X= 'mths_since_recent_revol_delinq'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **mths_since_recent_revol_delinq**: Months since most recent revolving delinquency.
 
@@ -837,6 +1237,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_60_2.png)
 
 
+
+
+```python
+X = 'num_accts_ever_120_pd'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -855,6 +1262,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_actv_bc_tl'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_actv_bc_tl**: Number of currently active bankcard accounts
 
@@ -869,6 +1283,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_62_2.png)
 
 
+
+
+```python
+X = 'num_actv_rev_tl'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -887,6 +1308,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_bc_sats'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_bc_sats**: Number of satisfactory bankcard accounts
 
@@ -901,6 +1329,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_64_2.png)
 
 
+
+
+```python
+X =  'num_bc_tl'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -919,6 +1354,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_il_tl'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_il_tl**: Number of installment accounts
 
@@ -933,6 +1375,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_66_2.png)
 
 
+
+
+```python
+X = 'num_op_rev_tl'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -951,6 +1400,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_rev_accts'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_rev_accts**: Number of revolving accounts
 
@@ -965,6 +1421,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_68_2.png)
 
 
+
+
+```python
+X = 'num_rev_tl_bal_gt_0'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -983,6 +1446,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_sats'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_sats**: Number of satisfactory accounts
 
@@ -997,6 +1467,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_70_2.png)
 
 
+
+
+```python
+X = 'num_tl_120dpd_2m'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1015,6 +1492,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_tl_30dpd'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_tl_30dpd**: Number of accounts currently 30 days past due (updated in past 2 months)
 
@@ -1029,6 +1513,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_72_2.png)
 
 
+
+
+```python
+X = 'num_tl_90g_dpd_24m'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1047,6 +1538,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'num_tl_op_past_12m'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **num_tl_op_past_12m**: Number of accounts opened in past 12 months
 
@@ -1061,6 +1559,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_74_2.png)
 
 
+
+
+```python
+X = 'open_acc'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1079,6 +1584,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'open_acc_6m'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **open_acc_6m**: Number of open trades in last 6 months
 
@@ -1093,6 +1605,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_76_2.png)
 
 
+
+
+```python
+X = 'open_act_il'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1111,6 +1630,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'open_il_12m'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **open_il_12m**: Number of installment accounts opened in past 12 months
 
@@ -1125,6 +1651,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_78_2.png)
 
 
+
+
+```python
+X = 'open_il_24m'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1143,6 +1676,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'open_rv_12m'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **open_rv_12m**: Number of revolving trades opened in past 12 months
 
@@ -1157,6 +1697,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_80_2.png)
 
 
+
+
+```python
+X = 'open_rv_24m'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1175,6 +1722,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'pct_tl_nvr_dlq'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **pct_tl_nvr_dlq**: Percent of trades never delinquent
 
@@ -1189,6 +1743,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_82_2.png)
 
 
+
+
+```python
+X = 'percent_bc_gt_75'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1207,6 +1768,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X ='pub_rec'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **pub_rec**: Number of derogatory public records
 
@@ -1221,6 +1789,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_84_2.png)
 
 
+
+
+```python
+X = 'pub_rec_bankruptcies'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1239,6 +1814,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'revol_bal'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **revol_bal**: Total credit revolving balance
 
@@ -1253,6 +1835,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_86_2.png)
 
 
+
+
+```python
+X = 'revol_util'
+EDA_attr(X)
+ls_clean[X] = ls[X].str[:-1].astype(np.float)
+scale_attr(X)
+```
 
 
 
@@ -1271,6 +1861,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'tax_liens'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **tax_liens**: Number of tax liens
 
@@ -1285,6 +1882,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_88_2.png)
 
 
+
+
+```python
+X = 'tot_coll_amt'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1303,6 +1907,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'tot_cur_bal'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **tot_cur_bal**: Total current balance of all accounts
 
@@ -1317,6 +1928,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_90_2.png)
 
 
+
+
+```python
+X = 'tot_hi_cred_lim'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1335,6 +1953,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'total_acc'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **total_acc**: The total number of credit lines currently in the borrower's credit file
 
@@ -1349,6 +1974,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_92_2.png)
 
 
+
+
+```python
+X = 'total_bal_ex_mort'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1367,6 +1999,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'total_bal_il'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **total_bal_il**: Total current balance of all installment accounts
 
@@ -1381,6 +2020,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_94_2.png)
 
 
+
+
+```python
+X = 'total_bc_limit'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1399,6 +2045,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'total_cu_tl'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **total_cu_tl**: Number of finance trades
 
@@ -1415,6 +2068,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'total_il_high_credit_limit'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **total_il_high_credit_limit**: Total installment high credit/credit limit
 
@@ -1429,6 +2089,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_97_2.png)
 
 
+
+
+```python
+X = 'total_rev_hi_lim'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1451,6 +2118,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'application_type'
+EDA_attr(X)
+dummy_attr(X)
+```
+
+
 
 **application_type**: Indicates whether the loan is an individual application or a joint application with two co-borrowers
 
@@ -1464,6 +2138,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     Joint App           86142  1689807550.000
 
 
+
+
+```python
+X = 'annual_inc_joint'
+EDA_attr(X)
+outliers = outlier_attr(X, 10000000)
+scale_attr(X, ls[~outliers][[X]])
+```
 
 
 
@@ -1482,6 +2164,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'dti_joint'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **dti_joint**: A ratio calculated using the co-borrowers' total monthly payments on the total debt obligations, excluding mortgages and the requested LC loan, divided by the co-borrowers' combined self-reported monthly income
 
@@ -1496,6 +2185,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_102_2.png)
 
 
+
+
+```python
+X = 'revol_bal_joint'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1514,6 +2210,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X ='sec_app_chargeoff_within_12_mths'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **sec_app_chargeoff_within_12_mths**:  Number of charge-offs within last 12 months at time of application for the secondary applicant
 
@@ -1528,6 +2231,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_104_2.png)
 
 
+
+
+```python
+X = 'sec_app_collections_12_mths_ex_med'
+EDA_attr(X)
+outliers = outlier_attr(X, 12)
+scale_attr(X, ls[~outliers][[X]])
+```
 
 
 
@@ -1546,6 +2257,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'sec_app_earliest_cr_line'
+EDA_attr(X)
+ls_clean[X] =  np.array((ls['issue_d'] - ls[X]).dt.days).reshape(-1,1)
+scale_attr(X)
+```
+
+
 
 **sec_app_earliest_cr_line**:  Earliest credit line at time of application for the secondary applicant
 
@@ -1554,6 +2273,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
     	Missing Values: 	1930608 (96.3%)
 
 
+
+
+```python
+X = 'sec_app_inq_last_6mths'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1572,6 +2298,14 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'sec_app_mort_acc'
+EDA_attr(X)
+outliers = outlier_attr(X, 15)
+scale_attr(X, ls[~outliers][[X]])
+```
+
+
 
 **sec_app_mort_acc**:  Number of mortgage accounts at time of application for the secondary applicant
 
@@ -1586,6 +2320,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_108_2.png)
 
 
+
+
+```python
+X = 'sec_app_mths_since_last_major_derog'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1604,6 +2345,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'sec_app_num_rev_accts'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **sec_app_num_rev_accts**:  Number of revolving accounts at time of application for the secondary applicant
 
@@ -1618,6 +2366,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_110_2.png)
 
 
+
+
+```python
+X = 'sec_app_open_acc'
+EDA_attr(X)
+scale_attr(X)
+```
 
 
 
@@ -1636,6 +2391,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'sec_app_open_act_il'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **sec_app_open_act_il**:  Number of currently active installment trades at time of application for the secondary applicant
 
@@ -1652,6 +2414,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+X = 'sec_app_revol_util'
+EDA_attr(X)
+scale_attr(X)
+```
+
+
 
 **sec_app_revol_util**:  Ratio of total current balance to high credit/credit limit for all revolving accounts
 
@@ -1666,6 +2435,13 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 ![png](EDA_files/EDA_113_2.png)
 
 
+
+
+```python
+X = 'verification_status_joint'
+EDA_attr(X)
+dummy_attr(X)
+```
 
 
 
@@ -1688,6 +2464,27 @@ Removal of non-existant, empty, constant or otherwise unmeaningful variables
 
 
 
+```python
+dependent_cols = [
+    
+    # Payment Variables (11): 
+    'issue_d', 'last_pymnt_amnt', 'last_pymnt_d', 'loan_status', 
+    'next_pymnt_d', 'out_prncp', 'out_prncp_inv', 'total_pymnt', 
+    'total_pymnt_inv', 'total_rec_int', 'total_rec_prncp', 
+    
+    # Hardship/Collections/Settlements
+    'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 'deferral_term', 
+    'hardship_amount', 'hardship_dpd', 'hardship_end_date', 'hardship_flag', 
+    'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 'hardship_payoff_balance_amount', 
+    'hardship_reason', 'hardship_start_date', 'hardship_status', 'hardship_type',
+    'last_credit_pull_d', 'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
+    'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
+    'settlement_status', 'settlement_term', 'total_rec_late_fee', ]
+
+ls_clean.drop(dependent_cols, axis=1, inplace=True)
+```
+
+
 There are three features that we will design to represent the outcome of loan:
 - A. **Outcome Classification** (Repaid/Current vs. Not Repaid/Current)
 - B. **Principal Repaid Percentage**
@@ -1697,6 +2494,12 @@ Our focus will be on loans that have completed their terms. This subset of loans
 
 ### A. `OUT_Class`
 
+
+
+```python
+print(ls.groupby('loan_status')['loan_amnt'].count())
+len(ls['loan_status'])
+```
 
 
     loan_status
@@ -1721,6 +2524,19 @@ Our focus will be on loans that have completed their terms. This subset of loans
 
 
 
+```python
+ls_clean['OUT_Class'] = 0
+ls_clean.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
+ls_clean.loc[ls['loan_status'].str.contains('Current'), 'OUT_Class'] = 1
+```
+
+
+
+
+```python
+print(ls_clean.groupby('OUT_Class')['loan_amnt'].count())
+len(ls['loan_status'])
+```
 
 
     OUT_Class
@@ -1740,6 +2556,16 @@ Our focus will be on loans that have completed their terms. This subset of loans
 
 
 
+```python
+ls_clean['OUT_Prncp_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
+```
+
+
+
+
+```python
+ls_clean['OUT_Prncp_Repaid_Percentage'].describe()
+```
 
 
 
@@ -1761,12 +2587,37 @@ Our focus will be on loans that have completed their terms. This subset of loans
 
 
 
+```python
+
+    
+```
+
+
 <hr style="height:5pt">
 
 ## 4. Final Processing
 
 
 
+```python
+ls_clean2 = ls_clean[ls_clean['outlier']==0]
+ls_clean2 = ls_clean2.drop('outlier', axis=1)
+```
 
 
+
+
+```python
+completed_36 = (ls['issue_d'] < '2015-04-01') & (ls['term']  == ' 36 months')
+completed_60 = (ls['issue_d'] < '2013-04-01') & (ls['term']  == ' 60 months')
+ls_clean3 = ls_clean2[completed_36 | completed_60]
+```
+
+
+
+
+```python
+ls_clean2.to_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
+ls_clean3.to_hdf(directory + 'LS_CLEAN_COMPLETED.h5', 'LS_CLEAN_COMPLETED')
+```
 
