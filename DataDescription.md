@@ -1,7 +1,6 @@
 ---
 title:  Data Description
 notebook: DataDescription.ipynb
-nav_include: 1
 ---
 
 ## Contents
@@ -10,11 +9,6 @@ nav_include: 1
 {: toc}
 
 
-
-
-```python
-from IPython.display import Image
-```
 
 
 We are utilizing the following three aggregated datasets in service of our project goals:
@@ -26,11 +20,6 @@ Lending Club publishes funded loan data (`LoanStats`) which are updated each qua
 
 
 
-```python
-Image(filename="LS_FileSummary.png")
-```
-
-
 
 
 
@@ -40,11 +29,6 @@ Image(filename="LS_FileSummary.png")
 
 The number and notional of LC loan issuances over time is visualized below. The monthly amount of loans has been trending upwards.
 
-
-
-```python
-Image(filename="LS_OverTime.png")
-```
 
 
 
@@ -61,11 +45,6 @@ The loan issue dates range from June 2007 to June 2018. The loan terms are 36 mo
 
 Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 features of 22,469,074 loan applications that failed to meet LC underwriting policy
 
-
-
-```python
-Image(filename="RS_FileSummary.png")
-```
 
 
 
