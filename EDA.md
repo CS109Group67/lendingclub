@@ -1,5 +1,5 @@
 ---
-title: EDA & Preprocessing
+title:  EDA & Preprocessing
 notebook: EDA.ipynb
 nav_include: 2
 ---
@@ -11,6 +11,8 @@ nav_include: 2
 
 
 Note: **`ls`** is DataFrame used for EDA and never modified. **`ls_clean`** is DataFrame updated progressively to create final processed dataset
+
+<br><br>
 
 ## 0. Imports and Functions
 
@@ -134,6 +136,8 @@ def outlier_attr(attr, threshold):
 ```
 
 
+<br><br>
+
 ## 1. Inconsequential Variable Removal
 
 First, we drop non-existant, empty, constant or otherwise unmeaningful variables.
@@ -187,6 +191,7 @@ LC only recently began accepting joint application loans, so there is no term-co
 
 
 ```python
+#DROP CO-BORROWER VARIABLES
 joint = ['application_type', 'annual_inc_joint', 'dti_joint', 'revol_bal_joint', 
          'sec_app_chargeoff_within_12_mths', 'sec_app_collections_12_mths_ex_med', 
          'sec_app_earliest_cr_line', 'sec_app_inq_last_6mths', 'sec_app_mort_acc', 
@@ -196,7 +201,9 @@ ls_clean.drop(joint, axis=1, inplace=True)
 ```
 
 
-##### 2. Independent Variable Preprocessing (65 variables)
+<br><br>
+
+## 2. Independent Variable Preprocessing (65 variables)
 
 We perform type conversions, outlier identification, scaling and dummy creation for each of the independent variables:
 
@@ -1352,6 +1359,8 @@ We perform type conversions, outlier identification, scaling and dummy creation 
 ![png](EDA_files/EDA_86_2.png)
 
 
+<br><br>
+
 ## 3. Dependent Variable Feature Design (3 variables)
 
 The following variables represent outcome information for the loan after it as been funded. This information is not be available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuances.
@@ -1359,6 +1368,7 @@ The following variables represent outcome information for the loan after it as b
 
 
 ```python
+#DEPENDENT VARIABLES
 dependent_cols = [
     
     # Payment Variables (11): 
@@ -1421,7 +1431,6 @@ This outcome variable represents the percentage of loan principal that has been 
 
 
 ```python
-#DESIGN OF 'OUT_Prncp_Repaid_Percentage'
 ls_clean['OUT_Prncp_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
 ls_clean['OUT_Prncp_Repaid_Percentage'].describe()
 ```
@@ -1449,11 +1458,14 @@ This outcome variable represents the monthly rate of return that investors have 
 
 
 ```python
+#Net_Repayment: amount repaid on the loan net of the loan amount
 Net_Repayment = ls['total_pymnt'] - ls['loan_amnt']
 
+#Repayment_Period: amount of time it took to repay the loan or charge off
 Repayment_Period = (ls['last_pymnt_d'].dt.to_period('M') - 
                     ls['issue_d'].dt.to_period('M')).replace([pd.NaT,0], 1)
 
+#Monthly_Rate_Of_Return: simple monthly return accrued over the term of the loan
 ls_clean['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls_clean['loan_amnt']
 
 ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
@@ -1475,11 +1487,14 @@ ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
 
 
 
+<br><br>
+
 ## 4. Final Processing
 
 
 
 ```python
+#DROP OUTLIERS
 ls_clean = ls_clean[ls_clean['outlier']==0]
 ls_clean = ls_clean.drop('outlier', axis=1)
 ```
@@ -1488,6 +1503,7 @@ ls_clean = ls_clean.drop('outlier', axis=1)
 
 
 ```python
+#EXPORT DATASET
 ls_clean.to_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
 ```
 
