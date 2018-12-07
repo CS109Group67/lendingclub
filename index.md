@@ -1,5 +1,6 @@
 ---
 title: Lending Club Data-Driven Investing
+nav_include: 0
 ---
 
 
@@ -17,14 +18,14 @@ investment strategy
 
 
 
-## 1. Data Description
+#### 1. Data Description
 
-## 2. Data Prep
+### 2. Data Prep
 
-## 2. Exploratory Data Analysis and Data Preprocessing
+### 2. Exploratory Data Analysis and Data Preprocessing
 
-## 3. Modeling
+### 3. Modeling
 
-## 4. Ethical Implications
+#### 4. Ethical Implications
 
-## 5. Conclusions
+#### 5. Conclusions
