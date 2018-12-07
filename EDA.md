@@ -1,7 +1,6 @@
 ---
-title: EDA
+title: EXPORT DATASET
 notebook: EDA.ipynb
-nav_include: 2
 ---
 
 ## Contents

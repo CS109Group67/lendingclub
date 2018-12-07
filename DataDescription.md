@@ -26,9 +26,6 @@ Lending Club publishes funded loan data (`LoanStats`) which are updated each qua
 
 
 
-```python
-Image(filename="LS_FileSummary.png")
-```
 
 
 
