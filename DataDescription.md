@@ -1,12 +1,15 @@
 ---
 title:  Data Description
 notebook: datadescription.ipynb
+nav_include: 1
 ---
 
 ## Contents
 {:.no_toc}
 *  
 {: toc}
+
+
 
 
 We are utilizing the following three aggregated datasets in service of our project goals:
@@ -19,11 +22,25 @@ We are utilizing the following three aggregated datasets in service of our proje
 
 Lending Club publishes funded loan data (`LoanStats`) which are updated each quarter. We merged these quarterly datasets to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
 
-![title](LS_FileSummary.png)
+
+
+
+
+
+![png](datadescription_files/datadescription_5_0.png)
+
+
 
 The number and notional of LC loan issuances over time is visualized below. The monthly amount of loans has been trending upwards.
 
-![title](LS_OverTime.png)
+
+
+
+
+
+![png](datadescription_files/datadescription_7_0.png)
+
+
 
 The loan issue dates range from June 2007 to June 2018. The loan terms are 36 months or 60 months, which means **term-complete loans** are only those issued prior to June 2013 for 60- month terms and prior to June 2015 for 36-month terms. These 56% of the funded loans form the ‘term complete’ subset from which we can draw significant inferences for a potential investor.
 
@@ -35,7 +52,14 @@ The loan issue dates range from June 2007 to June 2018. The loan terms are 36 mo
 
 Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 features of 22,469,074 loan applications that failed to meet LC underwriting policy
 
-![title](RS_FileSummary.png)
+
+
+
+
+
+![png](datadescription_files/datadescription_11_0.png)
+
+
 
 <hr style="height:5pt">
 
