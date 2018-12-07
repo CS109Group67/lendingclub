@@ -19,7 +19,9 @@ investment strategy
 
 ## 1. Data Description
 
-## 2. Exploratory Data Analysis
+## 2. Data Prep
+
+## 2. Exploratory Data Analysis and Data Preprocessing
 
 ## 3. Modeling
 
