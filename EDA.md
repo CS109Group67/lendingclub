@@ -207,7 +207,7 @@ ls_clean.drop(joint, axis=1, inplace=True)
 
 We perform type conversions, outlier identification, scaling and dummy creation for each of the independent variables:
 
-### 2A. Loan Characteristics (7 variables)
+### 2A. Loan Characteristics (7)
 
 
 
@@ -323,7 +323,7 @@ We perform type conversions, outlier identification, scaling and dummy creation 
     	Most Common Category: 	Not Verified
 
 
-### 2B. Borrower Demographics (4 variables)
+### 2B. Borrower Demographics (4)
 
 
 
@@ -389,7 +389,7 @@ We perform type conversions, outlier identification, scaling and dummy creation 
     	Most Common Category: 	MORTGAGE
 
 
-### 2C. Credit History Information (54 variables)
+### 2C. Credit History Information (54)
 
 
 
@@ -1424,15 +1424,15 @@ ls_clean['OUT_Class'].describe()
 
 
 
-### 3B. `OUT_Prncp_Repaid_Percentage`
+### 3B. `OUT_Principle_Repaid_Percentage`
 
 This outcome variable represents the percentage of loan principal that has been repaid. Note that the average principal repaid percentage is 91.5%.
 
 
 
 ```python
-ls_clean['OUT_Prncp_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
-ls_clean['OUT_Prncp_Repaid_Percentage'].describe()
+ls_clean['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
+ls_clean['OUT_Principle_Repaid_Percentage'].describe()
 ```
 
 
@@ -1493,17 +1493,8 @@ ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
 
 
 
-```python
-#DROP OUTLIERS
-ls_clean = ls_clean[ls_clean['outlier']==0]
-ls_clean = ls_clean.drop('outlier', axis=1)
-```
 
 
 
 
-```python
-#EXPORT DATASET
-ls_clean.to_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
-```
 
