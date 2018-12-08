@@ -14,7 +14,7 @@ LendingClub[<sup>1</sup>](https://www.lendingclub.com "LC Homepage") (LC) is a p
 
 **Problem Statment**:
 
-Our goal was to *propose, build and evaluate a data-driven model to power a profitable and ethically responsible LC investment strategy.* As if we were working as data scientists advising a LendingClub investor, we performed the following:
+Our goal was to *propose, build and evaluate data-driven models to power a profitable and ethically responsible LC investment strategy.* As if we were working as data scientists advising a LendingClub investor, we performed the following:
 - Analyzed LC data to discern features that influence loan outcomes
 - Performed classification and regression modeling to formulate sound LC investing principles
 - Devised an investment strategy, calculated its risk-return profile and assessed its predictive quality

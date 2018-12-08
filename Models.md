@@ -19,7 +19,7 @@ nav_include: 3
 
 
 <br><br>
-## 1. Data Preparation
+## 1. Data Preprocessing
 
 Some data preprocessing is needed in order to build and evaluate our models.
 

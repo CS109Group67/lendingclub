@@ -1,5 +1,5 @@
-theme: LendingClub
-title: Introduction
+theme: jekyll-theme-primer
+title: LendingClub
 description: Lending Club Data-Driven Investing
 baseurl:
 markdown: kramdown

@@ -1747,7 +1747,7 @@ ls_clean['OUT_Principle_Repaid_Percentage'].describe()
 
 ### 3C. `OUT_Monthly_Rate_of_Return`
 
-This outcome variable represents the monthly rate of return that investors have achieved by holding the loan. This is the most comprehensive of our outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan.
+This outcome variable represents the monthly rate of return that investors have achieved by holding the loan. This is the most comprehensive of our outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. Note that the median monthly rate of return is 0.6%.
 
 
 
