@@ -74,21 +74,6 @@ def dummy_attr(attr):
 
 
 
-```python
-#FUNCTION FOR SCALING
-scaler_dict = {} # dictionary to store scalers, to be used for inverse transforms
-scaler_list = [] # list to store variables to be scaled
-def scale_attr(attr, fit_data=None, scaler=None):
-    """ Scales attribute with StandardScaler (default) or MinMaxScaler"""
-    scaler_list.append(attr)
-    # if fit_data is None:
-    #     fit_data = ls_clean[[attr]]
-    # if scaler is None:
-    #     scaler = StandardScaler()
-    # scaler = scaler.fit(fit_data)
-    # ls_clean[attr] = scaler.transform(ls_clean[[attr]])
-    # scaler_dict[attr] = scaler
-```
 
 
 
@@ -108,7 +93,7 @@ def outlier_attr(attr, threshold):
 
 ## 1. Inconsequential Variables
 
-Our focus will be on loans that have completed their terms. This subset of **'term-complete'** loans provides the fully representative outcome information since current in-force loans can still default. Therefore, we remove the loan instances that are not term-complete:
+Our focus will be on loans that have completed their terms. This subset of **'term-complete'** loans provides the most representative outcome information since in-force loans can still default. Therefore, we remove the loan instances that are not term-complete:
 
 
 
@@ -172,7 +157,129 @@ ls_clean.drop(joint, axis=1, inplace=True)
 
 <br>
 
-## 2. Independent Variables
+## 2. Dependent Variables
+
+The following variables represent outcome information for the loan after it has been funded. This information is not be available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuance. Based on these variables, we designed 3 outcome features to represent loan outcomes: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
+
+
+
+```python
+#DEPENDENT VARIABLES
+dependent_cols = [
+    
+    # Payment Variables (11): 
+    'issue_d', 'last_pymnt_amnt', 'last_pymnt_d', 'loan_status', 
+    'next_pymnt_d', 'out_prncp', 'out_prncp_inv', 'total_pymnt', 
+    'total_pymnt_inv', 'total_rec_int', 'total_rec_prncp', 
+    
+    # Hardship/Collections/Settlements (27)
+    'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 
+    'deferral_term', 'hardship_amount', 'hardship_dpd', 'hardship_end_date', 
+    'hardship_flag', 'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 
+    'hardship_payoff_balance_amount', 'hardship_reason', 'hardship_start_date', 
+    'hardship_status', 'hardship_type', 'last_credit_pull_d', 
+    'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
+    'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
+    'settlement_status', 'settlement_term', 'total_rec_late_fee', ]
+
+ls_clean.drop(dependent_cols, axis=1, inplace=True)
+```
+
+
+### 2A. `OUT_Class`
+
+This outcome variable is an binary classification of whether the loan has been Fully Repaid (1) or Charged Off (0). Note that 85.9% percent of all loans have been repaid.
+
+
+
+```python
+ls_clean['OUT_Class'] = 0
+ls_clean.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
+ls_clean.loc[ls['loan_status'].str.contains('Current'), 'OUT_Class'] = 1
+ls_clean['OUT_Class'].describe()
+```
+
+
+
+
+
+    count   420181.000
+    mean         0.859
+    std          0.348
+    min          0.000
+    25%          1.000
+    50%          1.000
+    75%          1.000
+    max          1.000
+    Name: OUT_Class, dtype: float64
+
+
+
+### 2B. `OUT_Principle_Repaid_Percentage`
+
+This outcome variable represents the percentage of loan principal that has been repaid. Note that the average principal repaid percentage is 91.5%.
+
+
+
+```python
+ls_clean['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
+ls_clean['OUT_Principle_Repaid_Percentage'].describe()
+```
+
+
+
+
+
+    count   420181.000
+    mean         0.915
+    std          0.226
+    min          0.000
+    25%          1.000
+    50%          1.000
+    75%          1.000
+    max          1.000
+    Name: OUT_Principle_Repaid_Percentage, dtype: float64
+
+
+
+### 2C. `OUT_Monthly_Rate_of_Return`
+
+This outcome variable represents the simple monthly rate of return that investors recieved by holding the loan. This is the most comprehensive of our outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. Note that the median monthly rate of return is 0.6%.
+
+
+
+```python
+#Net_Repayment: amount repaid on the loan net of the loan amount
+Net_Repayment = ls['total_pymnt'] - ls['loan_amnt']
+
+#Repayment_Period: amount of time it took to repay the loan or charge off
+Repayment_Period = (ls['last_pymnt_d'].dt.to_period('M') - 
+                    ls['issue_d'].dt.to_period('M')).replace([pd.NaT,0], 1)
+
+#Monthly_Rate_Of_Return: simple monthly return accrued over the term of the loan
+ls_clean['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls_clean['loan_amnt']
+ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
+```
+
+
+
+
+
+    count   420181.000
+    mean        -0.002
+    std          0.052
+    min         -1.000
+    25%          0.004
+    50%          0.006
+    75%          0.008
+    max          0.208
+    Name: OUT_Monthly_Rate_Of_Return, dtype: float64
+
+
+
+<br>
+
+## 3. Independent Variables
 
 We performed type conversions, outlier identification, dummy creation and EDA for each independent variable.
 
@@ -193,7 +300,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_18_2.png)
+![png](EDA_files/EDA_26_2.png)
 
 
 
@@ -216,7 +323,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_19_2.png)
+![png](EDA_files/EDA_27_2.png)
 
 
 
@@ -239,7 +346,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_20_2.png)
+![png](EDA_files/EDA_28_2.png)
 
 
 
@@ -262,7 +369,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_21_2.png)
+![png](EDA_files/EDA_29_2.png)
 
 
 
@@ -285,7 +392,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_22_2.png)
+![png](EDA_files/EDA_30_2.png)
 
 
 
@@ -308,7 +415,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_23_2.png)
+![png](EDA_files/EDA_31_2.png)
 
 
 
@@ -331,7 +438,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_24_2.png)
+![png](EDA_files/EDA_32_2.png)
 
 
 
@@ -354,7 +461,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_25_2.png)
+![png](EDA_files/EDA_33_2.png)
 
 
 
@@ -377,7 +484,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_26_2.png)
+![png](EDA_files/EDA_34_2.png)
 
 
 
@@ -400,7 +507,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_27_2.png)
+![png](EDA_files/EDA_35_2.png)
 
 
 
@@ -423,7 +530,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_28_2.png)
+![png](EDA_files/EDA_36_2.png)
 
 
 
@@ -446,7 +553,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_29_2.png)
+![png](EDA_files/EDA_37_2.png)
 
 
 
@@ -469,7 +576,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_30_2.png)
+![png](EDA_files/EDA_38_2.png)
 
 
 
@@ -492,7 +599,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_31_2.png)
+![png](EDA_files/EDA_39_2.png)
 
 
 
@@ -534,7 +641,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_33_2.png)
+![png](EDA_files/EDA_41_2.png)
 
 
 
@@ -557,7 +664,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_34_2.png)
+![png](EDA_files/EDA_42_2.png)
 
 
 
@@ -580,7 +687,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_35_2.png)
+![png](EDA_files/EDA_43_2.png)
 
 
 
@@ -603,7 +710,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_36_2.png)
+![png](EDA_files/EDA_44_2.png)
 
 
 
@@ -626,7 +733,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_37_2.png)
+![png](EDA_files/EDA_45_2.png)
 
 
 
@@ -649,7 +756,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_38_2.png)
+![png](EDA_files/EDA_46_2.png)
 
 
 
@@ -672,7 +779,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_39_2.png)
+![png](EDA_files/EDA_47_2.png)
 
 
 
@@ -695,7 +802,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_40_2.png)
+![png](EDA_files/EDA_48_2.png)
 
 
 
@@ -718,7 +825,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_41_2.png)
+![png](EDA_files/EDA_49_2.png)
 
 
 
@@ -741,7 +848,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_42_2.png)
+![png](EDA_files/EDA_50_2.png)
 
 
 
@@ -764,7 +871,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_43_2.png)
+![png](EDA_files/EDA_51_2.png)
 
 
 
@@ -787,7 +894,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_44_2.png)
+![png](EDA_files/EDA_52_2.png)
 
 
 
@@ -810,7 +917,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_45_2.png)
+![png](EDA_files/EDA_53_2.png)
 
 
 
@@ -833,7 +940,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_46_2.png)
+![png](EDA_files/EDA_54_2.png)
 
 
 
@@ -856,7 +963,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_47_2.png)
+![png](EDA_files/EDA_55_2.png)
 
 
 
@@ -879,7 +986,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_48_2.png)
+![png](EDA_files/EDA_56_2.png)
 
 
 
@@ -902,7 +1009,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_49_2.png)
+![png](EDA_files/EDA_57_2.png)
 
 
 
@@ -925,7 +1032,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_50_2.png)
+![png](EDA_files/EDA_58_2.png)
 
 
 
@@ -948,7 +1055,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_51_2.png)
+![png](EDA_files/EDA_59_2.png)
 
 
 
@@ -971,7 +1078,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_52_2.png)
+![png](EDA_files/EDA_60_2.png)
 
 
 
@@ -994,7 +1101,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_53_2.png)
+![png](EDA_files/EDA_61_2.png)
 
 
 
@@ -1017,7 +1124,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_54_2.png)
+![png](EDA_files/EDA_62_2.png)
 
 
 
@@ -1040,7 +1147,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_55_2.png)
+![png](EDA_files/EDA_63_2.png)
 
 
 
@@ -1063,7 +1170,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_56_2.png)
+![png](EDA_files/EDA_64_2.png)
 
 
 
@@ -1086,7 +1193,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_57_2.png)
+![png](EDA_files/EDA_65_2.png)
 
 
 
@@ -1109,7 +1216,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_58_2.png)
+![png](EDA_files/EDA_66_2.png)
 
 
 
@@ -1132,7 +1239,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_59_2.png)
+![png](EDA_files/EDA_67_2.png)
 
 
 
@@ -1155,7 +1262,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_60_2.png)
+![png](EDA_files/EDA_68_2.png)
 
 
 
@@ -1178,7 +1285,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_61_2.png)
+![png](EDA_files/EDA_69_2.png)
 
 
 
@@ -1201,7 +1308,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_62_2.png)
+![png](EDA_files/EDA_70_2.png)
 
 
 
@@ -1224,7 +1331,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_63_2.png)
+![png](EDA_files/EDA_71_2.png)
 
 
 
@@ -1247,7 +1354,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_64_2.png)
+![png](EDA_files/EDA_72_2.png)
 
 
 
@@ -1270,7 +1377,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_65_2.png)
+![png](EDA_files/EDA_73_2.png)
 
 
 
@@ -1293,7 +1400,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_66_2.png)
+![png](EDA_files/EDA_74_2.png)
 
 
 
@@ -1316,7 +1423,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_67_2.png)
+![png](EDA_files/EDA_75_2.png)
 
 
 
@@ -1358,7 +1465,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_69_2.png)
+![png](EDA_files/EDA_77_2.png)
 
 
 
@@ -1400,7 +1507,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_71_2.png)
+![png](EDA_files/EDA_79_2.png)
 
 
 
@@ -1423,7 +1530,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_72_2.png)
+![png](EDA_files/EDA_80_2.png)
 
 
 
@@ -1465,7 +1572,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_74_2.png)
+![png](EDA_files/EDA_82_2.png)
 
 
 
@@ -1488,7 +1595,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_75_2.png)
+![png](EDA_files/EDA_83_2.png)
 
 
 
@@ -1511,7 +1618,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_76_2.png)
+![png](EDA_files/EDA_84_2.png)
 
 
 
@@ -1534,7 +1641,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_77_2.png)
+![png](EDA_files/EDA_85_2.png)
 
 
 
@@ -1557,7 +1664,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_78_2.png)
+![png](EDA_files/EDA_86_2.png)
 
 
 
@@ -1580,7 +1687,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_79_2.png)
+![png](EDA_files/EDA_87_2.png)
 
 
 
@@ -1603,7 +1710,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_80_2.png)
+![png](EDA_files/EDA_88_2.png)
 
 
 
@@ -1626,7 +1733,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_81_2.png)
+![png](EDA_files/EDA_89_2.png)
 
 
 
@@ -1650,133 +1757,6 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-
-
-
-<br>
-
-## 3. Dependent Variables
-
-The following variables represent outcome information for the loan after it has been funded. This information is not be available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuance.
-
-
-
-```python
-#DEPENDENT VARIABLES
-dependent_cols = [
-    
-    # Payment Variables (11): 
-    'issue_d', 'last_pymnt_amnt', 'last_pymnt_d', 'loan_status', 
-    'next_pymnt_d', 'out_prncp', 'out_prncp_inv', 'total_pymnt', 
-    'total_pymnt_inv', 'total_rec_int', 'total_rec_prncp', 
-    
-    # Hardship/Collections/Settlements (27)
-    'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 
-    'deferral_term', 'hardship_amount', 'hardship_dpd', 'hardship_end_date', 
-    'hardship_flag', 'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 
-    'hardship_payoff_balance_amount', 'hardship_reason', 'hardship_start_date', 
-    'hardship_status', 'hardship_type', 'last_credit_pull_d', 
-    'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
-    'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
-    'settlement_status', 'settlement_term', 'total_rec_late_fee', ]
-
-ls_clean.drop(dependent_cols, axis=1, inplace=True)
-```
-
-
-We designed 3 features to represent loan outcomes:
-- A. `OUT_Class`: outcome classification of Fully Repaid (1) vs. Not Fully Repaid (0)
-- B. `OUT_Prncp_Repaid_Percentage`: percentage of principal repaid
-- C. `OUT_Monthly_Rate_of_Return`: simple monthly rate of return
-
-### 3A. `OUT_Class`
-
-This outcome variable is an indicator whether the loan has been fully repaid (1) or charged off/defaulted (0). Note that 85.9% percent of all loans have been fully repaid.
-
-
-
-```python
-ls_clean['OUT_Class'] = 0
-ls_clean.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
-ls_clean.loc[ls['loan_status'].str.contains('Current'), 'OUT_Class'] = 1
-ls_clean['OUT_Class'].describe()
-```
-
-
-
-
-
-    count   420181.000
-    mean         0.859
-    std          0.348
-    min          0.000
-    25%          1.000
-    50%          1.000
-    75%          1.000
-    max          1.000
-    Name: OUT_Class, dtype: float64
-
-
-
-### 3B. `OUT_Principle_Repaid_Percentage`
-
-This outcome variable represents the percentage of loan principal that has been repaid. Note that the average principal repaid percentage is 91.5%.
-
-
-
-```python
-ls_clean['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
-ls_clean['OUT_Principle_Repaid_Percentage'].describe()
-```
-
-
-
-
-
-    count   420181.000
-    mean         0.915
-    std          0.226
-    min          0.000
-    25%          1.000
-    50%          1.000
-    75%          1.000
-    max          1.000
-    Name: OUT_Principle_Repaid_Percentage, dtype: float64
-
-
-
-### 3C. `OUT_Monthly_Rate_of_Return`
-
-This outcome variable represents the monthly rate of return that investors have achieved by holding the loan. This is the most comprehensive of our outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. Note that the median monthly rate of return is 0.6%.
-
-
-
-```python
-#Net_Repayment: amount repaid on the loan net of the loan amount
-Net_Repayment = ls['total_pymnt'] - ls['loan_amnt']
-
-#Repayment_Period: amount of time it took to repay the loan or charge off
-Repayment_Period = (ls['last_pymnt_d'].dt.to_period('M') - 
-                    ls['issue_d'].dt.to_period('M')).replace([pd.NaT,0], 1)
-
-#Monthly_Rate_Of_Return: simple monthly return accrued over the term of the loan
-ls_clean['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls_clean['loan_amnt']
-ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
-```
-
-
-
-
-
-    count   420181.000
-    mean        -0.002
-    std          0.052
-    min         -1.000
-    25%          0.004
-    50%          0.006
-    75%          0.008
-    max          0.208
-    Name: OUT_Monthly_Rate_Of_Return, dtype: float64
 
 
 
