@@ -17,15 +17,15 @@ LendingClub[<sup>1</sup>](https://www.lendingclub.com "LC Homepage") (LC) is a p
 Our goal was to *propose, build and evaluate a data-driven model to power a profitable and ethically responsible LC investment strategy.* As if we were working as data scientists advising a LendingClub investor, we performed the following:
 - Analyzed LC data to discern features that influence loan outcomes
 - Performed classification and regression modeling to formulate sound LC investing principles
-- Devised an investment strategy, calculated its risk and return profile and assessed its predictive quality
-- Evaluate ethical implications and evidence of discrimination resulting from the proposed investment strategy
+- Devised an investment strategy, calculated its risk-return profile and assessed its predictive quality
+- Evaluated ethical implications and evidence of discrimination resulting from the proposed investment strategy
 
 <br>
 
 **Report Structure**:
 
-1. *Data Description*: summary of the datasets we used in service of our project goals
-2. *EDA & Cleaning*: data exploration, cleaning and feature design
-3. *Models*: classification and regression models to support the investment strategy
-4. *Investment Strategy*: proposed strategy and an evaluation of its predictive quality
-5. *Ethical Implications*: investigation of discrimination in our investment strategy and LC's underwriting practices
+1. [Data Description](https://cs109group67.github.io/lendingclub/DataDescription.html): summary of the datasets we used in service of our project goals
+2. [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html): data exploration, cleaning and feature design
+3. [Models](https://cs109group67.github.io/lendingclub/Models.html): classification and regression models to support the investment strategy
+4. [Investment Strategy]: proposed strategy and an evaluation of its predictive quality
+5. [Ethical Implications]: investigation of discrimination in our investment strategy and LC's underwriting practices
