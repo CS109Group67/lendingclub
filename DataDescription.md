@@ -17,7 +17,6 @@ nav_include: 1
 We are utilizing the following three aggregated datasets in service of our project goals:
 
 ## 1. LoanStats
-**Funded LC loans**
 
 Lending Club publishes funded loan data (`LoanStats`) which are updated each quarter. We accessed the data as of the 2018Q2 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
 
@@ -46,7 +45,6 @@ The loan issue dates range from June 2007 to June 2018. The loan terms are 36 mo
 
 
 ## 2. RejectStats
-**Loan applications that failed to meet LC underwriting policy**
 
 Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 features of 22,469,074 loan applications that failed to meet LC underwriting policy
 
@@ -62,7 +60,6 @@ Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 
 
 
 ## 3. Census Data
-**U.S. demographic information at the zip code level**
 
 To understand whether there is discrimination in LC’s practices and ultimately our proposed investing strategy, we obtained the U.S. Census Bureau’s demographic data and leveraged zip codes to tie the demographic information to the loan data. This data reports the total population and population by different demographic groups (i.e., race, income, education, sex, household structure) and other characteristics like poverty and unemployment rate by zip code. Because LC data is reported at the 3-digit zip code level, we aggregated up to the 3-digit zip code level and calculated percentage of total population and percentage of total household values. We also derived some additional variables such as household size (from population and number of households) and occupied rate (from number of households and housing units). We dropped the variables related to age, as we felt that discrimination related to age is appropriate because it is highly correlated with length of credit history, a valid criterion on which loan applications should be evaluated. Post processing, our census dataset had 891 3-digit zip codes and 68 features. (See Appendix B1 for the full list of variables and their descriptions.)
 
