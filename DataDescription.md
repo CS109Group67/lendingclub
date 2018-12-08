@@ -14,7 +14,7 @@ nav_include: 1
 
 
 
-We are utilizing the following three aggregated datasets in service of our project goals:
+<br>
 
 ## 1. LoanStats
 
@@ -27,7 +27,7 @@ Lending Club publishes funded loan data (`LoanStats`) which are updated each qua
 
 
 
-![png](DataDescription_files/DataDescription_5_0.png)
+![png](DataDescription_files/DataDescription_4_0.png)
 
 
 
@@ -40,9 +40,11 @@ The loan issue dates range from June 2007 to June 2018. The loan terms are 36 mo
 
 
 
-![png](DataDescription_files/DataDescription_7_0.png)
+![png](DataDescription_files/DataDescription_6_0.png)
 
 
+
+<br>
 
 ## 2. RejectStats
 
@@ -55,9 +57,11 @@ Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 
 
 
 
-![png](DataDescription_files/DataDescription_10_0.png)
+![png](DataDescription_files/DataDescription_9_0.png)
 
 
+
+<br>
 
 ## 3. Census Data
 

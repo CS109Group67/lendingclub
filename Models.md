@@ -21,7 +21,7 @@ nav_include: 3
 <br><br>
 ## 1. Data Preparation
 
-The dataframe contains dependent outcome variables, independent dummy variables and indepenent numeric variables. Some data preprocessing is needed in order to build and evaluate our models.
+Some data preprocessing is needed in order to build and evaluate our models.
 
 
 
@@ -75,7 +75,7 @@ The dataframe contains dependent outcome variables, independent dummy variables 
 
 ### 1C. Numeric Variables
 
-60 numeric variables represent different loan characteristics and borrower credit history. These variables will be transformed to a standard scale (section 1E) before modeling.
+60 numeric variables represent different loan and borrower characteristics. These variables will be transformed to a standard scale (section 1E) before modeling.
 
 
 
@@ -145,7 +145,7 @@ The dataframe contains dependent outcome variables, independent dummy variables 
 
 ### 1D. Train-Test Split
 
-We split the `ls` dataset into a train and test part. We do this in a 'stratified' fashion ensuring that the outcome classes (fully paid loans and not fully paid loans) are equally represented in each set. For the splitting algorithm, we use `sklearn`'s `train_test_split` function. This function creates random train and test subsets of the dataset. The flag `stratify` ensures that both classes are equally represented in each set. 
+We split the `ls` dataset into a train and test part. We do this in a stratified fashion ensuring that the outcome classes (fully paid loans and not fully paid loans) are equally represented in each set. For the splitting algorithm, we use `sklearn`'s `train_test_split` function. This function creates random train and test subsets of the dataset. The flag `stratify` ensures that both classes are equally represented in each set. 
 
 
 

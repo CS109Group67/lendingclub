@@ -1,5 +1,5 @@
 ---
-title:  EDA & Data Cleaning
+title:  EDA & Cleaning
 notebook: EDA.ipynb
 nav_include: 2
 ---
@@ -10,7 +10,7 @@ nav_include: 2
 {: toc}
 
 
-<br><br>
+<br>
 
 ## 0. Custom Functions
 
@@ -36,7 +36,7 @@ nav_include: 2
 #FUNCTION FOR EDA
 num_observations = len(ls_clean)
 def EDA_attr(attr):
-    """ Prints basic EDA for given attribute (muted by commenting)"""
+    """ Displays basic EDA for given attribute"""
     attr_type = ls_clean[attr].dtype
     missing_values = ls_clean[attr].isnull().sum()
     display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, "NULL"))))
@@ -52,6 +52,8 @@ def EDA_attr(attr):
     if attr_type == 'object':   # categorical variables
         print('\tNumber of Categories: \t{}'.format(len(ls_clean.groupby(attr))))
         print('\tMost Common Category: \t{}'.format(ls_clean.groupby(attr)['loan_amnt'].count().idxmax()))
+    
+    display(Markdown('\n'))
 ```
 
 
@@ -102,9 +104,9 @@ def outlier_attr(attr, threshold):
 ```
 
 
-<br><br>
+<br>
 
-## 1. Inconsequential Variable Removal
+## 1. Inconsequential Variables
 
 Our focus will be on loans that have completed their terms. This subset of **'term-complete'** loans provides the fully representative outcome information since current in-force loans can still default. Therefore, we remove the loan instances that are not term-complete:
 
@@ -168,11 +170,13 @@ ls_clean.drop(joint, axis=1, inplace=True)
 ```
 
 
-<br><br>
+<br>
 
-## 2. Independent Variable Preprocessing (64 variables)
+## 2. Independent Variables
 
-We perform type conversions, outlier identification and dummy creation for each of the independent variables.
+We performed type conversions, outlier identification, dummy creation and EDA for each independent variable.
+
+<br>
 
 
 
@@ -182,14 +186,19 @@ We perform type conversions, outlier identification and dummy creation for each 
 **acc_now_delinq**: The number of accounts on which the borrower is now delinquent.
 
 
-
-![png](EDA_files/EDA_18_1.png)
-
-
     	Type: 			float64
     	Missing Values: 	29 (0.0%)
     	Mean: 			0.00
     	Range: 			(0.00, 14.00)
+
+
+
+![png](EDA_files/EDA_18_2.png)
+
+
+
+
+
 
 
 
@@ -200,14 +209,19 @@ We perform type conversions, outlier identification and dummy creation for each 
 **acc_open_past_24mths**: Number of trades opened in past 24 months.
 
 
-
-![png](EDA_files/EDA_19_1.png)
-
-
     	Type: 			float64
     	Missing Values: 	50030 (2.5%)
     	Mean: 			4.19
     	Range: 			(0.00, 53.00)
+
+
+
+![png](EDA_files/EDA_19_2.png)
+
+
+
+
+
 
 
 
@@ -219,13 +233,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	21519 (5.1%)
+    	Missing Values: 	21519 (1.1%)
     	Mean: 			5.84
     	Range: 			(0.00, 10.00)
 
 
 
 ![png](EDA_files/EDA_20_2.png)
+
+
+
+
+
 
 
 
@@ -251,15 +270,6 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**home_ownership**: The home ownership status provided by the borrower during registration or obtained from the credit report. Our values are: RENT, OWN, MORTGAGE, OTHER
-
-
-    	Type: 			object
-    	Missing Values: 	0 (0.0%)
-    	Number of Categories: 	4
-    	Most Common Category: 	MORTGAGE
-
-
 
 
 
@@ -269,13 +279,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70285 (16.7%)
+    	Missing Values: 	70285 (3.5%)
     	Mean: 			12685.60
     	Range: 			(0.00, 958084.00)
 
 
 
-![png](EDA_files/EDA_23_2.png)
+![png](EDA_files/EDA_22_2.png)
+
+
+
+
+
 
 
 
@@ -287,13 +302,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	53734 (12.8%)
+    	Missing Values: 	53734 (2.7%)
     	Mean: 			8498.77
     	Range: 			(0.00, 497445.00)
 
 
 
-![png](EDA_files/EDA_24_2.png)
+![png](EDA_files/EDA_23_2.png)
+
+
+
+
+
 
 
 
@@ -305,13 +325,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	53975 (12.8%)
+    	Missing Values: 	53975 (2.7%)
     	Mean: 			64.43
     	Range: 			(0.00, 339.60)
 
 
 
-![png](EDA_files/EDA_25_2.png)
+![png](EDA_files/EDA_24_2.png)
+
+
+
+
+
 
 
 
@@ -329,7 +354,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_26_2.png)
+![png](EDA_files/EDA_25_2.png)
+
+
+
+
+
 
 
 
@@ -347,7 +377,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_27_2.png)
+![png](EDA_files/EDA_26_2.png)
+
+
+
+
+
 
 
 
@@ -365,7 +400,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_28_2.png)
+![png](EDA_files/EDA_27_2.png)
+
+
+
+
+
 
 
 
@@ -383,7 +423,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_29_2.png)
+![png](EDA_files/EDA_28_2.png)
+
+
+
+
+
 
 
 
@@ -401,7 +446,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_30_2.png)
+![png](EDA_files/EDA_29_2.png)
+
+
+
+
+
 
 
 
@@ -419,7 +469,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_31_2.png)
+![png](EDA_files/EDA_30_2.png)
+
+
+
+
+
 
 
 
@@ -431,13 +486,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	21519 (5.1%)
+    	Missing Values: 	21519 (1.1%)
     	Mean: 			5.84
     	Range: 			(0.00, 10.00)
 
 
 
-![png](EDA_files/EDA_32_2.png)
+![png](EDA_files/EDA_31_2.png)
+
+
+
+
+
 
 
 
@@ -459,6 +519,11 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
+
+
+
+
+
 **inq_last_6mths**: The number of inquiries in past 6 months (excluding auto and mortgage inquiries)
 
 
@@ -469,7 +534,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_34_2.png)
+![png](EDA_files/EDA_33_2.png)
+
+
+
+
+
 
 
 
@@ -487,7 +557,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_35_2.png)
+![png](EDA_files/EDA_34_2.png)
+
+
+
+
+
 
 
 
@@ -505,7 +580,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_36_2.png)
+![png](EDA_files/EDA_35_2.png)
+
+
+
+
+
 
 
 
@@ -523,7 +603,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_37_2.png)
+![png](EDA_files/EDA_36_2.png)
+
+
+
+
+
 
 
 
@@ -535,13 +620,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	83911 (20.0%)
+    	Missing Values: 	83911 (4.2%)
     	Mean: 			124.94
     	Range: 			(0.00, 649.00)
 
 
 
-![png](EDA_files/EDA_38_2.png)
+![png](EDA_files/EDA_37_2.png)
+
+
+
+
+
 
 
 
@@ -553,13 +643,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70277 (16.7%)
+    	Missing Values: 	70277 (3.5%)
     	Mean: 			180.39
     	Range: 			(3.00, 851.00)
 
 
 
-![png](EDA_files/EDA_39_2.png)
+![png](EDA_files/EDA_38_2.png)
+
+
+
+
+
 
 
 
@@ -571,13 +666,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70277 (16.7%)
+    	Missing Values: 	70277 (3.5%)
     	Mean: 			13.25
     	Range: 			(0.00, 372.00)
 
 
 
-![png](EDA_files/EDA_40_2.png)
+![png](EDA_files/EDA_39_2.png)
+
+
+
+
+
 
 
 
@@ -589,13 +689,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			8.37
     	Range: 			(0.00, 226.00)
 
 
 
-![png](EDA_files/EDA_41_2.png)
+![png](EDA_files/EDA_40_2.png)
+
+
+
+
+
 
 
 
@@ -607,13 +712,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
+    	Missing Values: 	50030 (2.5%)
     	Mean: 			1.69
     	Range: 			(0.00, 34.00)
 
 
 
-![png](EDA_files/EDA_42_2.png)
+![png](EDA_files/EDA_41_2.png)
+
+
+
+
+
 
 
 
@@ -625,8 +735,31 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	224620 (53.5%)
+    	Missing Values: 	224620 (11.2%)
     	Mean: 			34.30
+    	Range: 			(0.00, 188.00)
+
+
+
+![png](EDA_files/EDA_42_2.png)
+
+
+
+
+
+
+
+
+
+
+
+
+**mths_since_last_major_derog**: Months since most recent 90-day or worse rating
+
+
+    	Type: 			float64
+    	Missing Values: 	329015 (16.4%)
+    	Mean: 			42.46
     	Range: 			(0.00, 188.00)
 
 
@@ -639,13 +772,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**mths_since_last_major_derog**: Months since most recent 90-day or worse rating
+
+
+
+
+
+**mths_since_last_record**: The number of months since the last public record.
 
 
     	Type: 			float64
-    	Missing Values: 	329015 (78.3%)
-    	Mean: 			42.46
-    	Range: 			(0.00, 188.00)
+    	Missing Values: 	360872 (18.0%)
+    	Mean: 			72.88
+    	Range: 			(0.00, 129.00)
 
 
 
@@ -657,13 +795,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**mths_since_last_record**: The number of months since the last public record.
+
+
+
+
+
+**mths_since_recent_bc**: Months since most recent bankcard account opened.
 
 
     	Type: 			float64
-    	Missing Values: 	360872 (85.9%)
-    	Mean: 			72.88
-    	Range: 			(0.00, 129.00)
+    	Missing Values: 	53373 (2.7%)
+    	Mean: 			24.53
+    	Range: 			(0.00, 616.00)
 
 
 
@@ -675,13 +818,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**mths_since_recent_bc**: Months since most recent bankcard account opened.
+
+
+
+
+
+**mths_since_recent_bc_dlq**: Months since most recent bankcard delinquency
 
 
     	Type: 			float64
-    	Missing Values: 	53373 (12.7%)
-    	Mean: 			24.53
-    	Range: 			(0.00, 616.00)
+    	Missing Values: 	331393 (16.5%)
+    	Mean: 			40.30
+    	Range: 			(0.00, 176.00)
 
 
 
@@ -693,13 +841,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**mths_since_recent_bc_dlq**: Months since most recent bankcard delinquency
+
+
+
+
+
+**mths_since_recent_inq**: Months since most recent inquiry.
 
 
     	Type: 			float64
-    	Missing Values: 	331393 (78.9%)
-    	Mean: 			40.30
-    	Range: 			(0.00, 176.00)
+    	Missing Values: 	88898 (4.4%)
+    	Mean: 			6.95
+    	Range: 			(0.00, 25.00)
 
 
 
@@ -711,13 +864,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**mths_since_recent_inq**: Months since most recent inquiry.
+
+
+
+
+
+**mths_since_recent_revol_delinq**: Months since most recent revolving delinquency.
 
 
     	Type: 			float64
-    	Missing Values: 	88898 (21.2%)
-    	Mean: 			6.95
-    	Range: 			(0.00, 25.00)
+    	Missing Values: 	294683 (14.7%)
+    	Mean: 			36.15
+    	Range: 			(0.00, 180.00)
 
 
 
@@ -729,13 +887,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**mths_since_recent_revol_delinq**: Months since most recent revolving delinquency.
+
+
+
+
+
+**num_accts_ever_120_pd**: Number of accounts ever 120 or more days past due
 
 
     	Type: 			float64
-    	Missing Values: 	294683 (70.1%)
-    	Mean: 			36.15
-    	Range: 			(0.00, 180.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			0.46
+    	Range: 			(0.00, 35.00)
 
 
 
@@ -747,13 +910,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_accts_ever_120_pd**: Number of accounts ever 120 or more days past due
+
+
+
+
+
+**num_actv_bc_tl**: Number of currently active bankcard accounts
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			0.46
-    	Range: 			(0.00, 35.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			3.66
+    	Range: 			(0.00, 30.00)
 
 
 
@@ -765,13 +933,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_actv_bc_tl**: Number of currently active bankcard accounts
+
+
+
+
+
+**num_actv_rev_tl**: Number of currently active revolving trades
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			3.66
-    	Range: 			(0.00, 30.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			5.67
+    	Range: 			(0.00, 41.00)
 
 
 
@@ -783,13 +956,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_actv_rev_tl**: Number of currently active revolving trades
+
+
+
+
+
+**num_bc_sats**: Number of satisfactory bankcard accounts
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			5.67
-    	Range: 			(0.00, 41.00)
+    	Missing Values: 	58590 (2.9%)
+    	Mean: 			4.61
+    	Range: 			(0.00, 46.00)
 
 
 
@@ -801,13 +979,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_bc_sats**: Number of satisfactory bankcard accounts
+
+
+
+
+
+**num_bc_tl**: Number of bankcard accounts
 
 
     	Type: 			float64
-    	Missing Values: 	58590 (13.9%)
-    	Mean: 			4.61
-    	Range: 			(0.00, 46.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			8.60
+    	Range: 			(0.00, 65.00)
 
 
 
@@ -819,13 +1002,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_bc_tl**: Number of bankcard accounts
+
+
+
+
+
+**num_il_tl**: Number of installment accounts
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			8.60
-    	Range: 			(0.00, 65.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			7.98
+    	Range: 			(0.00, 150.00)
 
 
 
@@ -837,13 +1025,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_il_tl**: Number of installment accounts
+
+
+
+
+
+**num_op_rev_tl**: Number of open revolving accounts
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			7.98
-    	Range: 			(0.00, 150.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			8.11
+    	Range: 			(0.00, 62.00)
 
 
 
@@ -855,13 +1048,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_op_rev_tl**: Number of open revolving accounts
+
+
+
+
+
+**num_rev_accts**: Number of revolving accounts
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			8.11
-    	Range: 			(0.00, 62.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			14.93
+    	Range: 			(0.00, 105.00)
 
 
 
@@ -873,13 +1071,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_rev_accts**: Number of revolving accounts
+
+
+
+
+
+**num_rev_tl_bal_gt_0**: Number of revolving trades with balance >0
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			14.93
-    	Range: 			(0.00, 105.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			5.65
+    	Range: 			(0.00, 38.00)
 
 
 
@@ -891,13 +1094,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_rev_tl_bal_gt_0**: Number of revolving trades with balance >0
+
+
+
+
+
+**num_sats**: Number of satisfactory accounts
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			5.65
-    	Range: 			(0.00, 38.00)
+    	Missing Values: 	58590 (2.9%)
+    	Mean: 			11.22
+    	Range: 			(0.00, 84.00)
 
 
 
@@ -909,13 +1117,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_sats**: Number of satisfactory accounts
+
+
+
+
+
+**num_tl_120dpd_2m**: Number of accounts currently 120 days past due (updated in past 2 months)
 
 
     	Type: 			float64
-    	Missing Values: 	58590 (13.9%)
-    	Mean: 			11.22
-    	Range: 			(0.00, 84.00)
+    	Missing Values: 	78691 (3.9%)
+    	Mean: 			0.00
+    	Range: 			(0.00, 3.00)
 
 
 
@@ -927,13 +1140,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_tl_120dpd_2m**: Number of accounts currently 120 days past due (updated in past 2 months)
+
+
+
+
+
+**num_tl_30dpd**: Number of accounts currently 30 days past due (updated in past 2 months)
 
 
     	Type: 			float64
-    	Missing Values: 	78691 (18.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			0.00
-    	Range: 			(0.00, 3.00)
+    	Range: 			(0.00, 4.00)
 
 
 
@@ -945,13 +1163,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_tl_30dpd**: Number of accounts currently 30 days past due (updated in past 2 months)
+
+
+
+
+
+**num_tl_90g_dpd_24m**: Number of accounts 90 or more days past due in last 24 months
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			0.00
-    	Range: 			(0.00, 4.00)
+    	Missing Values: 	70276 (3.5%)
+    	Mean: 			0.09
+    	Range: 			(0.00, 24.00)
 
 
 
@@ -963,19 +1186,6 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-**num_tl_90g_dpd_24m**: Number of accounts 90 or more days past due in last 24 months
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			0.09
-    	Range: 			(0.00, 24.00)
-
-
-
-![png](EDA_files/EDA_62_2.png)
-
-
 
 
 
@@ -985,13 +1195,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			1.94
     	Range: 			(0.00, 26.00)
 
 
 
-![png](EDA_files/EDA_63_2.png)
+![png](EDA_files/EDA_62_2.png)
+
+
+
+
+
 
 
 
@@ -1009,7 +1224,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_64_2.png)
+![png](EDA_files/EDA_63_2.png)
+
+
+
+
+
 
 
 
@@ -1021,13 +1241,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70390 (16.8%)
+    	Missing Values: 	70390 (3.5%)
     	Mean: 			94.44
     	Range: 			(7.70, 100.00)
 
 
 
-![png](EDA_files/EDA_65_2.png)
+![png](EDA_files/EDA_64_2.png)
+
+
+
+
+
 
 
 
@@ -1039,13 +1264,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	53858 (12.8%)
+    	Missing Values: 	53858 (2.7%)
     	Mean: 			50.54
     	Range: 			(0.00, 100.00)
 
 
 
-![png](EDA_files/EDA_66_2.png)
+![png](EDA_files/EDA_65_2.png)
+
+
+
+
+
 
 
 
@@ -1063,7 +1293,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_67_2.png)
+![png](EDA_files/EDA_66_2.png)
+
+
+
+
+
 
 
 
@@ -1075,13 +1310,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	1365 (0.3%)
+    	Missing Values: 	1365 (0.1%)
     	Mean: 			0.11
     	Range: 			(0.00, 12.00)
 
 
 
-![png](EDA_files/EDA_68_2.png)
+![png](EDA_files/EDA_67_2.png)
+
+
+
+
+
 
 
 
@@ -1103,6 +1343,11 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
+
+
+
+
+
 **revol_bal**: Total credit revolving balance
 
 
@@ -1113,7 +1358,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_70_2.png)
+![png](EDA_files/EDA_69_2.png)
+
+
+
+
+
 
 
 
@@ -1125,9 +1375,14 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			object
-    	Missing Values: 	296 (0.1%)
+    	Missing Values: 	296 (0.0%)
     	Number of Categories: 	1262
     	Most Common Category: 	0%
+
+
+
+
+
 
 
 
@@ -1145,7 +1400,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_72_2.png)
+![png](EDA_files/EDA_71_2.png)
+
+
+
+
+
 
 
 
@@ -1163,7 +1423,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_73_2.png)
+![png](EDA_files/EDA_72_2.png)
+
+
+
+
+
 
 
 
@@ -1185,17 +1450,27 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
+
+
+
+
+
 **tot_coll_amt**: Total collection amounts ever owed
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			213.03
     	Range: 			(0.00, 9152545.00)
 
 
 
-![png](EDA_files/EDA_75_2.png)
+![png](EDA_files/EDA_74_2.png)
+
+
+
+
+
 
 
 
@@ -1207,13 +1482,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			128545.52
     	Range: 			(0.00, 8000078.00)
 
 
 
-![png](EDA_files/EDA_76_2.png)
+![png](EDA_files/EDA_75_2.png)
+
+
+
+
+
 
 
 
@@ -1225,13 +1505,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			157552.13
     	Range: 			(0.00, 9999999.00)
 
 
 
-![png](EDA_files/EDA_77_2.png)
+![png](EDA_files/EDA_76_2.png)
+
+
+
+
+
 
 
 
@@ -1249,7 +1534,12 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-![png](EDA_files/EDA_78_2.png)
+![png](EDA_files/EDA_77_2.png)
+
+
+
+
+
 
 
 
@@ -1261,13 +1551,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
+    	Missing Values: 	50030 (2.5%)
     	Mean: 			44002.55
     	Range: 			(0.00, 2688920.00)
 
 
 
-![png](EDA_files/EDA_79_2.png)
+![png](EDA_files/EDA_78_2.png)
+
+
+
+
+
 
 
 
@@ -1279,13 +1574,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
+    	Missing Values: 	50030 (2.5%)
     	Mean: 			19602.34
     	Range: 			(0.00, 760000.00)
 
 
 
-![png](EDA_files/EDA_80_2.png)
+![png](EDA_files/EDA_79_2.png)
+
+
+
+
+
 
 
 
@@ -1297,13 +1597,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			36279.50
     	Range: 			(0.00, 1241783.00)
 
 
 
-![png](EDA_files/EDA_81_2.png)
+![png](EDA_files/EDA_80_2.png)
+
+
+
+
+
 
 
 
@@ -1315,13 +1620,18 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
+    	Missing Values: 	70276 (3.5%)
     	Mean: 			29473.47
     	Range: 			(0.00, 9999999.00)
 
 
 
-![png](EDA_files/EDA_82_2.png)
+![png](EDA_files/EDA_81_2.png)
+
+
+
+
+
 
 
 
@@ -1338,9 +1648,14 @@ We perform type conversions, outlier identification and dummy creation for each 
     	Most Common Category: 	Not Verified
 
 
-<br><br>
 
-## 3. Dependent Variable Feature Design (3 variables)
+
+
+
+
+<br>
+
+## 3. Dependent Variables
 
 The following variables represent outcome information for the loan after it has been funded. This information is not be available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuance.
 
@@ -1369,7 +1684,7 @@ ls_clean.drop(dependent_cols, axis=1, inplace=True)
 ```
 
 
-We designed 3 outcome features to represent the outcome of loan:
+We designed 3 features to represent loan outcomes:
 - A. `OUT_Class`: outcome classification of Fully Repaid (1) vs. Not Fully Repaid (0)
 - B. `OUT_Prncp_Repaid_Percentage`: percentage of principal repaid
 - C. `OUT_Monthly_Rate_of_Return`: simple monthly rate of return
@@ -1462,14 +1777,6 @@ ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
     75%          0.008
     max          0.208
     Name: OUT_Monthly_Rate_Of_Return, dtype: float64
-
-
-
-
-
-
-
-
 
 
 
