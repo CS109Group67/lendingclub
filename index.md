@@ -24,8 +24,8 @@ Our goal was to *propose, build and evaluate a data-driven model to power a prof
 
 **Report Structure**:
 
-1. [Data Description](https://cs109group67.github.io/lendingclub/DataDescription.html): summary of the datasets we used in service of our project goals
-2. [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html): data exploration, cleaning and feature design
-3. [Models](https://cs109group67.github.io/lendingclub/Models.html): classification and regression models to support the investment strategy
-4. [Investment Strategy]: proposed strategy and an evaluation of its predictive quality
-5. [Ethical Implications]: investigation of discrimination in our investment strategy and LC's underwriting practices
+- [Data Description](https://cs109group67.github.io/lendingclub/DataDescription.html): summary of the datasets we used in service of our project goals
+- [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html): data exploration, cleaning and feature design
+- [Models](https://cs109group67.github.io/lendingclub/Models.html): classification and regression models to support the investment strategy
+- [Investment Strategy](https://cs109group67.github.io/lendingclub/): proposed strategy and an evaluation of its predictive quality
+- [Ethical Implications](https://cs109group67.github.io/lendingclub/): investigation of discrimination in our investment strategy and LC's underwriting practices
