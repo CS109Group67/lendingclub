@@ -176,12 +176,6 @@ We perform type conversions, outlier identification and dummy creation for each 
 
 
 
-```python
-#1 ACC_NOW_DELINQ
-X = 'acc_now_delinq'
-EDA_attr(X)
-outliers = outlier_attr(X, 7)
-```
 
 
 
@@ -200,12 +194,6 @@ outliers = outlier_attr(X, 7)
 
 
 
-```python
-#2 ACC_OPEN_PAST_24MTHS
-X = 'acc_open_past_24mths'
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
@@ -224,16 +212,6 @@ scale_attr(X)
 
 
 
-```python
-#3 EMP_LENGTH
-X = 'emp_length'
-mapping = {'1 year': 1, '10+ years': 10, '2 years': 2, '3 years': 3, 
-           '4 years': 4, '5 years': 5, '6 years': 6, '7 years': 7, 
-           '8 years': 8, '9 years': 9, '< 1 year': 0}
-ls_clean[X] = ls[X].map(mapping)
-EDA_attr(X)
-scale_attr(X)
-```
 
 
 
@@ -252,13 +230,6 @@ scale_attr(X)
 
 
 
-```python
-#3 ANNUAL_INC
-X = 'annual_inc'
-EDA_attr(X)
-outliers = outlier_attr(X, 10000000)
-scale_attr(X,fit_data=ls_clean[~outliers][[X]])
-```
 
 
 
@@ -277,13 +248,6 @@ scale_attr(X,fit_data=ls_clean[~outliers][[X]])
 
 
 
-```python
-#4 HOME_OWNERSHIP
-X = 'home_ownership'
-ls_clean[X] = ls_clean[X].replace({'ANY':'OTHER', 'NONE':'OTHER'})
-EDA_attr(X)
-dummy_attr(X)
-```
 
 
 
@@ -314,8 +278,6 @@ dummy_attr(X)
 ![png](EDA_files/EDA_23_2.png)
 
 
-### 2C. Credit History Information (54)
-
 
 
 
@@ -331,7 +293,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_25_2.png)
+![png](EDA_files/EDA_24_2.png)
 
 
 
@@ -349,7 +311,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_26_2.png)
+![png](EDA_files/EDA_25_2.png)
 
 
 
@@ -367,7 +329,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_27_2.png)
+![png](EDA_files/EDA_26_2.png)
 
 
 
@@ -385,7 +347,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_28_2.png)
+![png](EDA_files/EDA_27_2.png)
 
 
 
@@ -403,7 +365,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_29_2.png)
+![png](EDA_files/EDA_28_2.png)
 
 
 
@@ -421,7 +383,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_30_2.png)
+![png](EDA_files/EDA_29_2.png)
 
 
 
@@ -439,7 +401,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_31_2.png)
+![png](EDA_files/EDA_30_2.png)
 
 
 
@@ -457,7 +419,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_32_2.png)
+![png](EDA_files/EDA_31_2.png)
 
 
 
@@ -475,7 +437,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_33_2.png)
+![png](EDA_files/EDA_32_2.png)
 
 
 
@@ -507,7 +469,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_35_2.png)
+![png](EDA_files/EDA_34_2.png)
 
 
 
@@ -525,7 +487,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_36_2.png)
+![png](EDA_files/EDA_35_2.png)
 
 
 
@@ -543,7 +505,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_37_2.png)
+![png](EDA_files/EDA_36_2.png)
 
 
 
@@ -561,7 +523,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_38_2.png)
+![png](EDA_files/EDA_37_2.png)
 
 
 
@@ -579,7 +541,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_39_2.png)
+![png](EDA_files/EDA_38_2.png)
 
 
 
@@ -597,7 +559,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_40_2.png)
+![png](EDA_files/EDA_39_2.png)
 
 
 
@@ -615,7 +577,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_41_2.png)
+![png](EDA_files/EDA_40_2.png)
 
 
 
@@ -633,7 +595,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_42_2.png)
+![png](EDA_files/EDA_41_2.png)
 
 
 
@@ -651,7 +613,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_43_2.png)
+![png](EDA_files/EDA_42_2.png)
 
 
 
@@ -669,7 +631,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_44_2.png)
+![png](EDA_files/EDA_43_2.png)
 
 
 
@@ -687,7 +649,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_45_2.png)
+![png](EDA_files/EDA_44_2.png)
 
 
 
@@ -705,7 +667,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_46_2.png)
+![png](EDA_files/EDA_45_2.png)
 
 
 
@@ -723,7 +685,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_47_2.png)
+![png](EDA_files/EDA_46_2.png)
 
 
 
@@ -741,7 +703,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_48_2.png)
+![png](EDA_files/EDA_47_2.png)
 
 
 
@@ -759,7 +721,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_49_2.png)
+![png](EDA_files/EDA_48_2.png)
 
 
 
@@ -777,7 +739,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_50_2.png)
+![png](EDA_files/EDA_49_2.png)
 
 
 
@@ -795,7 +757,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_51_2.png)
+![png](EDA_files/EDA_50_2.png)
 
 
 
@@ -813,7 +775,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_52_2.png)
+![png](EDA_files/EDA_51_2.png)
 
 
 
@@ -831,7 +793,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_53_2.png)
+![png](EDA_files/EDA_52_2.png)
 
 
 
@@ -849,7 +811,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_54_2.png)
+![png](EDA_files/EDA_53_2.png)
 
 
 
@@ -867,7 +829,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_55_2.png)
+![png](EDA_files/EDA_54_2.png)
 
 
 
@@ -885,7 +847,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_56_2.png)
+![png](EDA_files/EDA_55_2.png)
 
 
 
@@ -903,7 +865,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_57_2.png)
+![png](EDA_files/EDA_56_2.png)
 
 
 
@@ -921,7 +883,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_58_2.png)
+![png](EDA_files/EDA_57_2.png)
 
 
 
@@ -939,7 +901,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_59_2.png)
+![png](EDA_files/EDA_58_2.png)
 
 
 
@@ -957,7 +919,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_60_2.png)
+![png](EDA_files/EDA_59_2.png)
 
 
 
@@ -975,7 +937,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_61_2.png)
+![png](EDA_files/EDA_60_2.png)
 
 
 
@@ -993,7 +955,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_62_2.png)
+![png](EDA_files/EDA_61_2.png)
 
 
 
@@ -1011,7 +973,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_63_2.png)
+![png](EDA_files/EDA_62_2.png)
 
 
 
@@ -1029,7 +991,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_64_2.png)
+![png](EDA_files/EDA_63_2.png)
 
 
 
@@ -1047,7 +1009,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_65_2.png)
+![png](EDA_files/EDA_64_2.png)
 
 
 
@@ -1065,7 +1027,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_66_2.png)
+![png](EDA_files/EDA_65_2.png)
 
 
 
@@ -1083,7 +1045,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_67_2.png)
+![png](EDA_files/EDA_66_2.png)
 
 
 
@@ -1101,7 +1063,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_68_2.png)
+![png](EDA_files/EDA_67_2.png)
 
 
 
@@ -1119,7 +1081,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_69_2.png)
+![png](EDA_files/EDA_68_2.png)
 
 
 
@@ -1151,7 +1113,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_71_2.png)
+![png](EDA_files/EDA_70_2.png)
 
 
 
@@ -1183,7 +1145,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_73_2.png)
+![png](EDA_files/EDA_72_2.png)
 
 
 
@@ -1201,7 +1163,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_74_2.png)
+![png](EDA_files/EDA_73_2.png)
 
 
 
@@ -1233,7 +1195,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_76_2.png)
+![png](EDA_files/EDA_75_2.png)
 
 
 
@@ -1251,7 +1213,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_77_2.png)
+![png](EDA_files/EDA_76_2.png)
 
 
 
@@ -1269,7 +1231,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_78_2.png)
+![png](EDA_files/EDA_77_2.png)
 
 
 
@@ -1287,7 +1249,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_79_2.png)
+![png](EDA_files/EDA_78_2.png)
 
 
 
@@ -1305,7 +1267,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_80_2.png)
+![png](EDA_files/EDA_79_2.png)
 
 
 
@@ -1323,7 +1285,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_81_2.png)
+![png](EDA_files/EDA_80_2.png)
 
 
 
@@ -1341,7 +1303,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_82_2.png)
+![png](EDA_files/EDA_81_2.png)
 
 
 
@@ -1359,7 +1321,7 @@ dummy_attr(X)
 
 
 
-![png](EDA_files/EDA_83_2.png)
+![png](EDA_files/EDA_82_2.png)
 
 
 

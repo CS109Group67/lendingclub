@@ -4,7 +4,7 @@ title: Lending Club Data-Driven Investing
 
 ### CS109A Final Project - Fall 2018 -  Group 67 - Tiffany Chang, Michal Propas, Elliot Trilling
 
-<br><br>
+<br>
 
 **Motivation**:
 
