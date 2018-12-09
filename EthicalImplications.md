@@ -1,5 +1,14 @@
+---
+title: Ethical Implications
+notebook: EthicalImplications.ipynb
+nav_include: 5
+---
 
-# Ethical Implications
+## Contents
+{:.no_toc}
+*  
+{: toc}
+
 
 ## 1. Lending and Discrimination
 
@@ -35,40 +44,16 @@ There are five records with missing data, likely originating from sparsely popul
 
 
 
-```python
-# formatting
-import requests
-from IPython.core.display import HTML
-styles = requests.get("https://raw.githubusercontent.com/Harvard-IACS/2018-CS109A/master/content/styles/cs109.css").text
-HTML(styles)
-
-# import statements
-%matplotlib inline
-import pandas as pd
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-import seaborn as sns
-```
 
 
 
 
-```python
-# read in the census data
-census_df = pd.read_csv("data/census_data_clean_new.csv", index_col=False)
-```
 
 
 #### Table 1. Selected Summary Statistics for Census Data
 
 
 
-```python
-# summarize census data
-pd.set_option('float_format', '{:f}'.format)
-census_df[['Population', 'Household_size', 'Avg_median_household_inc', 'Male_pct', 'White_pct', 'No_Diploma_pct']].describe()
-```
 
 
 
@@ -179,30 +164,16 @@ census_df[['Population', 'Household_size', 'Avg_median_household_inc', 'Male_pct
 
 
 
-## Exploratory Data Analysis
+## 4. Exploratory Data Analysis
 
 Leveraging zip codes, we explored whether there were demographic differences between loans that LendingClub accepted or rejected for its marketplace.
 
 
 
-```python
-# read in the loan data for accepted loans
-loan_stats_df = pd.read_hdf("data/LoanStats_clean.h5")
-```
 
 
 
 
-```python
-# some processing of the accepted loan data
-loan_cols_to_keep = ['loan_amnt', 'funded_amnt', 'funded_amnt_inv', 'term', 'int_rate', 'installment', 
-                'grade', 'sub_grade', 'emp_length', 'home_ownership', 'annual_inc', 'verification_status', 
-                'zip_code', 'dti']
-accepted_df = loan_stats_df[loan_cols_to_keep]
-accepted_df['int_rate'] = accepted_df['int_rate'].apply(lambda x: float(x[:-1]))
-accepted_df['accepted'] = 1
-accepted_df.head()
-```
 
 
     /anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:6: SettingWithCopyWarning: 
@@ -356,27 +327,10 @@ accepted_df.head()
 
 
 
-```python
-# read in the loan data for rejected loans
-reject_stats_df = pd.read_pickle("data/RejectStats_clean.pkl")
-```
 
 
 
 
-```python
-# some processing of the rejected loan data
-reject_cols_to_keep = ['Amount Requested', 'Risk_Score', 'Debt-To-Income Ratio', 'Zip Code', 'Employment Length']
-rejected_df = reject_stats_df[reject_cols_to_keep]
-rejected_df = rejected_df.rename(index=str, columns={"Amount Requested": "loan_amnt", 
-                                                             "Risk_Score": "risk_score", 
-                                                             "Debt-To-Income Ratio": "dti", 
-                                                             "Zip Code": "zip_code", 
-                                                             "Employment Length": "emp_length"})
-rejected_df['dti'] = rejected_df['dti'].apply(lambda x: float(x[:-1]))
-rejected_df['accepted'] = 0
-rejected_df.head()
-```
 
 
 
@@ -462,77 +416,26 @@ rejected_df.head()
 
 
 
-```python
-# take a random sample of rejected_df of same size as accepted_df, as rejected_df is too large
-rand_ind = np.random.choice(rejected_df.shape[0], accepted_df.shape[0], replace=False)
-sample_rejected_df = rejected_df.iloc[rand_ind]
-```
 
 
 
 
-```python
-# Subset the common columns between the Loan Stats and Reject Stats (sample) datasets and combine
-common_cols = ['loan_amnt', 'dti', 'zip_code', 'emp_length', 'accepted']
-loan_df = accepted_df[common_cols].append(sample_rejected_df[common_cols])
-```
 
 
 
 
-```python
-# join loan data with census data by zip code
-# use left join so that none of the loan records are dropped
-loan_df = loan_df.rename(index=str, columns={"zip_code": "Zip"})
-joined_df = pd.merge(loan_df,census_df, on='Zip', how='left')
-```
 
 
 
 
-```python
-# variable lists
-level_vars = ['Population', 'Avg_median_household_inc', 'Households', 'Housing_Units']
-race_vars_pct = ['White_pct', 'Black_pct', 'Native_pct', 'Asian_pct', 'Islander_pct', 'Other_pct', 'Two_pct', 'Hispanic_pct']
-race_vars_count = ['White', 'Black', 'Native', 'Asian', 'Islander', 'Other', 'Two', 'Hispanic']
-sex_vars_pct = ['Female_pct', 'Male_pct']
-sex_vars_count = ['Female', 'Male']
-education_vars = ['No_Diploma_pct', 'High_School_pct', 'Some_College_pct', 
-                  'Bachelors_Degree_pct', 'Graduate_Degree_pct']
-household_vars_pct = ['Families_pct', 'Non_families_pct', 'Married_couple_families_pct','Single_parent_families_pct']
-household_vars_count = ['Families', 'Non_families', 'Married_couple_families', 'Single_parent_families']
-```
 
 
 
 
-```python
-# function to plot histograms by accept/reject
-def plot_acc_rej(var_list, figwidth, figheight):
-    fig, axs = plt.subplots(int(np.ceil(len(var_list)/2)),2, figsize=(figwidth,figheight))
-    plt.subplots_adjust(hspace=0.5, wspace=0.5)
-    plot_list = axs.ravel()
-
-    for i in np.arange(len(var_list)):
-        acc_data = joined_df[joined_df['accepted']==1][var_list[i]]
-        plot_list[i].hist(acc_data.dropna(), alpha=0.5, label='Accepted')
-
-        rej_data = joined_df[joined_df['accepted']==0][var_list[i]]
-        plot_list[i].hist(rej_data.dropna(), alpha=0.5, label='Rejected')
-
-        plot_list[i].set_title("Histogram of {} by Loan Application Status".format(var_list[i]))
-        plot_list[i].legend(loc='best')
-
-
-    plt.show()
-```
 
 
 
 
-```python
-plot_acc_rej(level_vars, 15, 10)
-```
 
 
 
@@ -541,9 +444,6 @@ plot_acc_rej(level_vars, 15, 10)
 
 
 
-```python
-plot_acc_rej(sex_vars_count+sex_vars_pct, 15, 10)
-```
 
 
 
@@ -552,9 +452,6 @@ plot_acc_rej(sex_vars_count+sex_vars_pct, 15, 10)
 
 
 
-```python
-plot_acc_rej(race_vars_count+race_vars_pct, 15, 40)
-```
 
 
 
@@ -563,9 +460,6 @@ plot_acc_rej(race_vars_count+race_vars_pct, 15, 40)
 
 
 
-```python
-plot_acc_rej(household_vars_count+household_vars_pct, 15, 20)
-```
 
 
 
@@ -574,13 +468,6 @@ plot_acc_rej(household_vars_count+household_vars_pct, 15, 20)
 
 
 
-```python
-sex_df = pd.melt(joined_df[['Male_pct', 'accepted']].rename(index=str, columns={"Male_pct": "Male", "accepted": "Loan Accepted"}), 
-        id_vars=['Loan Accepted'], value_vars=['Male'], 
-        var_name='Sex', value_name='Percent of Total Population')
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Sex", y="Percent of Total Population", data=sex_df, hue="Loan Accepted")
-```
 
 
 
@@ -589,22 +476,6 @@ ax = sns.boxplot(x="Sex", y="Percent of Total Population", data=sex_df, hue="Loa
 
 
 
-```python
-race_df = pd.melt(joined_df[race_vars_pct + ['accepted']].rename(index=str, 
-                                           columns={"White_pct": "White", 
-                                                    "Black_pct": "Black", 
-                                                    "Native_pct": "Native", 
-                                                    "Asian_pct": "Asian", 
-                                                    "Islander_pct": "Islander", 
-                                                    "Hispanic_pct": "Hispanic",
-                                                    "Other_pct": "Other", 
-                                                    "Two_pct": "Two Races", 
-                                                    "accepted": "Loan Accepted"}),
-        id_vars=['Loan Accepted'], value_vars=['White', 'Black', 'Native', 'Asian', 'Islander', 'Hispanic', 'Other', 'Two Races'], 
-        var_name='Race', value_name='Percent of Total Population')  
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Race", y="Percent of Total Population", data=race_df, hue="Loan Accepted")
-```
 
 
 
@@ -613,17 +484,6 @@ ax = sns.boxplot(x="Race", y="Percent of Total Population", data=race_df, hue="L
 
 
 
-```python
-household_df = pd.melt(joined_df[['Married_couple_families_pct', 'Single_parent_families_pct', 'Non_families_pct', 'accepted']].rename(index=str, 
-                                           columns={"Married_couple_families_pct": "Married Couple Families", 
-                                                    "Single_parent_families_pct": "Single Parent Families", 
-                                                    "Non_families_pct": "Non-Families", 
-                                                    "accepted": "Loan Accepted"}),
-        id_vars=['Loan Accepted'], value_vars=['Married Couple Families', 'Single Parent Families', 'Non-Families'], 
-        var_name='Household Structure', value_name='Percent of Households') 
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Household Structure", y="Percent of Households", data=household_df, hue="Loan Accepted")
-```
 
 
 
@@ -632,19 +492,6 @@ ax = sns.boxplot(x="Household Structure", y="Percent of Households", data=househ
 
 
 
-```python
-education_df = pd.melt(joined_df[education_vars + ['accepted']].rename(index=str, 
-                                           columns={"No_Diploma_pct": "No Diploma", 
-                                                    "High_School_pct": "High School", 
-                                                    "Some_College_pct": "Some College", 
-                                                    "Bachelors_Degree_pct": "Bachelors Degree", 
-                                                    "Graduate_Degree_pct": "Graduate Degree", 
-                                                    "accepted": "Loan Accepted"}),
-        id_vars=['Loan Accepted'], value_vars=['No Diploma', 'High School', 'Some College', 'Bachelors Degree', 'Graduate Degree'], 
-        var_name='Highest Education Attained', value_name='Percent of Total Population')      
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Highest Education Attained", y="Percent of Total Population", data=education_df, hue="Loan Accepted")
-```
 
 
 
@@ -655,23 +502,10 @@ Of the loans that were accepted, is there any discrimination in terms of the loa
 
 
 
-```python
-# join accepted loan data with census data by zip code
-accepted_df = accepted_df.rename(index=str, columns={"zip_code": "Zip"})
-accepted_joined_df = pd.merge(accepted_df,census_df, on='Zip', how='left')
-```
 
 
 
 
-```python
-sgrade_df = pd.melt(accepted_joined_df[['Male_pct','grade']].rename(index=str, columns={"Male_pct": "Male", "grade": "Loan Grade"}), 
-        id_vars=['Loan Grade'], value_vars=['Male'], 
-        var_name='Sex', value_name='Percent of Total Population')
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Sex", y="Percent of Total Population", data=sgrade_df, hue="Loan Grade",
-                hue_order=['A', 'B', 'C', 'D', 'E', 'F', 'G'])
-```
 
 
 
@@ -680,23 +514,6 @@ ax = sns.boxplot(x="Sex", y="Percent of Total Population", data=sgrade_df, hue="
 
 
 
-```python
-rgrade_df = pd.melt(accepted_joined_df[race_vars_pct + ['grade']].rename(index=str, 
-                                           columns={"White_pct": "White", 
-                                                    "Black_pct": "Black", 
-                                                    "Native_pct": "Native", 
-                                                    "Asian_pct": "Asian", 
-                                                    "Islander_pct": "Islander", 
-                                                    "Hispanic_pct": "Hispanic",
-                                                    "Other_pct": "Other", 
-                                                    "Two_pct": "Two Races", 
-                                                    "grade": "Loan Grade"}),
-        id_vars=['Loan Grade'], value_vars=['White', 'Black', 'Native', 'Asian', 'Islander', 'Hispanic', 'Other', 'Two Races'], 
-        var_name='Race', value_name='Percent of Total Population')       
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Race", y="Percent of Total Population", data=rgrade_df, hue="Loan Grade",
-                hue_order=['A', 'B', 'C', 'D', 'E', 'F', 'G'])
-```
 
 
 
@@ -705,18 +522,6 @@ ax = sns.boxplot(x="Race", y="Percent of Total Population", data=rgrade_df, hue=
 
 
 
-```python
-hgrade_df = pd.melt(accepted_joined_df[['Married_couple_families_pct', 'Single_parent_families_pct', 'Non_families_pct', 'grade']].rename(index=str, 
-                                           columns={"Married_couple_families_pct": "Married Couple Families", 
-                                                    "Single_parent_families_pct": "Single Parent Families", 
-                                                    "Non_families_pct": "Non-Families", 
-                                                    "grade": "Loan Grade"}),
-        id_vars=['Loan Grade'], value_vars=['Married Couple Families', 'Single Parent Families', 'Non-Families'], 
-        var_name='Household Structure', value_name='Percent of Households') 
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Household Structure", y="Percent of Households", data=hgrade_df, hue="Loan Grade",
-                hue_order=['A', 'B', 'C', 'D', 'E', 'F', 'G'])
-```
 
 
 
@@ -725,35 +530,16 @@ ax = sns.boxplot(x="Household Structure", y="Percent of Households", data=hgrade
 
 
 
-```python
-egrade_df = pd.melt(accepted_joined_df[education_vars + ['grade']].rename(index=str, 
-                                           columns={"No_Diploma_pct": "No Diploma", 
-                                                    "High_School_pct": "High School", 
-                                                    "Some_College_pct": "Some College", 
-                                                    "Bachelors_Degree_pct": "Bachelors Degree", 
-                                                    "Graduate_Degree_pct": "Graduate Degree", 
-                                                    "grade": "Loan Grade"}),
-        id_vars=['Loan Grade'], value_vars=['No Diploma', 'High School', 'Some College', 'Bachelors Degree', 'Graduate Degree'], 
-        var_name='Highest Education Attained', value_name='Percent of Total Population') 
-plt.figure(figsize=(15,8))
-ax = sns.boxplot(x="Highest Education Attained", y="Percent of Total Population", data=egrade_df, hue="Loan Grade",
-                hue_order=['A', 'B', 'C', 'D', 'E', 'F', 'G'])
-ax.legend(title="Loan Grade", loc='upper left')
-plt.show()
-```
 
 
 
 ![png](EthicalImplications_files/EthicalImplications_32_0.png)
 
 
-## Modelling
+## 5. Modelling
 
 
 
-```python
-joined_df.head()
-```
 
 
 
