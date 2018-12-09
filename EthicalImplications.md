@@ -55,7 +55,7 @@ There are five records with missing data, likely originating from sparsely popul
 
 
 
-#### Table 1. Selected Summary Statistics for Census Data
+**Table 1. Selected Summary Statistics for Census Data**
 
 
 
