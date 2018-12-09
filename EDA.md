@@ -56,9 +56,9 @@ ls = ls[completed_36 | completed_60]
 
 We removed variables from the `loanstats` dataset that would not be meaningful in the modeling for the following reasons:
 1. LC recently began reporting some new varaibles which are not reported in the term-complete subset. 
-2. LC recently began accepting joint application loans and the variables related to coborrowers are empty in the term-complete subset. 
-3. We designed three outcome features (see next section) based on the larger set of dependent variables
-4. Some features are non-standard or otherwise unmeaningful.
+2. LC recently began accepting joint loans and variables related to coborrowers are empty in the term-complete subset. 
+3. We designed three outcome features based on the set of dependent variables (see next section)
+4. Some variables are non-standard text descriptions or otherwise inconsequential
 
 
 

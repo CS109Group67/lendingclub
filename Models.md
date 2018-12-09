@@ -22,7 +22,7 @@ nav_include: 3
 
 ### Train-Test Split
 
-We split the `ls` dataset into a train and test part. We do this in a stratified fashion ensuring that the outcome classes (fully paid loans and not fully paid loans) are equally represented in each set. For the splitting algorithm, we use `sklearn`'s `train_test_split` function. This function creates random train and test subsets of the dataset. The flag `stratify` ensures that both classes are equally represented in each set. 
+Before we begin modeling, we set aside a test set that we will use later to evaluate the predictive quality of our investment strategy. We do this in a stratified fashion ensuring that the outcome classes (fully paid loans and not fully paid loans) are equally represented in the train and test sets. For the splitting algorithm, we use `sklearn`'s `train_test_split` function. This function creates random train and test subsets of the dataset. The flag `stratify` ensures that both classes are equally represented in each set. 
 
 
 
@@ -70,20 +70,6 @@ outcome_train = ls_train[list(outcome_var_list)]
 ```
 
 
-
-
-```python
-#STANDARDIZE THE TEST SET (transform)
-test_vars_scaled = pd.DataFrame(scaler.transform(ls_test[list(numeric_var_list)]),
-                                index=ls_test.index, 
-                                columns=ls_test[list(numeric_var_list)].columns)
-feature_test = pd.concat([test_vars_scaled, 
-                          ls_test[list(dummy_var_list)]], 
-                         axis=1).sort_index(axis=1)
-outcome_test = ls_test[list(outcome_var_list)]
-```
-
-
 ## 1. Logisitic Regression Classification
 
 The first model is a logistic regression on the outcome variable `OUT_class` which is the binary classification for loans are either fully repaid (1) or charged off (0). The flag `class_weight='balanced'` ensures that both classes are equally represented in each set. 
@@ -92,8 +78,8 @@ The first model is a logistic regression on the outcome variable `OUT_class` whi
 
 ```python
 #SET TARGET VARIABLE 'OUT_Class'
-target_train = outcome_train.iloc[:,2]
-target_test = outcome_test.iloc[:,2]
+target_train = outcome_train.iloc[:,1]
+target_test = outcome_test.iloc[:,1]
 ```
 
 
@@ -116,12 +102,8 @@ target_probabilities = classifier.predict_proba(feature_test)[:,1]
 from sklearn.model_selection import cross_val_score
 
 #ACCURACY
-train_accuracy = classifier_model.score(feature_train, target_train)
-print('Train Accuracy: {:.4}'.format(train_score))
-test_accuracy = classifier_model.score(feature_test, target_test)
-print('Test Accuracy: {:.4}'.format(test_score))
 cross_val_accuracy = cross_val_score(classifier, feature_train, target_train, scoring='accuracy', cv=5).mean()
-print('Cross-Validation Accuracy: {:.4}'.format(cross_val_accuracy))
+print('Accuracy: {:.4}'.format(cross_val_accuracy))
 
 #PRECISION: true good loans / total predicted good loans
 precision = cross_val_score(classifier, feature_train, target_train, scoring='precision', cv=5).mean()
@@ -131,13 +113,6 @@ print('Precision: {:.4}'.format(precision))
 recall = cross_val_score(classifier, feature_train, target_train, scoring='recall', cv=5).mean()
 print('Recall: {:.4}'.format(recall))
 ```
-
-
-    Train Accuracy: 0.6342
-    Test Accuracy: 0.6361
-    Cross-Validation Accuracy: 0.6344
-    Precision: 0.9127
-    Recall: 0.6351
 
 
 
@@ -163,10 +138,6 @@ plt.show()
 
 
 
-![png](Models_files/Models_18_0.png)
-
-
-
 
 ```python
 #ROC CURVE
@@ -182,10 +153,6 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 plt.show()
 ```
-
-
-
-![png](Models_files/Models_19_0.png)
 
 
 ## Regression
