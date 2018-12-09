@@ -10,6 +10,8 @@ nav_include: 5
 {: toc}
 
 
+## Lending and Discrimination
+
 The [Equal Credit Opportunity Act (ECOA)](https://www.consumer.ftc.gov/articles/0347-your-equal-credit-opportunity-rights) is a federal law that prohibits lending entities (both institutions and people) from discriminating "on the basis of race, color, religion, national origin, sex, marital status, age," or because the prospective borrower receives public assistance. Lenders are, however, permitted to consider an applicant's "income, expenses, debts, and credit history" in evaluating the applicant's probability of repaying the debt to decide whether to accept or reject loan applications and to determine loan terms. Nevertheless, differential treatment by race, color, religion, national origin, sex, etc can still arise even when an institution or person is not explicitly discriminating based on those characteristics. Thus, we want to assess whether we see evidence of discrimination in LendingClub's acceptances and rejections of loan applications or in the terms it sets for accepted loans. In addition, we want to evaluate whether our proposed investing strategy results in differential treatment.
 
 ## Literature Review
@@ -529,7 +531,7 @@ plot_acc_rej(level_vars, 15, 10)
 
 
 
-![png](EthicalImplications_files/EthicalImplications_18_0.png)
+![png](EthicalImplications_files/EthicalImplications_19_0.png)
 
 
 
@@ -540,7 +542,7 @@ plot_acc_rej(sex_vars_count+sex_vars_pct, 15, 10)
 
 
 
-![png](EthicalImplications_files/EthicalImplications_19_0.png)
+![png](EthicalImplications_files/EthicalImplications_20_0.png)
 
 
 
@@ -551,7 +553,7 @@ plot_acc_rej(race_vars_count+race_vars_pct, 15, 40)
 
 
 
-![png](EthicalImplications_files/EthicalImplications_20_0.png)
+![png](EthicalImplications_files/EthicalImplications_21_0.png)
 
 
 
@@ -562,7 +564,7 @@ plot_acc_rej(household_vars_count+household_vars_pct, 15, 20)
 
 
 
-![png](EthicalImplications_files/EthicalImplications_21_0.png)
+![png](EthicalImplications_files/EthicalImplications_22_0.png)
 
 
 
@@ -577,7 +579,7 @@ ax = sns.boxplot(x="Sex", y="Percent of Total Population", data=sex_df, hue="Loa
 
 
 
-![png](EthicalImplications_files/EthicalImplications_22_0.png)
+![png](EthicalImplications_files/EthicalImplications_23_0.png)
 
 
 
@@ -601,7 +603,7 @@ ax = sns.boxplot(x="Race", y="Percent of Total Population", data=race_df, hue="L
 
 
 
-![png](EthicalImplications_files/EthicalImplications_23_0.png)
+![png](EthicalImplications_files/EthicalImplications_24_0.png)
 
 
 
@@ -620,7 +622,7 @@ ax = sns.boxplot(x="Household Structure", y="Percent of Households", data=househ
 
 
 
-![png](EthicalImplications_files/EthicalImplications_24_0.png)
+![png](EthicalImplications_files/EthicalImplications_25_0.png)
 
 
 
@@ -641,7 +643,7 @@ ax = sns.boxplot(x="Highest Education Attained", y="Percent of Total Population"
 
 
 
-![png](EthicalImplications_files/EthicalImplications_25_0.png)
+![png](EthicalImplications_files/EthicalImplications_26_0.png)
 
 
 Of the loans that were accepted, is there any discrimination in terms of the loan amount, funded amount, grade, interest rate, or term?
@@ -667,7 +669,7 @@ ax = sns.boxplot(x="Sex", y="Percent of Total Population", data=sgrade_df, hue="
 
 
 
-![png](EthicalImplications_files/EthicalImplications_28_0.png)
+![png](EthicalImplications_files/EthicalImplications_29_0.png)
 
 
 
@@ -692,7 +694,7 @@ ax = sns.boxplot(x="Race", y="Percent of Total Population", data=rgrade_df, hue=
 
 
 
-![png](EthicalImplications_files/EthicalImplications_29_0.png)
+![png](EthicalImplications_files/EthicalImplications_30_0.png)
 
 
 
@@ -712,7 +714,7 @@ ax = sns.boxplot(x="Household Structure", y="Percent of Households", data=hgrade
 
 
 
-![png](EthicalImplications_files/EthicalImplications_30_0.png)
+![png](EthicalImplications_files/EthicalImplications_31_0.png)
 
 
 
@@ -736,7 +738,7 @@ plt.show()
 
 
 
-![png](EthicalImplications_files/EthicalImplications_31_0.png)
+![png](EthicalImplications_files/EthicalImplications_32_0.png)
 
 
 ## Modelling
