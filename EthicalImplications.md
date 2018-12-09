@@ -1,5 +1,5 @@
 ---
-title: Ethical Implications
+title: train and test random forest classifier
 notebook: EthicalImplications.ipynb
 nav_include: 5
 ---
@@ -44,6 +44,10 @@ There are five records with missing data, likely originating from sparsely popul
 
 
 
+
+
+    /anaconda3/lib/python3.7/site-packages/sklearn/ensemble/weight_boosting.py:29: DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. It will be removed in a future NumPy release.
+      from numpy.core.umath_tests import inner1d
 
 
 
@@ -166,7 +170,9 @@ There are five records with missing data, likely originating from sparsely popul
 
 ## 4. Exploratory Data Analysis
 
-Leveraging zip codes, we explored whether there were demographic differences between loans that LendingClub accepted or rejected for its marketplace.
+Leveraging zip codes, we explored whether there were demographic differences between loans that LendingClub accepted or rejected for its marketplace. We looked at the distributions of acceptances and rejections by demographic groups, on the basis of which federal law prohibits discrimination, in terms of both population count and as a percentage of the total population.
+
+Visually, our exploratory data analysis did not suggest discrimination in either loan status or the grade assigned to issued loans. Between different sexes, races, household structures, and educational attainments, there was not a significant difference between either the accept-reject decision of loan applications or the resulting loan grade of the issued loans, as suggested by the large overlap in the histograms and boxplots in **Figures 1-5**.
 
 
 
@@ -193,224 +199,6 @@ Leveraging zip codes, we explored whether there were demographic differences bet
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>loan_amnt</th>
-      <th>funded_amnt</th>
-      <th>funded_amnt_inv</th>
-      <th>term</th>
-      <th>int_rate</th>
-      <th>installment</th>
-      <th>grade</th>
-      <th>sub_grade</th>
-      <th>emp_length</th>
-      <th>home_ownership</th>
-      <th>annual_inc</th>
-      <th>verification_status</th>
-      <th>zip_code</th>
-      <th>dti</th>
-      <th>accepted</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>5000.0</td>
-      <td>5000.0</td>
-      <td>4975.0</td>
-      <td>36 months</td>
-      <td>10.65</td>
-      <td>162.87</td>
-      <td>B</td>
-      <td>B2</td>
-      <td>10+ years</td>
-      <td>RENT</td>
-      <td>24000.0</td>
-      <td>Verified</td>
-      <td>860xx</td>
-      <td>27.65</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2500.0</td>
-      <td>2500.0</td>
-      <td>2500.0</td>
-      <td>60 months</td>
-      <td>15.27</td>
-      <td>59.83</td>
-      <td>C</td>
-      <td>C4</td>
-      <td>&lt; 1 year</td>
-      <td>RENT</td>
-      <td>30000.0</td>
-      <td>Source Verified</td>
-      <td>309xx</td>
-      <td>1.00</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2400.0</td>
-      <td>2400.0</td>
-      <td>2400.0</td>
-      <td>36 months</td>
-      <td>15.96</td>
-      <td>84.33</td>
-      <td>C</td>
-      <td>C5</td>
-      <td>10+ years</td>
-      <td>RENT</td>
-      <td>12252.0</td>
-      <td>Not Verified</td>
-      <td>606xx</td>
-      <td>8.72</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>10000.0</td>
-      <td>10000.0</td>
-      <td>10000.0</td>
-      <td>36 months</td>
-      <td>13.49</td>
-      <td>339.31</td>
-      <td>C</td>
-      <td>C1</td>
-      <td>10+ years</td>
-      <td>RENT</td>
-      <td>49200.0</td>
-      <td>Source Verified</td>
-      <td>917xx</td>
-      <td>20.00</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3000.0</td>
-      <td>3000.0</td>
-      <td>3000.0</td>
-      <td>60 months</td>
-      <td>12.69</td>
-      <td>67.79</td>
-      <td>B</td>
-      <td>B5</td>
-      <td>1 year</td>
-      <td>RENT</td>
-      <td>80000.0</td>
-      <td>Source Verified</td>
-      <td>972xx</td>
-      <td>17.94</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>loan_amnt</th>
-      <th>risk_score</th>
-      <th>dti</th>
-      <th>zip_code</th>
-      <th>emp_length</th>
-      <th>accepted</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1000.000000</td>
-      <td>693.000000</td>
-      <td>10.000000</td>
-      <td>481xx</td>
-      <td>4 years</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1000.000000</td>
-      <td>703.000000</td>
-      <td>10.000000</td>
-      <td>010xx</td>
-      <td>&lt; 1 year</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>11000.000000</td>
-      <td>715.000000</td>
-      <td>10.000000</td>
-      <td>212xx</td>
-      <td>1 year</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>6000.000000</td>
-      <td>698.000000</td>
-      <td>38.640000</td>
-      <td>017xx</td>
-      <td>&lt; 1 year</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1500.000000</td>
-      <td>509.000000</td>
-      <td>9.430000</td>
-      <td>209xx</td>
-      <td>&lt; 1 year</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
 
 
 
@@ -436,11 +224,7 @@ Leveraging zip codes, we explored whether there were demographic differences bet
 
 
 
-
-
-
-![png](EthicalImplications_files/EthicalImplications_19_0.png)
-
+**Figure 1. Distributions of Loan Acceptances and Rejections by Populousness and Income**
 
 
 
@@ -450,21 +234,9 @@ Leveraging zip codes, we explored whether there were demographic differences bet
 ![png](EthicalImplications_files/EthicalImplications_20_0.png)
 
 
+Looking at the distributions of acceptances versus rejections by Population size, count of Households, and count of Housing Units, we observe a slight favoring of more populous areas for loan acceptances. Unsurprisingly, we also see that compared to the rejected loans, the accepted loans came from applicants in areas with higher median income.
 
-
-
-
-
-![png](EthicalImplications_files/EthicalImplications_21_0.png)
-
-
-
-
-
-
-
-![png](EthicalImplications_files/EthicalImplications_22_0.png)
-
+**Figure 2A. Histograms: Distributions of Loan Acceptances and Rejections by Sex (Count and Percent of Total Population)**
 
 
 
@@ -474,13 +246,7 @@ Leveraging zip codes, we explored whether there were demographic differences bet
 ![png](EthicalImplications_files/EthicalImplications_23_0.png)
 
 
-
-
-
-
-
-![png](EthicalImplications_files/EthicalImplications_24_0.png)
-
+**Figure 2B. Boxplots: Distributions of Loan Acceptances and Rejections by Sex (Count and Percent of Total Population)**
 
 
 
@@ -490,19 +256,17 @@ Leveraging zip codes, we explored whether there were demographic differences bet
 ![png](EthicalImplications_files/EthicalImplications_25_0.png)
 
 
+**Figure 3A. Histograms: Distributions of Loan Acceptances and Rejections by Race (Count and Percent of Total Population)**
 
 
 
 
 
-![png](EthicalImplications_files/EthicalImplications_26_0.png)
+
+![png](EthicalImplications_files/EthicalImplications_27_0.png)
 
 
-Of the loans that were accepted, is there any discrimination in terms of the loan amount, funded amount, grade, interest rate, or term?
-
-
-
-
+**Figure 3B. Boxplots: Distributions of Loan Acceptances and Rejections by Race (Count and Percent of Total Population)**
 
 
 
@@ -512,13 +276,7 @@ Of the loans that were accepted, is there any discrimination in terms of the loa
 ![png](EthicalImplications_files/EthicalImplications_29_0.png)
 
 
-
-
-
-
-
-![png](EthicalImplications_files/EthicalImplications_30_0.png)
-
+**Figure 4A. Histograms: Distributions of Loan Acceptances and Rejections by Household Structure and Marital Status (Count and Percent of Total Population)**
 
 
 
@@ -528,13 +286,103 @@ Of the loans that were accepted, is there any discrimination in terms of the loa
 ![png](EthicalImplications_files/EthicalImplications_31_0.png)
 
 
+**Figure 4B. Boxplots: Distributions of Loan Acceptances and Rejections by Household Structure and Marital Status (Count and Percent of Total Population)**
 
 
 
 
 
-![png](EthicalImplications_files/EthicalImplications_32_0.png)
 
+![png](EthicalImplications_files/EthicalImplications_33_0.png)
+
+
+**Figure 5. Boxplots: Distributions of Loan Acceptances and Rejections by Educational Attainment (Count and Percent of Total Population)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_35_0.png)
+
+
+Further, of the loans that were accepted, we checked to see if there were noticeable differences in assigned loan grade by demographic groups. Loan grade will influence the interest rate the borrower is charged and whether or not investors want to fund the loan. Again, the data visualizations did not suggest discrimination. (See **Figures 6-9** below.)
+
+
+
+
+
+**Figure 6A. Distributions of Loan Grade by Sex (Percent of Total Population)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_39_0.png)
+
+
+**Figure 6B. Distributions of Loan Grade by Sex (Population Count)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_41_0.png)
+
+
+**Figure 7A. Distributions of Loan Grade by Race (Percent of Total Population)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_43_0.png)
+
+
+**Figure 7B. Distributions of Loan Grade by Race (Population Count)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_45_0.png)
+
+
+**Figure 8A. Distributions of Loan Grade by Household Structure and Marital Status (Percent of Total Households)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_47_0.png)
+
+
+**Figure 8B. Distributions of Loan Grade by Household Structure and Marital Status (Household Count)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_49_0.png)
+
+
+**Figure 9. Distributions of Loan Grade by Educational Attainment (Percent of Total Population)**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_51_0.png)
+
+
+Going forward in the modelling, we chose to focus on the demographic measures as a percentage of the total population, because demographic information by zip code gets muddled by how populous the zip code is when using population counts. As we can see in the histograms in **Figures 1-4**, using counts makes the acceptance distributions slightly to the right of the rejection distributions for all demographic groups because accepted loans tended to come from more populous zip codes as shown in **Figure 1**, in the distributions by Population size.
 
 ## 5. Modelling
 
@@ -545,171 +393,60 @@ Of the loans that were accepted, is there any discrimination in terms of the loa
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>loan_amnt</th>
-      <th>dti</th>
-      <th>Zip</th>
-      <th>emp_length</th>
-      <th>accepted</th>
-      <th>Population</th>
-      <th>White</th>
-      <th>Black</th>
-      <th>Native</th>
-      <th>Asian</th>
-      <th>...</th>
-      <th>Married_couple_child_under_18_pct</th>
-      <th>Married_couple_no_child_under_18_pct</th>
-      <th>Single_parent_families_pct</th>
-      <th>Single_parent_child_under_18_pct</th>
-      <th>Single_parent_no_child_under_18_pct</th>
-      <th>Non_families_pct</th>
-      <th>Householder_living_alone_pct</th>
-      <th>Householder_living_with_unrelated_pct</th>
-      <th>Occupied_pct</th>
-      <th>Household_size</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>5000.000000</td>
-      <td>27.650000</td>
-      <td>860xx</td>
-      <td>10+ years</td>
-      <td>1</td>
-      <td>184274.000000</td>
-      <td>85837.000000</td>
-      <td>2391.000000</td>
-      <td>64344.000000</td>
-      <td>2553.000000</td>
-      <td>...</td>
-      <td>16.424996</td>
-      <td>26.521836</td>
-      <td>22.213048</td>
-      <td>11.061802</td>
-      <td>11.151246</td>
-      <td>34.840119</td>
-      <td>23.614910</td>
-      <td>11.225209</td>
-      <td>0.747368</td>
-      <td>3.169651</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2500.000000</td>
-      <td>1.000000</td>
-      <td>309xx</td>
-      <td>&lt; 1 year</td>
-      <td>1</td>
-      <td>204347.000000</td>
-      <td>91932.000000</td>
-      <td>92769.000000</td>
-      <td>283.000000</td>
-      <td>5308.000000</td>
-      <td>...</td>
-      <td>12.838156</td>
-      <td>24.570782</td>
-      <td>24.387649</td>
-      <td>12.528446</td>
-      <td>11.859203</td>
-      <td>38.203412</td>
-      <td>32.716157</td>
-      <td>5.487255</td>
-      <td>0.829328</td>
-      <td>2.751666</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2400.000000</td>
-      <td>8.720000</td>
-      <td>606xx</td>
-      <td>10+ years</td>
-      <td>1</td>
-      <td>2697610.000000</td>
-      <td>875093.000000</td>
-      <td>822035.000000</td>
-      <td>3193.000000</td>
-      <td>163025.000000</td>
-      <td>...</td>
-      <td>13.999956</td>
-      <td>18.663649</td>
-      <td>21.527478</td>
-      <td>10.097242</td>
-      <td>11.430236</td>
-      <td>45.808917</td>
-      <td>36.493490</td>
-      <td>9.315426</td>
-      <td>0.873162</td>
-      <td>2.602140</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>10000.000000</td>
-      <td>20.000000</td>
-      <td>917xx</td>
-      <td>10+ years</td>
-      <td>1</td>
-      <td>1977114.000000</td>
-      <td>393027.000000</td>
-      <td>72504.000000</td>
-      <td>4702.000000</td>
-      <td>452147.000000</td>
-      <td>...</td>
-      <td>24.276769</td>
-      <td>30.612848</td>
-      <td>23.172234</td>
-      <td>9.575353</td>
-      <td>13.596881</td>
-      <td>21.938149</td>
-      <td>17.238609</td>
-      <td>4.699540</td>
-      <td>0.948437</td>
-      <td>3.499106</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3000.000000</td>
-      <td>17.940000</td>
-      <td>972xx</td>
-      <td>1 year</td>
-      <td>1</td>
-      <td>893646.000000</td>
-      <td>644973.000000</td>
-      <td>42217.000000</td>
-      <td>4048.000000</td>
-      <td>69569.000000</td>
-      <td>...</td>
-      <td>17.444413</td>
-      <td>24.163792</td>
-      <td>13.963949</td>
-      <td>7.647337</td>
-      <td>6.316612</td>
-      <td>44.427846</td>
-      <td>32.168502</td>
-      <td>12.259344</td>
-      <td>0.944561</td>
-      <td>2.458543</td>
-    </tr>
-  </tbody>
-</table>
-<p>5 rows × 72 columns</p>
-</div>
+
+
+
+    /anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:3: SettingWithCopyWarning: 
+    A value is trying to be set on a copy of a slice from a DataFrame
+    
+    See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+      This is separate from the ipykernel package so we can avoid doing imports until
+
+
+
+
+
+
+
+
+```python
+n_use = 50
+depth_use = 25
+rf = RandomForestClassifier(n_estimators=n_use, max_depth=depth_use)
+rf.fit(X_train_rf, y_train_rf)
+rf_score_test = accuracy_score(y_test_rf, rf.predict(X_test_rf))
+print("The test accuracy of the RandomForestClassifier with max_depth {} and {} trees is {:.2f}."
+      .format(depth_use, n_use, rf_score_test))
+```
+
+
+    The test accuracy of the RandomForestClassifier with max_depth 25 and 50 trees is 0.91.
+
+
+
+
+
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_60_0.png)
+
+
+
+
+
+
+
+
+
+<script>
+$('div.output_stderr').hide();
+</script>
+
 
 
