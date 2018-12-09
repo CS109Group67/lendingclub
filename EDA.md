@@ -1,5 +1,5 @@
 ---
-title:  EDA & Cleaning
+title: EDA & Cleaning
 notebook: EDA.ipynb
 nav_include: 2
 ---
@@ -38,88 +38,91 @@ nav_include: 2
 
 
 
-## 1. Inconsequential Variables
+## 1. Term-Complete Subset
 
 'Term-complete' loans have completed their full term whereas 'in-force' loans have not completed their term.  To get the most representative outcome information we first remove the loan instances that are not term-complete.
 
 
 
 ```python
-#DROP TERM INCOMPLETE LOANS
+#TERM COMPLETE LOANS
 completed_36 = (ls['issue_d'] < '2015-04-01') & (ls['term']  == ' 36 months')
 completed_60 = (ls['issue_d'] < '2013-04-01') & (ls['term']  == ' 60 months')
 ls = ls[completed_36 | completed_60]
 ```
 
 
-LC recently began reporting some new varaibles which are not reported in the term-complete subset. Simlarly, LC recently began accepting joint application loans and the variables related to coborrowers are empty in the term-complete subset. We drop the features that are non-existant, empty or otherwise unmeaningful.
+## 2. Inconsequential Variable Removal
+
+We removed variables from the `loanstats` dataset that would not be meaningful in the modeling for the following reasons:
+1. LC recently began reporting some new varaibles which are not reported in the term-complete subset. 
+2. LC recently began accepting joint application loans and the variables related to coborrowers are empty in the term-complete subset. 
+3. We designed three outcome features (see next section) based on the larger set of dependent variables
+4. Some features are non-standard or otherwise unmeaningful.
 
 
 
 ```python
-#DROP EMPTY VARIABLES
+#1 EMPTY
 empty = ['all_util', 'il_util', 'inq_fi', 'inq_last_12m', 'max_bal_bc', 
          'mths_since_rcnt_il', 'open_acc_6m', 'open_act_il', 'open_il_12m', 
          'open_il_24m', 'open_rv_12m', 'open_rv_24m','total_bal_il', 'total_cu_tl']
-ls.drop(empty, axis=1, inplace=True)
 
-#DROP CO-BORROWER VARIABLES
+#2 CO-BORROWER
 joint = ['application_type', 'annual_inc_joint', 'dti_joint', 'revol_bal_joint', 
          'sec_app_chargeoff_within_12_mths', 'sec_app_collections_12_mths_ex_med', 
          'sec_app_earliest_cr_line', 'sec_app_inq_last_6mths', 'sec_app_mort_acc', 
          'sec_app_mths_since_last_major_derog', 'sec_app_num_rev_accts', 'sec_app_open_acc', 
          'sec_app_open_act_il', 'sec_app_revol_util', 'verification_status_joint']
-ls.drop(joint, axis=1, inplace=True)
 
-#DROP INCONSEQUENTIAL VARIABLES
-drop = ['addr_state', # not useful as dummy variable
-        'dataset', # just indicates the dataset
-        'desc', # non-standard text description
-        'disbursement_method', # just indicates cash or direct_pay
-        'emp_title', # non-standard text description
-        'funded_amnt', # redundant with loan_amount
-        'funded_amnt_inv', # redundant with loan_amount
-        'grade', # redundant when using sub_grade
-        'initial_list_status', # possible values are w or f
-        'title', # non-standard text description
-        'zip_code'] # we could make into dummies, but there are 954 of them
-ls.drop(drop, axis=1, inplace=True)
+#3 DEPENDENT
+dependent = [# Payment Variables (11): 
+              'issue_d', 'last_pymnt_amnt', 'last_pymnt_d', 'loan_status', 
+              'next_pymnt_d', 'out_prncp', 'out_prncp_inv', 'total_pymnt', 
+              'total_pymnt_inv', 'total_rec_int', 'total_rec_prncp', 
+             # Hardship/Collections/Settlements (27)
+              'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 
+              'deferral_term', 'hardship_amount', 'hardship_dpd', 'hardship_end_date', 
+              'hardship_flag', 'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 
+              'hardship_payoff_balance_amount', 'hardship_reason', 'hardship_start_date', 
+              'hardship_status', 'hardship_type', 'last_credit_pull_d', 
+              'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
+              'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
+              'settlement_status', 'settlement_term', 'total_rec_late_fee']
+
+#4 OTHER INCONSEQUENTIAL
+inconsequential = ['addr_state', # not useful as dummy variable
+                   'dataset', # just indicates the dataset
+                   'desc', # non-standard text description
+                   'disbursement_method', # just indicates cash or direct_pay
+                   'emp_title', # non-standard text description
+                   'funded_amnt', # redundant with loan_amount
+                   'funded_amnt_inv', # redundant with loan_amount
+                   'grade', # redundant when using sub_grade
+                   'initial_list_status', # possible values are w or f
+                   'title', # non-standard text description
+                   'zip_code'] # we could make into dummies, but there are 954 of them
 ```
 
 
-## 2. Outcome Variables
-
-The following variables contain information about the loan after its issuance. We designed 3 outcome features to represent how well or poorly the loan performed: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
 
 
 
-```python
-#DEPENDENT VARIABLES
-dependent_cols = [
-    
-    # Payment Variables (11): 
-    'issue_d', 'last_pymnt_amnt', 'last_pymnt_d', 'loan_status', 
-    'next_pymnt_d', 'out_prncp', 'out_prncp_inv', 'total_pymnt', 
-    'total_pymnt_inv', 'total_rec_int', 'total_rec_prncp', 
-    
-    # Hardship/Collections/Settlements (27)
-    'collection_recovery_fee', 'debt_settlement_flag', 'debt_settlement_flag_date', 
-    'deferral_term', 'hardship_amount', 'hardship_dpd', 'hardship_end_date', 
-    'hardship_flag', 'hardship_last_payment_amount','hardship_length', 'hardship_loan_status', 
-    'hardship_payoff_balance_amount', 'hardship_reason', 'hardship_start_date', 
-    'hardship_status', 'hardship_type', 'last_credit_pull_d', 
-    'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
-    'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
-    'settlement_status', 'settlement_term', 'total_rec_late_fee']
-```
 
+## 3. Outcome Feature Design
 
-### 2A. `OUT_Class`
+We designed 3 outcome features to represent how well or poorly the loan performed: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
+
+### 3A. `OUT_Class`
 
 This outcome variable is a binary classification of whether the loan has been Fully Repaid (1) or Not Fully Repaid (0). The percentage of loans that have been fully repaid is 85.9%.
 
 
 
+```python
+ls['OUT_Class'] = 0
+ls.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
+```
 
 
 
@@ -133,7 +136,7 @@ This outcome variable is a binary classification of whether the loan has been Fu
 
 
 
-![png](EDA_files/EDA_17_1.png)
+![png](EDA_files/EDA_18_1.png)
 
 
 
@@ -141,7 +144,7 @@ This outcome variable is a binary classification of whether the loan has been Fu
 
 
 
-### 2B. `OUT_Principle_Repaid_Percentage`
+### 3B. `OUT_Principle_Repaid_Percentage`
 
 This outcome variable represents the percentage of loan principle that has been repaid. The average principal repaid percentage is 91.5%.
 
@@ -163,7 +166,7 @@ ls['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
 
 
 
-![png](EDA_files/EDA_20_1.png)
+![png](EDA_files/EDA_21_1.png)
 
 
 
@@ -171,7 +174,7 @@ ls['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
 
 
 
-### 2C. `OUT_Monthly_Rate_of_Return`
+### 3C. `OUT_Monthly_Rate_of_Return`
 
 This outcome variable represents the simple monthly rate of return that investors recieved by holding the loan. This is the most comprehensive of the three outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. The median monthly rate of return is 0.6%.
 
@@ -201,7 +204,7 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 
 
-![png](EDA_files/EDA_23_1.png)
+![png](EDA_files/EDA_24_1.png)
 
 
 
@@ -209,9 +212,9 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 
 
-## 3. Independent Variables
+## 4. Independent Variables
 
-We cleaned each independent variable for type conversions, dummy creation, outlier identication and missing value imputation.
+We cleaned each independent variable with type conversions, dummy creation, outlier identication and missing value imputation.
 
 
 
@@ -232,7 +235,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_2.png)
+![png](EDA_files/EDA_27_2.png)
 
 
 
@@ -251,7 +254,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_6.png)
+![png](EDA_files/EDA_27_6.png)
 
 
 
@@ -270,7 +273,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_10.png)
+![png](EDA_files/EDA_27_10.png)
 
 
 
@@ -289,7 +292,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_14.png)
+![png](EDA_files/EDA_27_14.png)
 
 
 
@@ -308,7 +311,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_18.png)
+![png](EDA_files/EDA_27_18.png)
 
 
 
@@ -327,7 +330,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_22.png)
+![png](EDA_files/EDA_27_22.png)
 
 
 
@@ -346,7 +349,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_26.png)
+![png](EDA_files/EDA_27_26.png)
 
 
 
@@ -365,7 +368,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_30.png)
+![png](EDA_files/EDA_27_30.png)
 
 
 
@@ -384,7 +387,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_34.png)
+![png](EDA_files/EDA_27_34.png)
 
 
 
@@ -403,7 +406,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_38.png)
+![png](EDA_files/EDA_27_38.png)
 
 
 
@@ -422,7 +425,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_42.png)
+![png](EDA_files/EDA_27_42.png)
 
 
 
@@ -441,7 +444,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_46.png)
+![png](EDA_files/EDA_27_46.png)
 
 
 
@@ -460,7 +463,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_50.png)
+![png](EDA_files/EDA_27_50.png)
 
 
 
@@ -474,7 +477,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
     	Type: 			object
     	Missing Values: 	0 (0.0%)
-    	Number of Categories: 	4
+    	Number of Dummies: 	4
     	Most Common Category: 	MORTGAGE
 
 
@@ -494,7 +497,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_57.png)
+![png](EDA_files/EDA_27_57.png)
 
 
 
@@ -513,7 +516,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_61.png)
+![png](EDA_files/EDA_27_61.png)
 
 
 
@@ -532,7 +535,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_65.png)
+![png](EDA_files/EDA_27_65.png)
 
 
 
@@ -551,7 +554,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_69.png)
+![png](EDA_files/EDA_27_69.png)
 
 
 
@@ -570,7 +573,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_73.png)
+![png](EDA_files/EDA_27_73.png)
 
 
 
@@ -589,7 +592,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_77.png)
+![png](EDA_files/EDA_27_77.png)
 
 
 
@@ -608,7 +611,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_81.png)
+![png](EDA_files/EDA_27_81.png)
 
 
 
@@ -627,7 +630,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_85.png)
+![png](EDA_files/EDA_27_85.png)
 
 
 
@@ -646,7 +649,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_89.png)
+![png](EDA_files/EDA_27_89.png)
 
 
 
@@ -665,7 +668,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_93.png)
+![png](EDA_files/EDA_27_93.png)
 
 
 
@@ -684,7 +687,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_97.png)
+![png](EDA_files/EDA_27_97.png)
 
 
 
@@ -703,7 +706,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_101.png)
+![png](EDA_files/EDA_27_101.png)
 
 
 
@@ -722,7 +725,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_105.png)
+![png](EDA_files/EDA_27_105.png)
 
 
 
@@ -741,7 +744,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_109.png)
+![png](EDA_files/EDA_27_109.png)
 
 
 
@@ -760,7 +763,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_113.png)
+![png](EDA_files/EDA_27_113.png)
 
 
 
@@ -779,7 +782,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_117.png)
+![png](EDA_files/EDA_27_117.png)
 
 
 
@@ -798,7 +801,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_121.png)
+![png](EDA_files/EDA_27_121.png)
 
 
 
@@ -817,7 +820,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_125.png)
+![png](EDA_files/EDA_27_125.png)
 
 
 
@@ -836,7 +839,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_129.png)
+![png](EDA_files/EDA_27_129.png)
 
 
 
@@ -855,7 +858,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_133.png)
+![png](EDA_files/EDA_27_133.png)
 
 
 
@@ -874,7 +877,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_137.png)
+![png](EDA_files/EDA_27_137.png)
 
 
 
@@ -893,7 +896,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_141.png)
+![png](EDA_files/EDA_27_141.png)
 
 
 
@@ -912,7 +915,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_145.png)
+![png](EDA_files/EDA_27_145.png)
 
 
 
@@ -931,7 +934,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_149.png)
+![png](EDA_files/EDA_27_149.png)
 
 
 
@@ -950,7 +953,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_153.png)
+![png](EDA_files/EDA_27_153.png)
 
 
 
@@ -969,7 +972,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_157.png)
+![png](EDA_files/EDA_27_157.png)
 
 
 
@@ -988,7 +991,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_161.png)
+![png](EDA_files/EDA_27_161.png)
 
 
 
@@ -1007,7 +1010,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_165.png)
+![png](EDA_files/EDA_27_165.png)
 
 
 
@@ -1026,7 +1029,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_169.png)
+![png](EDA_files/EDA_27_169.png)
 
 
 
@@ -1045,7 +1048,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_173.png)
+![png](EDA_files/EDA_27_173.png)
 
 
 
@@ -1064,7 +1067,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_177.png)
+![png](EDA_files/EDA_27_177.png)
 
 
 
@@ -1083,7 +1086,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_181.png)
+![png](EDA_files/EDA_27_181.png)
 
 
 
@@ -1102,7 +1105,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_185.png)
+![png](EDA_files/EDA_27_185.png)
 
 
 
@@ -1121,7 +1124,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_189.png)
+![png](EDA_files/EDA_27_189.png)
 
 
 
@@ -1140,7 +1143,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_193.png)
+![png](EDA_files/EDA_27_193.png)
 
 
 
@@ -1159,7 +1162,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_197.png)
+![png](EDA_files/EDA_27_197.png)
 
 
 
@@ -1173,7 +1176,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
     	Type: 			object
     	Missing Values: 	0 (0.0%)
-    	Number of Categories: 	14
+    	Number of Dummies: 	14
     	Most Common Category: 	debt_consolidation
 
 
@@ -1193,7 +1196,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_204.png)
+![png](EDA_files/EDA_27_204.png)
 
 
 
@@ -1212,7 +1215,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_208.png)
+![png](EDA_files/EDA_27_208.png)
 
 
 
@@ -1231,7 +1234,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_212.png)
+![png](EDA_files/EDA_27_212.png)
 
 
 
@@ -1250,7 +1253,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_216.png)
+![png](EDA_files/EDA_27_216.png)
 
 
 
@@ -1264,7 +1267,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
     	Type: 			object
     	Missing Values: 	0 (0.0%)
-    	Number of Categories: 	2
+    	Number of Dummies: 	2
     	Most Common Category: 	 36 months
 
 
@@ -1284,7 +1287,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_223.png)
+![png](EDA_files/EDA_27_223.png)
 
 
 
@@ -1303,7 +1306,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_227.png)
+![png](EDA_files/EDA_27_227.png)
 
 
 
@@ -1322,7 +1325,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_231.png)
+![png](EDA_files/EDA_27_231.png)
 
 
 
@@ -1341,7 +1344,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_235.png)
+![png](EDA_files/EDA_27_235.png)
 
 
 
@@ -1360,7 +1363,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_239.png)
+![png](EDA_files/EDA_27_239.png)
 
 
 
@@ -1379,7 +1382,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_243.png)
+![png](EDA_files/EDA_27_243.png)
 
 
 
@@ -1398,7 +1401,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_247.png)
+![png](EDA_files/EDA_27_247.png)
 
 
 
@@ -1417,7 +1420,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
 
 
-![png](EDA_files/EDA_26_251.png)
+![png](EDA_files/EDA_27_251.png)
 
 
 
@@ -1431,7 +1434,7 @@ We cleaned each independent variable for type conversions, dummy creation, outli
 
     	Type: 			object
     	Missing Values: 	0 (0.0%)
-    	Number of Categories: 	3
+    	Number of Dummies: 	3
     	Most Common Category: 	Not Verified
 
 
