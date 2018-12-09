@@ -10,9 +10,6 @@ nav_include: 2
 {: toc}
 
 
-<br>
-
-## 0. Functions
 
 
 
@@ -28,84 +25,22 @@ nav_include: 2
 
 
 
-```python
-#FUNCTION FOR DUMMY CREATION
-def dummy_attr(attr):
-    """ Creates dummy variables and drops original attribute"""
-    global ls
-    if attr not in list(ls): return
-    prefix = 'D_' + attr
-    dummies = pd.get_dummies(ls[attr], prefix=prefix)
-    ls.drop([attr], axis=1, inplace=True)
-    ls = pd.concat([ls, dummies], axis=1)
-```
 
 
 
 
-```python
-#FUNCTION FOR OUTLIER DETECTION
-ls['outlier'] = 0 # this column is incremented for identified outlier instances
-def outlier_attr(attr, threshold):
-    """ Identifies outliers above threshold and updates outlier indictor""" 
-    outliers = ls[attr] > threshold
-    ls['outlier'] = ls['outlier'] + outliers
-    return outliers
-```
 
 
 
 
-```python
-#FUNCTION FOR MISSING VALUE IMPUTATION
-from sklearn.impute import SimpleImputer
-def impute_attr(attr, strategy='median'):
-    """ Impute missing values (via median imputation by default)"""
-    imp = SimpleImputer(strategy=strategy)
-    ls[attr] = imp.fit_transform(ls[[attr]])
-```
 
 
 
 
-```python
-#FUNCTION FOR EDA
-num_observations = len(ls)
-def EDA_attr(attr):
-    """ Displays basic EDA for given attribute"""
-    if 'OUT' not in attr:
-        display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, ""))))
-    
-    #attribute type
-    attr_type = ls[attr].dtype
-    print('\tType: \t\t\t{}'.format(attr_type))
-    
-    #missing values
-    missing_values = ls[attr].isnull().sum()
-    print('\tMissing Values: \t{} ({:.1%})'.format(missing_values, missing_values/num_observations))
-
-    #numerical variables
-    if attr_type == 'float64' or attr_type == 'int64':  
-        print('\tMean: \t\t\t{:.2f}'.format(ls[attr].mean()))     
-        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls[attr].min(), ls[attr].max()))
-        plt.hist(ls[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
-        impute_attr(attr)    
-        
-    #categorical variables
-    if attr_type == 'object':   
-        print('\tNumber of Categories: \t{}'.format(len(ls.groupby(attr))))
-        print('\tMost Common Category: \t{}'.format(ls.groupby(attr)['loan_amnt'].count().idxmax()))
-        dummy_attr(attr)
-
-    display(Markdown('\n'))
-```
-
-
-<br>
 
 ## 1. Inconsequential Variables
 
-Our focus will be on loans that have completed their terms. This subset of **'term-complete'** loans provides the most representative outcome information since in-force loans can still default. Therefore, we remove the loan instances that are not term-complete:
+'Term-complete' loans have completed their full term whereas 'in-force' loans have not completed their term.  To get the most representative outcome information we first remove the loan instances that are not term-complete.
 
 
 
@@ -117,11 +52,17 @@ ls = ls[completed_36 | completed_60]
 ```
 
 
-Next we drop non-existant, empty, constant or otherwise unmeaningful variables. LC only recently began accepting joint application loans, so none of these loans are term-complete. Similarly, LC started reporting variables recently that were not reported for the term-complete loans. Therefore we remove these variables from the model.
+LC recently began reporting some new varaibles which are not reported in the term-complete subset. Simlarly, LC recently began accepting joint application loans and the variables related to coborrowers are empty in the term-complete subset. We drop the features that are non-existant, empty or otherwise unmeaningful.
 
 
 
 ```python
+#DROP EMPTY VARIABLES
+empty = ['all_util', 'il_util', 'inq_fi', 'inq_last_12m', 'max_bal_bc', 
+         'mths_since_rcnt_il', 'open_acc_6m', 'open_act_il', 'open_il_12m', 
+         'open_il_24m', 'open_rv_12m', 'open_rv_24m','total_bal_il', 'total_cu_tl']
+ls.drop(empty, axis=1, inplace=True)
+
 #DROP CO-BORROWER VARIABLES
 joint = ['application_type', 'annual_inc_joint', 'dti_joint', 'revol_bal_joint', 
          'sec_app_chargeoff_within_12_mths', 'sec_app_collections_12_mths_ex_med', 
@@ -129,12 +70,6 @@ joint = ['application_type', 'annual_inc_joint', 'dti_joint', 'revol_bal_joint',
          'sec_app_mths_since_last_major_derog', 'sec_app_num_rev_accts', 'sec_app_open_acc', 
          'sec_app_open_act_il', 'sec_app_revol_util', 'verification_status_joint']
 ls.drop(joint, axis=1, inplace=True)
-
-#DROP EMPTY VARIABLES
-empty = ['all_util', 'il_util', 'inq_fi', 'inq_last_12m', 'max_bal_bc', 
-         'mths_since_rcnt_il', 'open_acc_6m', 'open_act_il', 'open_il_12m', 
-         'open_il_24m', 'open_rv_12m', 'open_rv_24m','total_bal_il', 'total_cu_tl']
-ls.drop(empty, axis=1, inplace=True)
 
 #DROP INCONSEQUENTIAL VARIABLES
 drop = ['addr_state', # not useful as dummy variable
@@ -152,11 +87,9 @@ ls.drop(drop, axis=1, inplace=True)
 ```
 
 
-<br>
-
 ## 2. Outcome Variables
 
-The following variables represent information about the loan after it is funded. These variables represent aspects of the loan performed after issuance. Based on these variables, we designed 3 outcome features to represent how well or poorly loan performed: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
+The following variables contain information about the loan after its issuance. We designed 3 outcome features to represent how well or poorly the loan performed: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
 
 
 
@@ -178,23 +111,19 @@ dependent_cols = [
     'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
     'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
     'settlement_status', 'settlement_term', 'total_rec_late_fee']
-
-outcome_cols = ['OUT_Class', 'OUT_Principle_Repaid_Percentage', 'OUT_Monthly_Rate_Of_Return']
 ```
 
 
 ### 2A. `OUT_Class`
 
-This outcome variable is an binary classification of whether the loan has been Fully Repaid (1) or Not Fully Repaid (0). Note that 85.9% percent of all loans have been repaid.
+This outcome variable is a binary classification of whether the loan has been Fully Repaid (1) or Not Fully Repaid (0). The percentage of loans that have been fully repaid is 85.9%.
 
 
 
-```python
-ls['OUT_Class'] = 0
-ls.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
-ls.loc[ls['loan_status'].str.contains('Current'), 'OUT_Class'] = 1
-EDA_attr('OUT_Class')
-```
+
+
+
+
 
 
     	Type: 			int64
@@ -214,14 +143,17 @@ EDA_attr('OUT_Class')
 
 ### 2B. `OUT_Principle_Repaid_Percentage`
 
-This outcome variable represents the percentage of loan principal that has been repaid. Note that the average principal repaid percentage is 91.5%.
+This outcome variable represents the percentage of loan principle that has been repaid. The average principal repaid percentage is 91.5%.
 
 
 
 ```python
 ls['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
-EDA_attr('OUT_Principle_Repaid_Percentage')
 ```
+
+
+
+
 
 
     	Type: 			float64
@@ -231,7 +163,7 @@ EDA_attr('OUT_Principle_Repaid_Percentage')
 
 
 
-![png](EDA_files/EDA_19_1.png)
+![png](EDA_files/EDA_20_1.png)
 
 
 
@@ -241,7 +173,7 @@ EDA_attr('OUT_Principle_Repaid_Percentage')
 
 ### 2C. `OUT_Monthly_Rate_of_Return`
 
-This outcome variable represents the simple monthly rate of return that investors recieved by holding the loan. This is the most comprehensive of our outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. Note that the median monthly rate of return is 0.6%.
+This outcome variable represents the simple monthly rate of return that investors recieved by holding the loan. This is the most comprehensive of the three outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. The median monthly rate of return is 0.6%.
 
 
 
@@ -255,8 +187,11 @@ Repayment_Period = (ls['last_pymnt_d'].dt.to_period('M') -
 
 #MONTHLY_RATE_OF_RETURN: simple monthly return accrued over the term of the loan
 ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan_amnt']
-EDA_attr('OUT_Monthly_Rate_Of_Return')
 ```
+
+
+
+
 
 
     	Type: 			float64
@@ -266,21 +201,17 @@ EDA_attr('OUT_Monthly_Rate_Of_Return')
 
 
 
-![png](EDA_files/EDA_21_1.png)
+![png](EDA_files/EDA_23_1.png)
 
 
 
 
 
 
-
-<br>
 
 ## 3. Independent Variables
 
-We performed type conversions, outlier identification, dummy creation, missing value imputation and EDA for each independent variable.
-
-<br>
+We cleaned each independent variable for type conversions, dummy creation, outlier identication and missing value imputation.
 
 
 
@@ -288,11 +219,6 @@ We performed type conversions, outlier identification, dummy creation, missing v
 
 
 
-```python
-independent_cols = set(ls.columns) - set(outcome_cols) - set(dependent_cols)
-for attr in sorted(independent_cols):
-    EDA_attr(attr)
-```
 
 
 
@@ -306,7 +232,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_2.png)
+![png](EDA_files/EDA_26_2.png)
 
 
 
@@ -319,13 +245,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (2.5%)
+    	Missing Values: 	50030 (11.9%)
     	Mean: 			4.19
     	Range: 			(0.00, 53.00)
 
 
 
-![png](EDA_files/EDA_24_6.png)
+![png](EDA_files/EDA_26_6.png)
 
 
 
@@ -344,7 +270,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_10.png)
+![png](EDA_files/EDA_26_10.png)
 
 
 
@@ -357,13 +283,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70285 (3.5%)
+    	Missing Values: 	70285 (16.7%)
     	Mean: 			12685.60
     	Range: 			(0.00, 958084.00)
 
 
 
-![png](EDA_files/EDA_24_14.png)
+![png](EDA_files/EDA_26_14.png)
 
 
 
@@ -376,13 +302,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	53734 (2.7%)
+    	Missing Values: 	53734 (12.8%)
     	Mean: 			8498.77
     	Range: 			(0.00, 497445.00)
 
 
 
-![png](EDA_files/EDA_24_18.png)
+![png](EDA_files/EDA_26_18.png)
 
 
 
@@ -395,13 +321,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	53975 (2.7%)
+    	Missing Values: 	53975 (12.8%)
     	Mean: 			64.43
     	Range: 			(0.00, 339.60)
 
 
 
-![png](EDA_files/EDA_24_22.png)
+![png](EDA_files/EDA_26_22.png)
 
 
 
@@ -420,7 +346,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_26.png)
+![png](EDA_files/EDA_26_26.png)
 
 
 
@@ -439,7 +365,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_30.png)
+![png](EDA_files/EDA_26_30.png)
 
 
 
@@ -458,7 +384,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_34.png)
+![png](EDA_files/EDA_26_34.png)
 
 
 
@@ -477,7 +403,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_38.png)
+![png](EDA_files/EDA_26_38.png)
 
 
 
@@ -496,7 +422,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_42.png)
+![png](EDA_files/EDA_26_42.png)
 
 
 
@@ -515,7 +441,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_46.png)
+![png](EDA_files/EDA_26_46.png)
 
 
 
@@ -528,13 +454,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	21519 (1.1%)
+    	Missing Values: 	21519 (5.1%)
     	Mean: 			5.84
     	Range: 			(0.00, 10.00)
 
 
 
-![png](EDA_files/EDA_24_50.png)
+![png](EDA_files/EDA_26_50.png)
 
 
 
@@ -568,7 +494,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_57.png)
+![png](EDA_files/EDA_26_57.png)
 
 
 
@@ -587,7 +513,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_61.png)
+![png](EDA_files/EDA_26_61.png)
 
 
 
@@ -606,7 +532,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_65.png)
+![png](EDA_files/EDA_26_65.png)
 
 
 
@@ -625,7 +551,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_69.png)
+![png](EDA_files/EDA_26_69.png)
 
 
 
@@ -638,13 +564,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	83911 (4.2%)
+    	Missing Values: 	83911 (20.0%)
     	Mean: 			124.94
     	Range: 			(0.00, 649.00)
 
 
 
-![png](EDA_files/EDA_24_73.png)
+![png](EDA_files/EDA_26_73.png)
 
 
 
@@ -657,13 +583,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70277 (3.5%)
+    	Missing Values: 	70277 (16.7%)
     	Mean: 			180.39
     	Range: 			(3.00, 851.00)
 
 
 
-![png](EDA_files/EDA_24_77.png)
+![png](EDA_files/EDA_26_77.png)
 
 
 
@@ -676,13 +602,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70277 (3.5%)
+    	Missing Values: 	70277 (16.7%)
     	Mean: 			13.25
     	Range: 			(0.00, 372.00)
 
 
 
-![png](EDA_files/EDA_24_81.png)
+![png](EDA_files/EDA_26_81.png)
 
 
 
@@ -695,13 +621,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			8.37
     	Range: 			(0.00, 226.00)
 
 
 
-![png](EDA_files/EDA_24_85.png)
+![png](EDA_files/EDA_26_85.png)
 
 
 
@@ -714,13 +640,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (2.5%)
+    	Missing Values: 	50030 (11.9%)
     	Mean: 			1.69
     	Range: 			(0.00, 34.00)
 
 
 
-![png](EDA_files/EDA_24_89.png)
+![png](EDA_files/EDA_26_89.png)
 
 
 
@@ -733,13 +659,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	224620 (11.2%)
+    	Missing Values: 	224620 (53.5%)
     	Mean: 			34.30
     	Range: 			(0.00, 188.00)
 
 
 
-![png](EDA_files/EDA_24_93.png)
+![png](EDA_files/EDA_26_93.png)
 
 
 
@@ -752,13 +678,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	329015 (16.4%)
+    	Missing Values: 	329015 (78.3%)
     	Mean: 			42.46
     	Range: 			(0.00, 188.00)
 
 
 
-![png](EDA_files/EDA_24_97.png)
+![png](EDA_files/EDA_26_97.png)
 
 
 
@@ -771,13 +697,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	360872 (18.0%)
+    	Missing Values: 	360872 (85.9%)
     	Mean: 			72.88
     	Range: 			(0.00, 129.00)
 
 
 
-![png](EDA_files/EDA_24_101.png)
+![png](EDA_files/EDA_26_101.png)
 
 
 
@@ -790,13 +716,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	53373 (2.7%)
+    	Missing Values: 	53373 (12.7%)
     	Mean: 			24.53
     	Range: 			(0.00, 616.00)
 
 
 
-![png](EDA_files/EDA_24_105.png)
+![png](EDA_files/EDA_26_105.png)
 
 
 
@@ -809,13 +735,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	331393 (16.5%)
+    	Missing Values: 	331393 (78.9%)
     	Mean: 			40.30
     	Range: 			(0.00, 176.00)
 
 
 
-![png](EDA_files/EDA_24_109.png)
+![png](EDA_files/EDA_26_109.png)
 
 
 
@@ -828,13 +754,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	88898 (4.4%)
+    	Missing Values: 	88898 (21.2%)
     	Mean: 			6.95
     	Range: 			(0.00, 25.00)
 
 
 
-![png](EDA_files/EDA_24_113.png)
+![png](EDA_files/EDA_26_113.png)
 
 
 
@@ -847,13 +773,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	294683 (14.7%)
+    	Missing Values: 	294683 (70.1%)
     	Mean: 			36.15
     	Range: 			(0.00, 180.00)
 
 
 
-![png](EDA_files/EDA_24_117.png)
+![png](EDA_files/EDA_26_117.png)
 
 
 
@@ -866,13 +792,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			0.46
     	Range: 			(0.00, 35.00)
 
 
 
-![png](EDA_files/EDA_24_121.png)
+![png](EDA_files/EDA_26_121.png)
 
 
 
@@ -885,13 +811,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			3.66
     	Range: 			(0.00, 30.00)
 
 
 
-![png](EDA_files/EDA_24_125.png)
+![png](EDA_files/EDA_26_125.png)
 
 
 
@@ -904,13 +830,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			5.67
     	Range: 			(0.00, 41.00)
 
 
 
-![png](EDA_files/EDA_24_129.png)
+![png](EDA_files/EDA_26_129.png)
 
 
 
@@ -923,13 +849,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	58590 (2.9%)
+    	Missing Values: 	58590 (13.9%)
     	Mean: 			4.61
     	Range: 			(0.00, 46.00)
 
 
 
-![png](EDA_files/EDA_24_133.png)
+![png](EDA_files/EDA_26_133.png)
 
 
 
@@ -942,13 +868,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			8.60
     	Range: 			(0.00, 65.00)
 
 
 
-![png](EDA_files/EDA_24_137.png)
+![png](EDA_files/EDA_26_137.png)
 
 
 
@@ -961,13 +887,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			7.98
     	Range: 			(0.00, 150.00)
 
 
 
-![png](EDA_files/EDA_24_141.png)
+![png](EDA_files/EDA_26_141.png)
 
 
 
@@ -980,13 +906,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			8.11
     	Range: 			(0.00, 62.00)
 
 
 
-![png](EDA_files/EDA_24_145.png)
+![png](EDA_files/EDA_26_145.png)
 
 
 
@@ -999,13 +925,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			14.93
     	Range: 			(0.00, 105.00)
 
 
 
-![png](EDA_files/EDA_24_149.png)
+![png](EDA_files/EDA_26_149.png)
 
 
 
@@ -1018,13 +944,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			5.65
     	Range: 			(0.00, 38.00)
 
 
 
-![png](EDA_files/EDA_24_153.png)
+![png](EDA_files/EDA_26_153.png)
 
 
 
@@ -1037,13 +963,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	58590 (2.9%)
+    	Missing Values: 	58590 (13.9%)
     	Mean: 			11.22
     	Range: 			(0.00, 84.00)
 
 
 
-![png](EDA_files/EDA_24_157.png)
+![png](EDA_files/EDA_26_157.png)
 
 
 
@@ -1056,13 +982,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	78691 (3.9%)
+    	Missing Values: 	78691 (18.7%)
     	Mean: 			0.00
     	Range: 			(0.00, 3.00)
 
 
 
-![png](EDA_files/EDA_24_161.png)
+![png](EDA_files/EDA_26_161.png)
 
 
 
@@ -1075,13 +1001,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			0.00
     	Range: 			(0.00, 4.00)
 
 
 
-![png](EDA_files/EDA_24_165.png)
+![png](EDA_files/EDA_26_165.png)
 
 
 
@@ -1094,13 +1020,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			0.09
     	Range: 			(0.00, 24.00)
 
 
 
-![png](EDA_files/EDA_24_169.png)
+![png](EDA_files/EDA_26_169.png)
 
 
 
@@ -1113,13 +1039,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			1.94
     	Range: 			(0.00, 26.00)
 
 
 
-![png](EDA_files/EDA_24_173.png)
+![png](EDA_files/EDA_26_173.png)
 
 
 
@@ -1138,7 +1064,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_177.png)
+![png](EDA_files/EDA_26_177.png)
 
 
 
@@ -1157,7 +1083,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_181.png)
+![png](EDA_files/EDA_26_181.png)
 
 
 
@@ -1170,13 +1096,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70390 (3.5%)
+    	Missing Values: 	70390 (16.8%)
     	Mean: 			94.44
     	Range: 			(7.70, 100.00)
 
 
 
-![png](EDA_files/EDA_24_185.png)
+![png](EDA_files/EDA_26_185.png)
 
 
 
@@ -1189,13 +1115,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	53858 (2.7%)
+    	Missing Values: 	53858 (12.8%)
     	Mean: 			50.54
     	Range: 			(0.00, 100.00)
 
 
 
-![png](EDA_files/EDA_24_189.png)
+![png](EDA_files/EDA_26_189.png)
 
 
 
@@ -1214,7 +1140,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_193.png)
+![png](EDA_files/EDA_26_193.png)
 
 
 
@@ -1227,13 +1153,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	1365 (0.1%)
+    	Missing Values: 	1365 (0.3%)
     	Mean: 			0.11
     	Range: 			(0.00, 12.00)
 
 
 
-![png](EDA_files/EDA_24_197.png)
+![png](EDA_files/EDA_26_197.png)
 
 
 
@@ -1267,7 +1193,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_204.png)
+![png](EDA_files/EDA_26_204.png)
 
 
 
@@ -1280,13 +1206,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	296 (0.0%)
+    	Missing Values: 	296 (0.1%)
     	Mean: 			55.02
     	Range: 			(0.00, 892.30)
 
 
 
-![png](EDA_files/EDA_24_208.png)
+![png](EDA_files/EDA_26_208.png)
 
 
 
@@ -1305,7 +1231,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_212.png)
+![png](EDA_files/EDA_26_212.png)
 
 
 
@@ -1324,7 +1250,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_216.png)
+![png](EDA_files/EDA_26_216.png)
 
 
 
@@ -1352,13 +1278,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			213.03
     	Range: 			(0.00, 9152545.00)
 
 
 
-![png](EDA_files/EDA_24_223.png)
+![png](EDA_files/EDA_26_223.png)
 
 
 
@@ -1371,13 +1297,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			128545.52
     	Range: 			(0.00, 8000078.00)
 
 
 
-![png](EDA_files/EDA_24_227.png)
+![png](EDA_files/EDA_26_227.png)
 
 
 
@@ -1390,13 +1316,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			157552.13
     	Range: 			(0.00, 9999999.00)
 
 
 
-![png](EDA_files/EDA_24_231.png)
+![png](EDA_files/EDA_26_231.png)
 
 
 
@@ -1415,7 +1341,7 @@ for attr in sorted(independent_cols):
 
 
 
-![png](EDA_files/EDA_24_235.png)
+![png](EDA_files/EDA_26_235.png)
 
 
 
@@ -1428,13 +1354,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (2.5%)
+    	Missing Values: 	50030 (11.9%)
     	Mean: 			44002.55
     	Range: 			(0.00, 2688920.00)
 
 
 
-![png](EDA_files/EDA_24_239.png)
+![png](EDA_files/EDA_26_239.png)
 
 
 
@@ -1447,13 +1373,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	50030 (2.5%)
+    	Missing Values: 	50030 (11.9%)
     	Mean: 			19602.34
     	Range: 			(0.00, 760000.00)
 
 
 
-![png](EDA_files/EDA_24_243.png)
+![png](EDA_files/EDA_26_243.png)
 
 
 
@@ -1466,13 +1392,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			36279.50
     	Range: 			(0.00, 1241783.00)
 
 
 
-![png](EDA_files/EDA_24_247.png)
+![png](EDA_files/EDA_26_247.png)
 
 
 
@@ -1485,13 +1411,13 @@ for attr in sorted(independent_cols):
 
 
     	Type: 			float64
-    	Missing Values: 	70276 (3.5%)
+    	Missing Values: 	70276 (16.7%)
     	Mean: 			29473.47
     	Range: 			(0.00, 9999999.00)
 
 
 
-![png](EDA_files/EDA_24_251.png)
+![png](EDA_files/EDA_26_251.png)
 
 
 

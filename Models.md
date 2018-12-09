@@ -18,10 +18,9 @@ nav_include: 3
 
 
 
-<br><br>
-## 1. Data Preprocessing
+## 0. Preprocessing
 
-### 1A. Train-Test Split
+### Train-Test Split
 
 We split the `ls` dataset into a train and test part. We do this in a stratified fashion ensuring that the outcome classes (fully paid loans and not fully paid loans) are equally represented in each set. For the splitting algorithm, we use `sklearn`'s `train_test_split` function. This function creates random train and test subsets of the dataset. The flag `stratify` ensures that both classes are equally represented in each set. 
 
@@ -29,13 +28,13 @@ We split the `ls` dataset into a train and test part. We do this in a stratified
 
 ```python
 from sklearn.model_selection import train_test_split
-ls_train, ls_test = train_test_split(ls, test_size=0.2, stratify=ls['OUT_Class'])
+ls_train, ls_test = train_test_split(ls, test_size=0.15, stratify=ls['OUT_Class'])
 ```
 
 
-### 1B. Standard Scaling
+### Standard Scaling
 
-Most of the models used later will assume all features are on similar scales. To achieve this, we use standardization to transform the numeric variables such that they have a mean of 0 and standard deviation of 1. We use `sklearn`'s `StandardScaler` function.
+The models used in the next sections assume that the features are on similar scales. To achieve this, we transform the numeric variables to a standard scale with mean 0 and standard deviation 1 using sklearn's `StandardScaler` function.
 
 
 
@@ -64,11 +63,9 @@ scaler = StandardScaler()
 train_vars_scaled = pd.DataFrame(scaler.fit_transform(ls_train[list(numeric_var_list)]),
                                  index=ls_train.index, 
                                  columns=ls_train[list(numeric_var_list)].columns)
-
 feature_train = pd.concat([train_vars_scaled, 
                            ls_train[list(dummy_var_list)]], 
                           axis=1).sort_index(axis=1)
-
 outcome_train = ls_train[list(outcome_var_list)]
 ```
 
@@ -80,68 +77,115 @@ outcome_train = ls_train[list(outcome_var_list)]
 test_vars_scaled = pd.DataFrame(scaler.transform(ls_test[list(numeric_var_list)]),
                                 index=ls_test.index, 
                                 columns=ls_test[list(numeric_var_list)].columns)
-
 feature_test = pd.concat([test_vars_scaled, 
                           ls_test[list(dummy_var_list)]], 
                          axis=1).sort_index(axis=1)
-
 outcome_test = ls_test[list(outcome_var_list)]
-
 ```
 
 
-## Classification
+## 1. Logisitic Regression Classification
+
+The first model is a logistic regression on the outcome variable `OUT_class` which is the binary classification for loans are either fully repaid (1) or charged off (0). The flag `class_weight='balanced'` ensures that both classes are equally represented in each set. 
 
 
 
 ```python
-from sklearn.linear_model import LogisticRegression
-logreg = LogisticRegression(random_state=0)
-model_logreg = logreg.fit(feature_train, outcome_test.iloc[:,0])
-
+#SET TARGET VARIABLE 'OUT_Class'
+target_train = outcome_train.iloc[:,2]
+target_test = outcome_test.iloc[:,2]
 ```
 
 
-    /Users/michal/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/logistic.py:432: FutureWarning: Default solver will be changed to 'lbfgs' in 0.22. Specify a solver to silence this warning.
-      FutureWarning)
+
+
+```python
+#LOGISTIC REGRESSION
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state=0, solver='lbfgs', max_iter=10000, class_weight='balanced')
+classifier.fit(feature_train, target_train)
+target_predicted = classifier.predict(feature_test)
+target_probabilities = classifier.predict_proba(feature_test)[:,1]
+```
 
 
 
-    ---------------------------------------------------------------------------
 
-    ValueError                                Traceback (most recent call last)
+```python
+#MODEL EVALUATION
+from sklearn.model_selection import cross_val_score
 
-    <ipython-input-47-7a4b50aacbb2> in <module>()
-          1 from sklearn.linear_model import LogisticRegression
-          2 logreg = LogisticRegression(random_state=0)
-    ----> 3 model_logreg = logreg.fit(feature_train, outcome_test.iloc[:,0])
-    
+#ACCURACY
+train_accuracy = classifier_model.score(feature_train, target_train)
+print('Train Accuracy: {:.4}'.format(train_score))
+test_accuracy = classifier_model.score(feature_test, target_test)
+print('Test Accuracy: {:.4}'.format(test_score))
+cross_val_accuracy = cross_val_score(classifier, feature_train, target_train, scoring='accuracy', cv=5).mean()
+print('Cross-Validation Accuracy: {:.4}'.format(cross_val_accuracy))
 
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/logistic.py in fit(self, X, y, sample_weight)
-       1282 
-       1283         X, y = check_X_y(X, y, accept_sparse='csr', dtype=_dtype, order="C",
-    -> 1284                          accept_large_sparse=solver != 'liblinear')
-       1285         check_classification_targets(y)
-       1286         self.classes_ = np.unique(y)
+#PRECISION: true good loans / total predicted good loans
+precision = cross_val_score(classifier, feature_train, target_train, scoring='precision', cv=5).mean()
+print('Precision: {:.4}'.format(precision))
 
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/utils/validation.py in check_X_y(X, y, accept_sparse, accept_large_sparse, dtype, order, copy, force_all_finite, ensure_2d, allow_nd, multi_output, ensure_min_samples, ensure_min_features, y_numeric, warn_on_dtype, estimator)
-        755         y = y.astype(np.float64)
-        756 
-    --> 757     check_consistent_length(X, y)
-        758 
-        759     return X, y
+#RECALL: true good loans / total actual good loans
+recall = cross_val_score(classifier, feature_train, target_train, scoring='recall', cv=5).mean()
+print('Recall: {:.4}'.format(recall))
+```
 
 
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/utils/validation.py in check_consistent_length(*arrays)
-        228     if len(uniques) > 1:
-        229         raise ValueError("Found input variables with inconsistent numbers of"
-    --> 230                          " samples: %r" % [int(l) for l in lengths])
-        231 
-        232 
+    Train Accuracy: 0.6342
+    Test Accuracy: 0.6361
+    Cross-Validation Accuracy: 0.6344
+    Precision: 0.9127
+    Recall: 0.6351
 
 
-    ValueError: Found input variables with inconsistent numbers of samples: [336144, 84037]
+
+
+```python
+#CONFUSION MATRIX
+from sklearn.metrics import confusion_matrix
+
+matrix = pd.DataFrame(confusion_matrix(target_test, target_predicted),
+                      index=['Fully Repaid', 'Not Fully Repaid'],
+                      columns=['Fully Repaid', 'Not Fully Repaid'])
+
+fig, ax = plt.subplots()
+sns.heatmap(matrix, annot=True, fmt='g', cbar=None, cmap='Blues')
+plt.title('Confusion Matrix of Binary Classification Predictions')
+plt.tight_layout()
+plt.ylabel('True Class')
+plt.xlabel('Predicted Class')
+ax.set_xticklabels(['Charged Off', 'Fully Repaid'], va='center')
+ax.set_yticklabels(['Charged Off', 'Fully Repaid'], va='center')
+plt.show()
+```
+
+
+
+![png](Models_files/Models_18_0.png)
+
+
+
+
+```python
+#ROC CURVE
+from sklearn.metrics import roc_curve, roc_auc_score
+false_positive_rate, true_positive_rate, threshold = roc_curve(target_test, target_probabilities)
+plt.title('Reciever Operating Characterisic')
+plt.plot(false_positive_rate, true_positive_rate, label='ROC')
+plt.plot([0,1], ls='--',label='random')
+plt.plot([0,0],[1,0], c='.7', )
+plt.plot([1,1], c='.7', label='perfect')
+plt.legend()
+plt.ylabel('True Positive Rate')
+plt.xlabel('False Positive Rate')
+plt.show()
+```
+
+
+
+![png](Models_files/Models_19_0.png)
 
 
 ## Regression
