@@ -47,8 +47,8 @@ There are five records with missing data, likely originating from sparsely popul
 
 
 
-    /anaconda3/lib/python3.7/site-packages/sklearn/ensemble/weight_boosting.py:29: DeprecationWarning: numpy.core.umath_tests is an internal NumPy module and should not be imported. It will be removed in a future NumPy release.
-      from numpy.core.umath_tests import inner1d
+
+
 
 
 
@@ -183,20 +183,6 @@ Visually, our exploratory data analysis did not suggest discrimination in either
 
 
 
-    /anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:6: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
-      
-    /anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:7: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
-      import sys
-
-
 
 
 
@@ -232,7 +218,7 @@ Visually, our exploratory data analysis did not suggest discrimination in either
 
 
 
-![png](EthicalImplications_files/EthicalImplications_20_0.png)
+![png](EthicalImplications_files/EthicalImplications_21_0.png)
 
 
 Looking at the distributions of acceptances versus rejections by Population size, count of Households, and count of Housing Units, we observe a slight favoring of more populous areas for loan acceptances. Unsurprisingly, we also see that compared to the rejected loans, the accepted loans came from applicants in areas with higher median income.
@@ -244,7 +230,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_23_0.png)
+![png](EthicalImplications_files/EthicalImplications_24_0.png)
 
 
 **Figure 2B. Boxplots: Distributions of Loan Acceptances and Rejections by Sex (Count and Percent of Total Population)**
@@ -254,7 +240,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_25_0.png)
+![png](EthicalImplications_files/EthicalImplications_26_0.png)
 
 
 **Figure 3A. Histograms: Distributions of Loan Acceptances and Rejections by Race (Count and Percent of Total Population)**
@@ -264,7 +250,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_27_0.png)
+![png](EthicalImplications_files/EthicalImplications_28_0.png)
 
 
 **Figure 3B. Boxplots: Distributions of Loan Acceptances and Rejections by Race (Count and Percent of Total Population)**
@@ -274,7 +260,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_29_0.png)
+![png](EthicalImplications_files/EthicalImplications_30_0.png)
 
 
 **Figure 4A. Histograms: Distributions of Loan Acceptances and Rejections by Household Structure and Marital Status (Count and Percent of Total Population)**
@@ -284,7 +270,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_31_0.png)
+![png](EthicalImplications_files/EthicalImplications_32_0.png)
 
 
 **Figure 4B. Boxplots: Distributions of Loan Acceptances and Rejections by Household Structure and Marital Status (Count and Percent of Total Population)**
@@ -294,7 +280,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_33_0.png)
+![png](EthicalImplications_files/EthicalImplications_34_0.png)
 
 
 **Figure 5. Boxplots: Distributions of Loan Acceptances and Rejections by Educational Attainment (Count and Percent of Total Population)**
@@ -304,7 +290,7 @@ Looking at the distributions of acceptances versus rejections by Population size
 
 
 
-![png](EthicalImplications_files/EthicalImplications_35_0.png)
+![png](EthicalImplications_files/EthicalImplications_36_0.png)
 
 
 Further, of the loans that were accepted, we checked to see if there were noticeable differences in assigned loan grade by demographic groups. Loan grade will influence the interest rate the borrower is charged and whether or not investors want to fund the loan. Again, the data visualizations did not suggest discrimination. (See **Figures 6-9** below.)
@@ -320,7 +306,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_39_0.png)
+![png](EthicalImplications_files/EthicalImplications_40_0.png)
 
 
 **Figure 6B. Distributions of Loan Grade by Sex (Population Count)**
@@ -330,7 +316,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_41_0.png)
+![png](EthicalImplications_files/EthicalImplications_42_0.png)
 
 
 **Figure 7A. Distributions of Loan Grade by Race (Percent of Total Population)**
@@ -340,7 +326,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_43_0.png)
+![png](EthicalImplications_files/EthicalImplications_44_0.png)
 
 
 **Figure 7B. Distributions of Loan Grade by Race (Population Count)**
@@ -350,7 +336,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_45_0.png)
+![png](EthicalImplications_files/EthicalImplications_46_0.png)
 
 
 **Figure 8A. Distributions of Loan Grade by Household Structure and Marital Status (Percent of Total Households)**
@@ -360,7 +346,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_47_0.png)
+![png](EthicalImplications_files/EthicalImplications_48_0.png)
 
 
 **Figure 8B. Distributions of Loan Grade by Household Structure and Marital Status (Household Count)**
@@ -370,7 +356,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_49_0.png)
+![png](EthicalImplications_files/EthicalImplications_50_0.png)
 
 
 **Figure 9. Distributions of Loan Grade by Educational Attainment (Percent of Total Population)**
@@ -380,7 +366,7 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 
 
-![png](EthicalImplications_files/EthicalImplications_51_0.png)
+![png](EthicalImplications_files/EthicalImplications_52_0.png)
 
 
 Going forward in the modelling, we chose to focus on the demographic measures as a percentage of the total population, because demographic information by zip code gets muddled by how populous the zip code is when using population counts. As we can see in the histograms in **Figures 1-4**, using counts makes the acceptance distributions slightly to the right of the rejection distributions for all demographic groups because accepted loans tended to come from more populous zip codes as shown in **Figure 1**, in the distributions by Population size.
@@ -399,19 +385,18 @@ Going forward in the modelling, we chose to focus on the demographic measures as
 
 
 
-    /anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:3: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
-      This is separate from the ipykernel package so we can avoid doing imports until
 
 
-
-
-
-
-
-
+```python
+#train and test random forest classifier
+n_use = 50
+depth_use = 25
+rf = RandomForestClassifier(n_estimators=n_use, max_depth=depth_use)
+rf.fit(X_train_rf, y_train_rf)
+rf_score_test = accuracy_score(y_test_rf, rf.predict(X_test_rf))
+print("The test accuracy of the RandomForestClassifier with max_depth {} and {} trees is {:.2f}."
+      .format(depth_use, n_use, rf_score_test))
+```
 
 
     The test accuracy of the RandomForestClassifier with max_depth 25 and 50 trees is 0.91.
@@ -431,14 +416,123 @@ Going forward in the modelling, we chose to focus on the demographic measures as
 
 
 
+```python
+#remove 1 of each of the demographic groups to avoid perfect colinearity
+#e.g. Male_pct + Female_pct = 1
+#leave 'int_rate' out as the response
+ols_predictors = ['loan_amnt',
+ 'funded_amnt',
+ 'funded_amnt_inv',
+ 'term',
+ 'grade',
+ 'sub_grade',
+ 'emp_length',
+ 'home_ownership',
+ 'annual_inc',
+ 'verification_status',
+ 'dti',
+ 'Population',
+ 'Households',
+ 'No_Diploma_pct',
+ 'High_School_pct',
+ 'Some_College_pct',
+ 'Bachelors_Degree_pct',
+ 'Graduate_Degree_pct',
+ 'Family_Poverty_pct',
+ 'Unemployment_Rate_pct',
+ 'Housing_Units',
+ 'White_pct',
+ 'Black_pct',
+ 'Native_pct',
+ 'Asian_pct',
+ 'Islander_pct',
+ 'Two_pct',
+ 'Hispanic_pct',
+ 'Male_pct',
+ 'From_25000_to_49999_pct',
+ 'From_50000_to_74999_pct',
+ 'From_75000_to_99999_pct',
+ 'From_100000_to_149999_pct',
+ 'From_150000_to_199999_pct',
+ 'From_200000_or_more_pct',
+ 'Married_couple_families_pct',
+ 'Married_couple_child_under_18_pct',
+ 'Single_parent_families_pct',
+ 'Single_parent_child_under_18_pct']
+```
+
+
+
+
+```python
+accepted_joined_df.dtypes
+```
 
 
 
 
 
-<script>
-$('div.output_stderr').hide();
-</script>
-
+    loan_amnt                                float64
+    term                                      object
+    int_rate                                 float64
+    installment                              float64
+    grade                                     object
+    emp_length                               float64
+    home_ownership                            object
+    annual_inc                               float64
+    verification_status                       object
+    Zip                                       object
+    dti                                      float64
+    accepted                                   int64
+    Population                               float64
+    White                                    float64
+    Black                                    float64
+    Native                                   float64
+    Asian                                    float64
+    Islander                                 float64
+    Other                                    float64
+    Two                                      float64
+    Hispanic                                 float64
+    Households                               float64
+    Less_than_24999                          float64
+    From_25000_to_49999                      float64
+    From_50000_to_74999                      float64
+    From_75000_to_99999                      float64
+    From_100000_to_149999                    float64
+    From_150000_to_199999                    float64
+    From_200000_or_more                      float64
+    No_Diploma_pct                           float64
+                                              ...   
+    Male                                     float64
+    White_pct                                float64
+    Black_pct                                float64
+    Native_pct                               float64
+    Asian_pct                                float64
+    Islander_pct                             float64
+    Other_pct                                float64
+    Two_pct                                  float64
+    Hispanic_pct                             float64
+    Female_pct                               float64
+    Male_pct                                 float64
+    Less_than_24999_pct                      float64
+    From_25000_to_49999_pct                  float64
+    From_50000_to_74999_pct                  float64
+    From_75000_to_99999_pct                  float64
+    From_100000_to_149999_pct                float64
+    From_150000_to_199999_pct                float64
+    From_200000_or_more_pct                  float64
+    Families_pct                             float64
+    Married_couple_families_pct              float64
+    Married_couple_child_under_18_pct        float64
+    Married_couple_no_child_under_18_pct     float64
+    Single_parent_families_pct               float64
+    Single_parent_child_under_18_pct         float64
+    Single_parent_no_child_under_18_pct      float64
+    Non_families_pct                         float64
+    Householder_living_alone_pct             float64
+    Householder_living_with_unrelated_pct    float64
+    Occupied_pct                             float64
+    Household_size                           float64
+    Length: 79, dtype: object
 
 
