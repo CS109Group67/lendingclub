@@ -1,5 +1,5 @@
 ---
-title: join accepted loan data with census data by zip code
+title: Ethical Implications
 notebook: EthicalImplications.ipynb
 nav_include: 5
 ---
