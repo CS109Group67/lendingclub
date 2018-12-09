@@ -2,7 +2,7 @@
 title: Lending Club Data-Driven Investing
 ---
 
-## CS109A | Fall 2018 |Tiffany Chang, Michal Propas, Elliot Trilling
+## CS109A | Fall 2018 | Tiffany Chang, Michal Propas, Elliot Trilling
 
 <br>
 
