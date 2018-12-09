@@ -12,7 +12,7 @@ nav_include: 2
 
 <br>
 
-## 0. Custom Functions
+## 0. Functions
 
 
 
@@ -28,33 +28,6 @@ nav_include: 2
 
 
 
-
-
-
-
-```python
-#FUNCTION FOR EDA
-num_observations = len(ls_clean)
-def EDA_attr(attr):
-    """ Displays basic EDA for given attribute"""
-    attr_type = ls_clean[attr].dtype
-    missing_values = ls_clean[attr].isnull().sum()
-    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, "NULL"))))
-    print('\tType: \t\t\t{}'.format(attr_type))
-    print('\tMissing Values: \t{} ({:.1%})'.format(
-                    missing_values, missing_values/num_observations))    
-    
-    if attr_type == 'float64':  # numerical variables
-        print('\tMean: \t\t\t{:.2f}'.format(ls_clean[attr].mean()))
-        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls_clean[attr].min(), ls_clean[attr].max()))
-        plt.hist(ls_clean[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
-    
-    if attr_type == 'object':   # categorical variables
-        print('\tNumber of Categories: \t{}'.format(len(ls_clean.groupby(attr))))
-        print('\tMost Common Category: \t{}'.format(ls_clean.groupby(attr)['loan_amnt'].count().idxmax()))
-    
-    display(Markdown('\n'))
-```
 
 
 
@@ -74,10 +47,6 @@ def dummy_attr(attr):
 
 
 
-
-
-
-
 ```python
 #FUNCTION FOR OUTLIER DETECTION
 ls_clean['outlier'] = 0 # this column is incremented for identified outlier instances
@@ -86,6 +55,47 @@ def outlier_attr(attr, threshold):
     outliers = ls[attr] > threshold
     ls_clean['outlier'] = ls_clean['outlier'] + outliers
     return outliers
+```
+
+
+
+
+```python
+#FUNCTION FOR MISSING VALUE IMPUTATION
+from sklearn.impute import SimpleImputer
+def imputation_attr(attr, strategy='mean'):
+    """ Impute missing values via mean imputation or most frequent value"""
+    imp = SimpleImputer(strategy=strategy)
+    ls_clean[attr] = imp.fit_transform(ls_clean[[attr]])
+```
+
+
+
+
+```python
+#FUNCTION FOR EDA
+num_observations = len(ls_clean)
+def EDA_attr(attr):
+    """ Displays basic EDA for given attribute"""
+    attr_type = ls_clean[attr].dtype
+    missing_values = ls_clean[attr].isnull().sum()
+    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, ""))))
+    print('\tType: \t\t\t{}'.format(attr_type))
+    print('\tMissing Values: \t{} ({:.1%})'.format(missing_values, missing_values/num_observations))
+    
+    # numerical variables
+    if attr_type == 'float64' or attr_type == 'int64':  
+        print('\tMean: \t\t\t{:.2f}'.format(ls_clean[attr].mean()))     
+        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls_clean[attr].min(), ls_clean[attr].max()))
+        plt.hist(ls_clean[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
+    
+    # categorical variables
+    if attr_type == 'object':   
+        print('\tNumber of Categories: \t{}'.format(len(ls_clean.groupby(attr))))
+        print('\tMost Common Category: \t{}'.format(ls_clean.groupby(attr)['loan_amnt'].count().idxmax()))
+        dummy_attr(attr)
+
+    display(Markdown('\n'))
 ```
 
 
@@ -105,42 +115,7 @@ ls_clean = ls_clean[completed_36 | completed_60]
 ```
 
 
-Next we drop non-existant, empty, constant or otherwise unmeaningful variables.
-
-
-
-```python
-#DROP INCONSEQUENTIAL VARIABLES
-drop = ['addr_state', # not useful as dummy variable
-        'all_util', # all missing values
-        'dataset', # just indicates the dataset
-        'desc', # non-standard text description
-        'disbursement_method', # just indicates cash or direct_pay
-        'emp_title', # non-standard text description
-        'funded_amnt', # redundant with loan_amount
-        'funded_amnt_inv', # redundant with loan_amount
-        'grade', # redundant when using sub_grade
-        'initial_list_status', # possible values are w or f
-        'il_util', # all missing values
-        'inq_fi', # all missing values
-        'inq_last_12m', # all missing values
-        'max_bal_bc', # all missing values
-        'mths_since_rcnt_il', # all missing values
-        'open_acc_6m', # all missing values
-        'open_act_il', # all missing values
-        'open_il_12m', # all missing values
-        'open_il_24m', # all missing values
-        'open_rv_12m', # all missing values
-        'open_rv_24m', # all missing values
-        'title', # non-standard text description
-        'total_bal_il', # all missing values
-        'total_cu_tl', # all missing values
-        'zip_code'] # we could make into dummies, but there are 954 of them
-ls_clean.drop(drop, axis=1, inplace=True)
-```
-
-
-LC only recently began accepting joint application loans, so none of these loans are term-complete. Therefore we remove these variables from the model.
+Next we drop non-existant, empty, constant or otherwise unmeaningful variables. LC only recently began accepting joint application loans, so none of these loans are term-complete. Similarly, LC started reporting variables recently that were not reported for the term-complete loans. Therefore we remove these variables from the model.
 
 
 
@@ -152,14 +127,34 @@ joint = ['application_type', 'annual_inc_joint', 'dti_joint', 'revol_bal_joint',
          'sec_app_mths_since_last_major_derog', 'sec_app_num_rev_accts', 'sec_app_open_acc', 
          'sec_app_open_act_il', 'sec_app_revol_util', 'verification_status_joint']
 ls_clean.drop(joint, axis=1, inplace=True)
+
+#DROP EMPTY VARIABLES
+empty = ['all_util', 'il_util', 'inq_fi', 'inq_last_12m', 'max_bal_bc', 
+         'mths_since_rcnt_il', 'open_acc_6m', 'open_act_il', 'open_il_12m', 
+         'open_il_24m', 'open_rv_12m', 'open_rv_24m','total_bal_il', 'total_cu_tl']
+ls_clean.drop(empty, axis=1, inplace=True)
+
+#DROP INCONSEQUENTIAL VARIABLES
+drop = ['addr_state', # not useful as dummy variable
+        'dataset', # just indicates the dataset
+        'desc', # non-standard text description
+        'disbursement_method', # just indicates cash or direct_pay
+        'emp_title', # non-standard text description
+        'funded_amnt', # redundant with loan_amount
+        'funded_amnt_inv', # redundant with loan_amount
+        'grade', # redundant when using sub_grade
+        'initial_list_status', # possible values are w or f
+        'title', # non-standard text description
+        'zip_code'] # we could make into dummies, but there are 954 of them
+ls_clean.drop(drop, axis=1, inplace=True)
 ```
 
 
 <br>
 
-## 2. Dependent Variables
+## 2. Depedent Variables
 
-The following variables represent outcome information for the loan after it has been funded. This information is not be available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuance. Based on these variables, we designed 3 outcome features to represent loan outcomes: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
+The following variables represent outcome information for the loan after it has been funded. This information is not available to a prospective investor but instead represents aspects of how well or poorly the loan performed after issuance. Based on these variables, we designed 3 outcome features to represent loan outcomes: `OUT_Class`, `OUT_Principle_Repaid_Percentage` and `OUT_Monthly_Rate_of_Return`.
 
 
 
@@ -180,9 +175,9 @@ dependent_cols = [
     'hardship_status', 'hardship_type', 'last_credit_pull_d', 
     'orig_projected_additional_accrued_interest', 'payment_plan_start_date', 'pymnt_plan', 
     'recoveries', 'settlement_amount', 'settlement_date', 'settlement_percentage', 
-    'settlement_status', 'settlement_term', 'total_rec_late_fee', ]
+    'settlement_status', 'settlement_term', 'total_rec_late_fee']
 
-ls_clean.drop(dependent_cols, axis=1, inplace=True)
+outcome_cols = ['OUT_Class', 'OUT_Principle_Repaid_Percentage', 'OUT_Monthly_Rate_Of_Return']
 ```
 
 
@@ -196,22 +191,26 @@ This outcome variable is an binary classification of whether the loan has been F
 ls_clean['OUT_Class'] = 0
 ls_clean.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
 ls_clean.loc[ls['loan_status'].str.contains('Current'), 'OUT_Class'] = 1
-ls_clean['OUT_Class'].describe()
+EDA_attr('OUT_Class')
 ```
 
 
 
+**OUT_Class**: 
 
 
-    count   420181.000
-    mean         0.859
-    std          0.348
-    min          0.000
-    25%          1.000
-    50%          1.000
-    75%          1.000
-    max          1.000
-    Name: OUT_Class, dtype: float64
+    	Type: 			int64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.86
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_18_2.png)
+
+
+
+
 
 
 
@@ -223,22 +222,26 @@ This outcome variable represents the percentage of loan principal that has been 
 
 ```python
 ls_clean['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
-ls_clean['OUT_Principle_Repaid_Percentage'].describe()
+EDA_attr('OUT_Principle_Repaid_Percentage')
 ```
 
 
 
+**OUT_Principle_Repaid_Percentage**: 
 
 
-    count   420181.000
-    mean         0.915
-    std          0.226
-    min          0.000
-    25%          1.000
-    50%          1.000
-    75%          1.000
-    max          1.000
-    Name: OUT_Principle_Repaid_Percentage, dtype: float64
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.92
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_20_2.png)
+
+
+
+
 
 
 
@@ -249,31 +252,35 @@ This outcome variable represents the simple monthly rate of return that investor
 
 
 ```python
-#Net_Repayment: amount repaid on the loan net of the loan amount
+#NET_REPAYMENT: amount repaid on the loan net of the loan amount
 Net_Repayment = ls['total_pymnt'] - ls['loan_amnt']
 
-#Repayment_Period: amount of time it took to repay the loan or charge off
+#REPAYMENT_PERIOD: amount of time it took to repay the loan or charge off
 Repayment_Period = (ls['last_pymnt_d'].dt.to_period('M') - 
                     ls['issue_d'].dt.to_period('M')).replace([pd.NaT,0], 1)
 
-#Monthly_Rate_Of_Return: simple monthly return accrued over the term of the loan
+#MONTHLY_RATE_OF_RETURN: simple monthly return accrued over the term of the loan
 ls_clean['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls_clean['loan_amnt']
-ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
+EDA_attr('OUT_Monthly_Rate_Of_Return')
 ```
 
 
 
+**OUT_Monthly_Rate_Of_Return**: 
 
 
-    count   420181.000
-    mean        -0.002
-    std          0.052
-    min         -1.000
-    25%          0.004
-    50%          0.006
-    75%          0.008
-    max          0.208
-    Name: OUT_Monthly_Rate_Of_Return, dtype: float64
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			-0.00
+    	Range: 			(-1.00, 0.21)
+
+
+
+![png](EDA_files/EDA_22_2.png)
+
+
+
+
 
 
 
@@ -281,12 +288,21 @@ ls_clean['OUT_Monthly_Rate_Of_Return'].describe()
 
 ## 3. Independent Variables
 
-We performed type conversions, outlier identification, dummy creation and EDA for each independent variable.
+We performed type conversions, outlier identification, dummy creation, missing value imputation and EDA for each independent variable.
 
 <br>
 
 
 
+
+
+
+
+```python
+independent_cols = set(ls_clean.columns) - set(outcome_cols)
+for attr in sorted(independent_cols):
+    EDA_attr(attr)
+```
 
 
 
@@ -300,11 +316,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_26_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_2.png)
 
 
 
@@ -323,34 +335,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_27_2.png)
-
-
-
-
-
-
-
-
-
-
-
-
-**emp_length**: Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years. 
-
-
-    	Type: 			float64
-    	Missing Values: 	21519 (1.1%)
-    	Mean: 			5.84
-    	Range: 			(0.00, 10.00)
-
-
-
-![png](EDA_files/EDA_28_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_6.png)
 
 
 
@@ -369,11 +354,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_29_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_10.png)
 
 
 
@@ -392,11 +373,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_30_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_14.png)
 
 
 
@@ -415,11 +392,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_31_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_18.png)
 
 
 
@@ -438,11 +411,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_32_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_22.png)
 
 
 
@@ -461,11 +430,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_33_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_26.png)
 
 
 
@@ -484,11 +449,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_34_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_30.png)
 
 
 
@@ -507,11 +468,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_35_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_34.png)
 
 
 
@@ -530,11 +487,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_36_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_38.png)
 
 
 
@@ -553,11 +506,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_37_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_42.png)
 
 
 
@@ -576,11 +525,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_38_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_46.png)
 
 
 
@@ -599,11 +544,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_39_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_50.png)
 
 
 
@@ -627,10 +568,6 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-
-
-
-
 **inq_last_6mths**: The number of inquiries in past 6 months (excluding auto and mortgage inquiries)
 
 
@@ -641,11 +578,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_41_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_57.png)
 
 
 
@@ -664,11 +597,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_42_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_61.png)
 
 
 
@@ -687,11 +616,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_43_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_65.png)
 
 
 
@@ -710,11 +635,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_44_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_69.png)
 
 
 
@@ -733,11 +654,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_45_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_73.png)
 
 
 
@@ -756,11 +673,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_46_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_77.png)
 
 
 
@@ -779,11 +692,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_47_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_81.png)
 
 
 
@@ -802,11 +711,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_48_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_85.png)
 
 
 
@@ -825,11 +730,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_49_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_89.png)
 
 
 
@@ -848,11 +749,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_50_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_93.png)
 
 
 
@@ -871,11 +768,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_51_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_97.png)
 
 
 
@@ -894,11 +787,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_52_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_101.png)
 
 
 
@@ -917,11 +806,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_53_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_105.png)
 
 
 
@@ -940,11 +825,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_54_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_109.png)
 
 
 
@@ -963,11 +844,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_55_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_113.png)
 
 
 
@@ -986,11 +863,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_56_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_117.png)
 
 
 
@@ -1009,11 +882,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_57_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_121.png)
 
 
 
@@ -1032,11 +901,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_58_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_125.png)
 
 
 
@@ -1055,11 +920,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_59_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_129.png)
 
 
 
@@ -1078,11 +939,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_60_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_133.png)
 
 
 
@@ -1101,11 +958,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_61_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_137.png)
 
 
 
@@ -1124,11 +977,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_62_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_141.png)
 
 
 
@@ -1147,11 +996,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_63_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_145.png)
 
 
 
@@ -1170,11 +1015,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_64_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_149.png)
 
 
 
@@ -1193,11 +1034,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_65_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_153.png)
 
 
 
@@ -1216,11 +1053,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_66_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_157.png)
 
 
 
@@ -1239,11 +1072,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_67_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_161.png)
 
 
 
@@ -1262,11 +1091,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_68_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_165.png)
 
 
 
@@ -1285,11 +1110,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_69_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_169.png)
 
 
 
@@ -1308,11 +1129,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_70_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_173.png)
 
 
 
@@ -1331,11 +1148,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_71_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_177.png)
 
 
 
@@ -1354,11 +1167,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_72_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_181.png)
 
 
 
@@ -1377,11 +1186,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_73_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_185.png)
 
 
 
@@ -1400,11 +1205,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_74_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_189.png)
 
 
 
@@ -1423,11 +1224,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_75_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_193.png)
 
 
 
@@ -1451,10 +1248,6 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-
-
-
-
 **revol_bal**: Total credit revolving balance
 
 
@@ -1465,11 +1258,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_77_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_200.png)
 
 
 
@@ -1481,14 +1270,14 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 **revol_util**: Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.
 
 
-    	Type: 			object
+    	Type: 			float64
     	Missing Values: 	296 (0.0%)
-    	Number of Categories: 	1262
-    	Most Common Category: 	0%
+    	Mean: 			55.02
+    	Range: 			(0.00, 892.30)
 
 
 
-
+![png](EDA_files/EDA_25_204.png)
 
 
 
@@ -1507,11 +1296,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_79_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_208.png)
 
 
 
@@ -1530,11 +1315,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_80_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_212.png)
 
 
 
@@ -1558,10 +1339,6 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-
-
-
-
 **tot_coll_amt**: Total collection amounts ever owed
 
 
@@ -1572,11 +1349,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_82_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_219.png)
 
 
 
@@ -1595,11 +1368,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_83_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_223.png)
 
 
 
@@ -1618,11 +1387,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_84_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_227.png)
 
 
 
@@ -1641,11 +1406,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_85_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_231.png)
 
 
 
@@ -1664,11 +1425,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_86_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_235.png)
 
 
 
@@ -1687,11 +1444,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_87_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_239.png)
 
 
 
@@ -1710,11 +1463,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_88_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_243.png)
 
 
 
@@ -1733,11 +1482,7 @@ We performed type conversions, outlier identification, dummy creation and EDA fo
 
 
 
-![png](EDA_files/EDA_89_2.png)
-
-
-
-
+![png](EDA_files/EDA_25_247.png)
 
 
 
