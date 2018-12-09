@@ -1,5 +1,14 @@
+---
+title: join accepted loan data with census data by zip code
+notebook: EthicalImplications.ipynb
+nav_include: 5
+---
 
-# Ethical Implications
+## Contents
+{:.no_toc}
+*  
+{: toc}
+
 
 The [Equal Credit Opportunity Act (ECOA)](https://www.consumer.ftc.gov/articles/0347-your-equal-credit-opportunity-rights) is a federal law that prohibits lending entities (both institutions and people) from discriminating "on the basis of race, color, religion, national origin, sex, marital status, age," or because the prospective borrower receives public assistance. Lenders are, however, permitted to consider an applicant's "income, expenses, debts, and credit history" in evaluating the applicant's probability of repaying the debt to decide whether to accept or reject loan applications and to determine loan terms. Nevertheless, differential treatment by race, color, religion, national origin, sex, etc can still arise even when an institution or person is not explicitly discriminating based on those characteristics. Thus, we want to assess whether we see evidence of discrimination in LendingClub's acceptances and rejections of loan applications or in the terms it sets for accepted loans. In addition, we want to evaluate whether our proposed investing strategy results in differential treatment.
 
@@ -34,13 +43,11 @@ There are five records with missing data, likely originating from sparsely popul
 
 
 ```python
-# formatting
 import requests
 from IPython.core.display import HTML
 styles = requests.get("https://raw.githubusercontent.com/Harvard-IACS/2018-CS109A/master/content/styles/cs109.css").text
 HTML(styles)
 
-# import statements
 %matplotlib inline
 import pandas as pd
 import numpy as np
@@ -53,7 +60,6 @@ import seaborn as sns
 
 
 ```python
-# read in the census data
 census_df = pd.read_csv("data/census_data_clean_new.csv", index_col=False)
 ```
 
@@ -63,7 +69,6 @@ census_df = pd.read_csv("data/census_data_clean_new.csv", index_col=False)
 
 
 ```python
-# summarize census data
 pd.set_option('float_format', '{:f}'.format)
 census_df[['Population', 'Household_size', 'Avg_median_household_inc', 'Male_pct', 'White_pct', 'No_Diploma_pct']].describe()
 ```
@@ -184,7 +189,6 @@ Leveraging zip codes, we explored whether there were demographic differences bet
 
 
 ```python
-# read in the loan data for accepted loans
 loan_stats_df = pd.read_hdf("data/LoanStats_clean.h5")
 ```
 
@@ -192,7 +196,6 @@ loan_stats_df = pd.read_hdf("data/LoanStats_clean.h5")
 
 
 ```python
-# some processing of the accepted loan data
 loan_cols_to_keep = ['loan_amnt', 'funded_amnt', 'funded_amnt_inv', 'term', 'int_rate', 'installment', 
                 'grade', 'sub_grade', 'emp_length', 'home_ownership', 'annual_inc', 'verification_status', 
                 'zip_code', 'dti']
@@ -355,7 +358,6 @@ accepted_df.head()
 
 
 ```python
-# read in the loan data for rejected loans
 reject_stats_df = pd.read_pickle("data/RejectStats_clean.pkl")
 ```
 
@@ -363,7 +365,6 @@ reject_stats_df = pd.read_pickle("data/RejectStats_clean.pkl")
 
 
 ```python
-# some processing of the rejected loan data
 reject_cols_to_keep = ['Amount Requested', 'Risk_Score', 'Debt-To-Income Ratio', 'Zip Code', 'Employment Length']
 rejected_df = reject_stats_df[reject_cols_to_keep]
 rejected_df = rejected_df.rename(index=str, columns={"Amount Requested": "loan_amnt", 
@@ -461,7 +462,6 @@ rejected_df.head()
 
 
 ```python
-# take a random sample of rejected_df of same size as accepted_df, as rejected_df is too large
 rand_ind = np.random.choice(rejected_df.shape[0], accepted_df.shape[0], replace=False)
 sample_rejected_df = rejected_df.iloc[rand_ind]
 ```
@@ -470,7 +470,6 @@ sample_rejected_df = rejected_df.iloc[rand_ind]
 
 
 ```python
-# Subset the common columns between the Loan Stats and Reject Stats (sample) datasets and combine
 common_cols = ['loan_amnt', 'dti', 'zip_code', 'emp_length', 'accepted']
 loan_df = accepted_df[common_cols].append(sample_rejected_df[common_cols])
 ```
@@ -479,8 +478,6 @@ loan_df = accepted_df[common_cols].append(sample_rejected_df[common_cols])
 
 
 ```python
-# join loan data with census data by zip code
-# use left join so that none of the loan records are dropped
 loan_df = loan_df.rename(index=str, columns={"zip_code": "Zip"})
 joined_df = pd.merge(loan_df,census_df, on='Zip', how='left')
 ```
@@ -489,7 +486,6 @@ joined_df = pd.merge(loan_df,census_df, on='Zip', how='left')
 
 
 ```python
-# variable lists
 level_vars = ['Population', 'Avg_median_household_inc', 'Households', 'Housing_Units']
 race_vars_pct = ['White_pct', 'Black_pct', 'Native_pct', 'Asian_pct', 'Islander_pct', 'Other_pct', 'Two_pct', 'Hispanic_pct']
 race_vars_count = ['White', 'Black', 'Native', 'Asian', 'Islander', 'Other', 'Two', 'Hispanic']
@@ -505,7 +501,6 @@ household_vars_count = ['Families', 'Non_families', 'Married_couple_families', '
 
 
 ```python
-# function to plot histograms by accept/reject
 def plot_acc_rej(var_list, figwidth, figheight):
     fig, axs = plt.subplots(int(np.ceil(len(var_list)/2)),2, figsize=(figwidth,figheight))
     plt.subplots_adjust(hspace=0.5, wspace=0.5)
@@ -654,7 +649,6 @@ Of the loans that were accepted, is there any discrimination in terms of the loa
 
 
 ```python
-# join accepted loan data with census data by zip code
 accepted_df = accepted_df.rename(index=str, columns={"zip_code": "Zip"})
 accepted_joined_df = pd.merge(accepted_df,census_df, on='Zip', how='left')
 ```
