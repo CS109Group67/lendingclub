@@ -1,6 +1,7 @@
 ---
 title: EDA & Cleaning
 notebook: EDA.ipynb
+nav_include: 2
 ---
 
 ## Contents

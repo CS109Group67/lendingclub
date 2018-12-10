@@ -1,6 +1,7 @@
 ---
 title:  Data Description
 notebook: DataDescription.ipynb
+nav_include: 1
 ---
 
 ## Contents

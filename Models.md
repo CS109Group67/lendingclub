@@ -1,6 +1,7 @@
 ---
 title: Models
 notebook: Models.ipynb
+nav_include: 3
 ---
 
 ## Contents
