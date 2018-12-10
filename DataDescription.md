@@ -1,7 +1,6 @@
 ---
 title:  Data Description
 notebook: DataDescription.ipynb
-nav_include: 1
 ---
 
 ## Contents
@@ -16,7 +15,7 @@ nav_include: 1
 
 ## 1. LoanStats
 
-Lending Club publishes funded loan data (`LoanStats`) each quarter. We accessed the data as of the 2018Q2 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans.
+Lending Club publishes funded loan data (`LoanStats`) each quarter. We accessed the data as of the 2018Q2 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans. The issue dates range from June 2007 to June 2018 and the loan terms are 36 months or 60 months. After cleaning `loanstats` the dataset contains 3 outcome features, 23 dummy variables and  60 numeric variables . The file summaries and loan issue amounts are visualized below. See the [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html) section for more details on the `loanstats` data.
 
 
 
@@ -29,22 +28,9 @@ Lending Club publishes funded loan data (`LoanStats`) each quarter. We accessed 
 
 
 
-After cleaning `loanstats` the dataset contains 3 outcome features, 23 dummy variables and  60 numeric variables (see [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html)). The loan issue dates range from June 2007 to June 2018. The loan terms are 36 months or 60 months, which means 'term-complete' loans are only those issued prior to 2013-Q2 for 60-month terms and prior to 2015-Q2 for 36-month terms. The number and notional of LC loan issuances over time is visualized below.
-
-
-
-
-
-
-
-
-![png](DataDescription_files/DataDescription_6_0.png)
-
-
-
 ## 2. RejectStats
 
-Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 features of 22,469,074 loan applications that failed to meet LC underwriting policy
+Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 features of 22,469,074 loan applications that failed to meet LC underwriting policy. These loan applications have less relevance to prospective investors since they were not approved for funding on the platform. 
 
 
 
@@ -53,7 +39,7 @@ Rejected loan datasets (`RejectStats`) were merged to create a DataFrame with 9 
 
 
 
-![png](DataDescription_files/DataDescription_9_0.png)
+![png](DataDescription_files/DataDescription_7_0.png)
 
 
 

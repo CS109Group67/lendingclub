@@ -1,7 +1,6 @@
 ---
 title: EDA & Cleaning
 notebook: EDA.ipynb
-nav_include: 2
 ---
 
 ## Contents
@@ -63,7 +62,7 @@ We removed variables from the `loanstats` dataset that would not be meaningful i
 
 
 ```python
-#1 EMPTY
+#1 NEW
 empty = ['all_util', 'il_util', 'inq_fi', 'inq_last_12m', 'max_bal_bc', 
          'mths_since_rcnt_il', 'open_acc_6m', 'open_act_il', 'open_il_12m', 
          'open_il_24m', 'open_rv_12m', 'open_rv_24m','total_bal_il', 'total_cu_tl']
