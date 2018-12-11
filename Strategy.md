@@ -37,7 +37,6 @@ ls.sort_index(axis=1, inplace=True)
 
 ## 1. Preprocessing
 
-### Test Set
 
 
 
@@ -48,23 +47,6 @@ ls.sort_index(axis=1, inplace=True)
 
 
 
-
-
-
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    <ipython-input-8-c5218a2ddf05> in <module>()
-          1 #SCALE THE TRAINING SETS (fit_transform)
-    ----> 2 train_vars_scaled = pd.DataFrame(scaler.fit_transform(ls_train[list(numeric_var_list)]),
-          3                                  index=ls_train.index,
-          4                                  columns=ls_train[list(numeric_var_list)].columns)
-          5 feature_train = pd.concat([train_vars_scaled, 
-
-
-    NameError: name 'ls_train' is not defined
 
 
 

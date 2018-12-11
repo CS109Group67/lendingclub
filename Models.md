@@ -32,7 +32,7 @@ ls_train, ls_test = train_test_split(ls, test_size=0.15, stratify=ls['OUT_Class'
 ```
 
 
-### 1A. Standard Scaling
+### 1B. Standard Scaling
 
 The models used in the next sections assume that the features are on similar scales. To achieve this, we transform the numeric variables to a standard scale with mean 0 and standard deviation 1 using sklearn's `StandardScaler` function.
 
@@ -70,7 +70,21 @@ outcome_train = ls_train[list(outcome_var_list)]
 ```
 
 
-## 2. Logisitic Classification
+
+
+```python
+#STANDARDIZE THE TEST SET (transform)
+test_vars_scaled = pd.DataFrame(scaler.transform(ls_test[list(numeric_var_list)]),
+                                index=ls_test.index, 
+                                columns=ls_test[list(numeric_var_list)].columns)
+feature_test = pd.concat([test_vars_scaled, 
+                          ls_test[list(dummy_var_list)]], 
+                         axis=1).sort_index(axis=1)
+outcome_test = ls_test[list(outcome_var_list)]
+```
+
+
+## 2. Logistic Classification
 
 The first model is a logistic regression on the outcome variable `OUT_class` which is the binary classification for loans are either fully repaid (1) or charged off (0). The flag `class_weight='balanced'` ensures that both classes are equally represented in each set. 
 
@@ -79,6 +93,7 @@ The first model is a logistic regression on the outcome variable `OUT_class` whi
 ```python
 #SET TARGET VARIABLE 'OUT_Class'
 target_train = outcome_train.iloc[:,0]
+target_test = outcome_test.iloc[:,0]
 ```
 
 
@@ -89,19 +104,9 @@ target_train = outcome_train.iloc[:,0]
 from sklearn.linear_model import LogisticRegression
 classifier = LogisticRegression(random_state=0, solver='lbfgs', max_iter=10000, class_weight='balanced')
 classifier.fit(feature_train, target_train)
-#target_predicted = classifier.predict(feature_test)
-#target_probabilities = classifier.predict_proba(feature_test)[:,0]
+target_predicted = classifier.predict(feature_test)
+target_probabilities = classifier.predict_proba(feature_test)[:,0]
 ```
-
-
-
-
-
-    LogisticRegression(C=1.0, class_weight='balanced', dual=False,
-              fit_intercept=True, intercept_scaling=1, max_iter=10000,
-              multi_class='warn', n_jobs=None, penalty='l2', random_state=0,
-              solver='lbfgs', tol=0.0001, verbose=0, warm_start=False)
-
 
 
 
@@ -124,9 +129,9 @@ print('Recall: {:.4}'.format(recall))
 ```
 
 
-    Accuracy: 0.6301
-    Precision: 0.9156
-    Recall: 0.6294
+    Accuracy: 0.6309
+    Precision: 0.9153
+    Recall: 0.6307
 
 
 
@@ -152,19 +157,7 @@ plt.show()
 
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    <ipython-input-25-473876e84076> in <module>()
-          2 from sklearn.metrics import confusion_matrix
-          3 
-    ----> 4 matrix = pd.DataFrame(confusion_matrix(target_test, target_predicted),
-          5                       index=['Fully Repaid', 'Not Fully Repaid'],
-          6                       columns=['Fully Repaid', 'Not Fully Repaid'])
-
-
-    NameError: name 'target_test' is not defined
+![png](Models_files/Models_18_0.png)
 
 
 
@@ -183,6 +176,10 @@ plt.ylabel('True Positive Rate')
 plt.xlabel('False Positive Rate')
 plt.show()
 ```
+
+
+
+![png](Models_files/Models_19_0.png)
 
 
 ## 3. Linear Regression

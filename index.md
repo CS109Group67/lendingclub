@@ -15,6 +15,6 @@ title: LendingClub Data-Driven Investing
 Our goal was to *propose, build and evaluate data-driven modeling to power a profitable and ethically responsible LC investment strategy.* As if we were working as data scientists advising a LendingClub investor, we performed the following:
 - [Data Description](https://cs109group67.github.io/lendingclub/DataDescription.html): summary of the datasets
 - [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html): data exploration, cleaning and feature design
-- [Modeling](https://cs109group67.github.io/lendingclub/Models.html): modeling to discern an investment strategy
+- [Modeling](https://cs109group67.github.io/lendingclub/Models.html): modeling to discern predictive features that influence loan outcomes
 - [Investment Strategy](https://cs109group67.github.io/lendingclub/): investment strategy and evaluation of its predictive quality
 - [Ethical Implications](https://cs109group67.github.io/lendingclub/EthicalImplications.html): investigation of discrimination in the investment strategy and LC's underwriting practices
