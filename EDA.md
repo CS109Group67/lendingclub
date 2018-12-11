@@ -38,24 +38,25 @@ nav_include: 2
 
 
 
-## 1. Term-Complete Subset
+## 1. Term-Complete Representative Subset
 
-'Term-complete' loans have completed their full term whereas 'in-force' loans have not completed their term.  To get the most representative outcome information we first remove the loan instances that are not term-complete.
+'Term-complete' loans have completed their full term whereas 'in-force' loans have not completed their term.  To get the most representative outcome information we first remove the loan instances that are not term-complete. Also, LC no longer offers loans of of the lowest grades of F or G, so we remove these loans from the dataset.
 
 
 
 ```python
-#TERM COMPLETE LOANS
+#TERM-COMPLETE GRADES A-E
 completed_36 = (ls['issue_d'] < '2015-04-01') & (ls['term']  == ' 36 months')
 completed_60 = (ls['issue_d'] < '2013-04-01') & (ls['term']  == ' 60 months')
 ls = ls[completed_36 | completed_60]
+ls = ls[(ls['grade'] != 'F') & (ls['grade'] != 'G')]
 ```
 
 
 ## 2. Inconsequential Variable Removal
 
 We removed variables from the `loanstats` dataset that would not be meaningful in the modeling for the following reasons:
-1. LC recently began reporting some new varaibles which are not reported in the term-complete subset. 
+1. LC recently began reporting some new variables which are not reported in the term-complete subset. 
 2. LC recently began accepting joint loans and variables related to coborrowers are empty in the term-complete subset. 
 3. We designed three outcome features based on the set of dependent variables (see next section)
 4. Some variables are non-standard text descriptions or otherwise inconsequential
@@ -129,21 +130,6 @@ ls.loc[ls['loan_status'].str.contains('Fully Paid'), 'OUT_Class'] = 1
 
 
 
-    	Type: 			int64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			0.86
-    	Range: 			(0.00, 1.00)
-
-
-
-![png](EDA_files/EDA_18_1.png)
-
-
-
-
-
-
-
 ### 3B. `OUT_Principle_Repaid_Percentage`
 
 This outcome variable represents the percentage of loan principle that has been repaid. The average principal repaid percentage is 91.5%.
@@ -153,25 +139,6 @@ This outcome variable represents the percentage of loan principle that has been 
 ```python
 ls['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
 ```
-
-
-
-
-
-
-    	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			0.92
-    	Range: 			(0.00, 1.00)
-
-
-
-![png](EDA_files/EDA_21_1.png)
-
-
-
-
-
 
 
 ### 3C. `OUT_Monthly_Rate_of_Return`
@@ -193,8 +160,79 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 ```
 
 
+## 4. Independent Variable Cleaning
+
+We cleaned each independent variable with type converstion, dummy creation and outlier identification. Loans that had missing values in more than 15 of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. See the appendix for the custom functions that we employed.
 
 
+
+```python
+#EARLIEST_CR_LINE
+ls['earliest_cr_line'] =  np.array((ls['issue_d'] - 
+                                    ls['earliest_cr_line']).dt.days).reshape(-1,1)
+
+#EMP_LENGTH
+mapping = {'1 year': 1, '10+ years': 10, '2 years': 2, '3 years': 3, 
+           '4 years': 4, '5 years': 5, '6 years': 6, '7 years': 7, 
+           '8 years': 8, '9 years': 9, '< 1 year': 0}
+ls['emp_length'] = ls['emp_length'].map(mapping)
+
+#HOME_OWNERSHIP
+ls['home_ownership'].replace({'ANY':'OTHER', 'NONE':'OTHER'}, inplace=True)
+
+#INT_RATE
+ls['int_rate'] = ls['int_rate'].str[:-1].astype(np.float)
+
+#REVOL_UTIL
+ls['revol_util'] = ls['revol_util'].str[:-1].astype(np.float)
+
+#SUB_GRADE
+mapping = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4}
+ls['sub_grade'] = (ls['sub_grade'].apply(lambda x: x[0]).map(mapping).astype(int)*5 +
+                         ls['sub_grade'].apply(lambda x: x[1]).astype(int)).astype(float)
+
+#'MTHS_SINCE...' reciprocals
+#use reciprocal so that 0='never occured' and 1/n+1='n month since'
+mnths_since = ls.columns[ls.columns.str.contains('mo_sin|mths_since')]
+for var in mnths_since:
+    ls[var+'_R'] = 1 / (ls[var] + 1)
+ls.drop(mnths_since, axis=1, inplace=True)
+```
+
+
+
+
+
+
+## 4. Variable EDA
+
+### 4A. Outcome Variables
+
+
+
+
+
+
+**OUT_Class**: Binary classification of whether the loan has been Fully Repaid (1) or Not Fully Repaid (0)
+
+
+    	Type: 			int64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.86
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_28_2.png)
+
+
+
+
+
+
+
+
+**OUT_Monthly_Rate_Of_Return**: Simple monthly rate of return that investors recieved by holding the loan
 
 
     	Type: 			float64
@@ -204,7 +242,7 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 
 
-![png](EDA_files/EDA_24_1.png)
+![png](EDA_files/EDA_28_6.png)
 
 
 
@@ -212,239 +250,18 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 
 
-## 4. Independent Variables
 
-We cleaned each independent variable with type conversions, dummy creation, outlier identication and missing value imputation.
-
-
-
-
-
-
-
-
-
-
-**acc_now_delinq**: The number of accounts on which the borrower is now delinquent.
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			0.00
-    	Range: 			(0.00, 14.00)
-
-
-
-![png](EDA_files/EDA_27_2.png)
-
-
-
-
-
-
-
-
-**acc_open_past_24mths**: Number of trades opened in past 24 months.
-
-
-    	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
-    	Mean: 			4.19
-    	Range: 			(0.00, 53.00)
-
-
-
-![png](EDA_files/EDA_27_6.png)
-
-
-
-
-
-
-
-
-**annual_inc**: The self-reported annual income provided by the borrower during registration.
-
-
-    	Type: 			float64
-    	Missing Values: 	4 (0.0%)
-    	Mean: 			71625.96
-    	Range: 			(1896.00, 8706582.00)
-
-
-
-![png](EDA_files/EDA_27_10.png)
-
-
-
-
-
-
-
-
-**avg_cur_bal**: Average current balance of all accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70285 (16.7%)
-    	Mean: 			12685.60
-    	Range: 			(0.00, 958084.00)
-
-
-
-![png](EDA_files/EDA_27_14.png)
-
-
-
-
-
-
-
-
-**bc_open_to_buy**: Total open to buy on revolving bankcards.
-
-
-    	Type: 			float64
-    	Missing Values: 	53734 (12.8%)
-    	Mean: 			8498.77
-    	Range: 			(0.00, 497445.00)
-
-
-
-![png](EDA_files/EDA_27_18.png)
-
-
-
-
-
-
-
-
-**bc_util**: Ratio of total current balance to high credit/credit limit for all bankcard accounts.
-
-
-    	Type: 			float64
-    	Missing Values: 	53975 (12.8%)
-    	Mean: 			64.43
-    	Range: 			(0.00, 339.60)
-
-
-
-![png](EDA_files/EDA_27_22.png)
-
-
-
-
-
-
-
-
-**chargeoff_within_12_mths**: Number of charge-offs within 12 months
-
-
-    	Type: 			float64
-    	Missing Values: 	145 (0.0%)
-    	Mean: 			0.01
-    	Range: 			(0.00, 7.00)
-
-
-
-![png](EDA_files/EDA_27_26.png)
-
-
-
-
-
-
-
-
-**collections_12_mths_ex_med**: Number of collections in 12 months excluding medical collections
-
-
-    	Type: 			float64
-    	Missing Values: 	145 (0.0%)
-    	Mean: 			0.01
-    	Range: 			(0.00, 20.00)
-
-
-
-![png](EDA_files/EDA_27_30.png)
-
-
-
-
-
-
-
-
-**delinq_2yrs**: The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			0.29
-    	Range: 			(0.00, 29.00)
-
-
-
-![png](EDA_files/EDA_27_34.png)
-
-
-
-
-
-
-
-
-**delinq_amnt**: The past-due amount owed for the accounts on which the borrower is now delinquent.
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			8.69
-    	Range: 			(0.00, 86399.00)
-
-
-
-![png](EDA_files/EDA_27_38.png)
-
-
-
-
-
-
-
-
-**dti**: A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly income.
+**OUT_Principle_Repaid_Percentage**: Percentage of loan principle that has been repaid
 
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			16.99
-    	Range: 			(0.00, 39.99)
+    	Mean: 			0.92
+    	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_27_42.png)
-
-
-
-
-
-
-
-
-**earliest_cr_line**: The month the borrower's earliest reported credit line was opened
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			5749.94
-    	Range: 			(184.00, 25933.00)
-
-
-
-![png](EDA_files/EDA_27_46.png)
+![png](EDA_files/EDA_28_10.png)
 
 
 
@@ -452,20 +269,7 @@ We cleaned each independent variable with type conversions, dummy creation, outl
 
 
 
-
-**emp_length**: Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years. 
-
-
-    	Type: 			float64
-    	Missing Values: 	21519 (5.1%)
-    	Mean: 			5.84
-    	Range: 			(0.00, 10.00)
-
-
-
-![png](EDA_files/EDA_27_50.png)
-
-
+### 4B. Independent Dummy Variables
 
 
 
@@ -487,773 +291,13 @@ We cleaned each independent variable with type conversions, dummy creation, outl
 
 
 
-**inq_last_6mths**: The number of inquiries in past 6 months (excluding auto and mortgage inquiries)
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			0.78
-    	Range: 			(0.00, 33.00)
-
-
-
-![png](EDA_files/EDA_27_57.png)
-
-
-
-
-
-
-
-
-**installment**: The monthly payment owed by the borrower if the loan originates.
-
-
-    	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			414.03
-    	Range: 			(14.01, 1409.99)
-
-
-
-![png](EDA_files/EDA_27_61.png)
-
-
-
-
-
-
-
-
-**int_rate**: Interest Rate on the loan
-
-
-    	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			12.74
-    	Range: 			(5.42, 26.06)
-
-
-
-![png](EDA_files/EDA_27_65.png)
-
-
-
-
-
-
-
-
-**loan_amnt**: The listed amount of the loan applied for by the borrower. If at some point in time, the credit department reduces the loan amount, then it will be reflected in this value.
-
-
-    	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			12718.50
-    	Range: 			(500.00, 35000.00)
-
-
-
-![png](EDA_files/EDA_27_69.png)
-
-
-
-
-
-
-
-
-**mo_sin_old_il_acct**: Months since oldest bank installment account opened
-
-
-    	Type: 			float64
-    	Missing Values: 	83911 (20.0%)
-    	Mean: 			124.94
-    	Range: 			(0.00, 649.00)
-
-
-
-![png](EDA_files/EDA_27_73.png)
-
-
-
-
-
-
-
-
-**mo_sin_old_rev_tl_op**: Months since oldest revolving account opened
-
-
-    	Type: 			float64
-    	Missing Values: 	70277 (16.7%)
-    	Mean: 			180.39
-    	Range: 			(3.00, 851.00)
-
-
-
-![png](EDA_files/EDA_27_77.png)
-
-
-
-
-
-
-
-
-**mo_sin_rcnt_rev_tl_op**: Months since most recent revolving account opened
-
-
-    	Type: 			float64
-    	Missing Values: 	70277 (16.7%)
-    	Mean: 			13.25
-    	Range: 			(0.00, 372.00)
-
-
-
-![png](EDA_files/EDA_27_81.png)
-
-
-
-
-
-
-
-
-**mo_sin_rcnt_tl**: Months since most recent account opened
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			8.37
-    	Range: 			(0.00, 226.00)
-
-
-
-![png](EDA_files/EDA_27_85.png)
-
-
-
-
-
-
-
-
-**mort_acc**: Number of mortgage accounts.
-
-
-    	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
-    	Mean: 			1.69
-    	Range: 			(0.00, 34.00)
-
-
-
-![png](EDA_files/EDA_27_89.png)
-
-
-
-
-
-
-
-
-**mths_since_last_delinq**: The number of months since the borrower's last delinquency.
-
-
-    	Type: 			float64
-    	Missing Values: 	224620 (53.5%)
-    	Mean: 			34.30
-    	Range: 			(0.00, 188.00)
-
-
-
-![png](EDA_files/EDA_27_93.png)
-
-
-
-
-
-
-
-
-**mths_since_last_major_derog**: Months since most recent 90-day or worse rating
-
-
-    	Type: 			float64
-    	Missing Values: 	329015 (78.3%)
-    	Mean: 			42.46
-    	Range: 			(0.00, 188.00)
-
-
-
-![png](EDA_files/EDA_27_97.png)
-
-
-
-
-
-
-
-
-**mths_since_last_record**: The number of months since the last public record.
-
-
-    	Type: 			float64
-    	Missing Values: 	360872 (85.9%)
-    	Mean: 			72.88
-    	Range: 			(0.00, 129.00)
-
-
-
-![png](EDA_files/EDA_27_101.png)
-
-
-
-
-
-
-
-
-**mths_since_recent_bc**: Months since most recent bankcard account opened.
-
-
-    	Type: 			float64
-    	Missing Values: 	53373 (12.7%)
-    	Mean: 			24.53
-    	Range: 			(0.00, 616.00)
-
-
-
-![png](EDA_files/EDA_27_105.png)
-
-
-
-
-
-
-
-
-**mths_since_recent_bc_dlq**: Months since most recent bankcard delinquency
-
-
-    	Type: 			float64
-    	Missing Values: 	331393 (78.9%)
-    	Mean: 			40.30
-    	Range: 			(0.00, 176.00)
-
-
-
-![png](EDA_files/EDA_27_109.png)
-
-
-
-
-
-
-
-
-**mths_since_recent_inq**: Months since most recent inquiry.
-
-
-    	Type: 			float64
-    	Missing Values: 	88898 (21.2%)
-    	Mean: 			6.95
-    	Range: 			(0.00, 25.00)
-
-
-
-![png](EDA_files/EDA_27_113.png)
-
-
-
-
-
-
-
-
-**mths_since_recent_revol_delinq**: Months since most recent revolving delinquency.
-
-
-    	Type: 			float64
-    	Missing Values: 	294683 (70.1%)
-    	Mean: 			36.15
-    	Range: 			(0.00, 180.00)
-
-
-
-![png](EDA_files/EDA_27_117.png)
-
-
-
-
-
-
-
-
-**num_accts_ever_120_pd**: Number of accounts ever 120 or more days past due
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			0.46
-    	Range: 			(0.00, 35.00)
-
-
-
-![png](EDA_files/EDA_27_121.png)
-
-
-
-
-
-
-
-
-**num_actv_bc_tl**: Number of currently active bankcard accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			3.66
-    	Range: 			(0.00, 30.00)
-
-
-
-![png](EDA_files/EDA_27_125.png)
-
-
-
-
-
-
-
-
-**num_actv_rev_tl**: Number of currently active revolving trades
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			5.67
-    	Range: 			(0.00, 41.00)
-
-
-
-![png](EDA_files/EDA_27_129.png)
-
-
-
-
-
-
-
-
-**num_bc_sats**: Number of satisfactory bankcard accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	58590 (13.9%)
-    	Mean: 			4.61
-    	Range: 			(0.00, 46.00)
-
-
-
-![png](EDA_files/EDA_27_133.png)
-
-
-
-
-
-
-
-
-**num_bc_tl**: Number of bankcard accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			8.60
-    	Range: 			(0.00, 65.00)
-
-
-
-![png](EDA_files/EDA_27_137.png)
-
-
-
-
-
-
-
-
-**num_il_tl**: Number of installment accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			7.98
-    	Range: 			(0.00, 150.00)
-
-
-
-![png](EDA_files/EDA_27_141.png)
-
-
-
-
-
-
-
-
-**num_op_rev_tl**: Number of open revolving accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			8.11
-    	Range: 			(0.00, 62.00)
-
-
-
-![png](EDA_files/EDA_27_145.png)
-
-
-
-
-
-
-
-
-**num_rev_accts**: Number of revolving accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			14.93
-    	Range: 			(0.00, 105.00)
-
-
-
-![png](EDA_files/EDA_27_149.png)
-
-
-
-
-
-
-
-
-**num_rev_tl_bal_gt_0**: Number of revolving trades with balance >0
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			5.65
-    	Range: 			(0.00, 38.00)
-
-
-
-![png](EDA_files/EDA_27_153.png)
-
-
-
-
-
-
-
-
-**num_sats**: Number of satisfactory accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	58590 (13.9%)
-    	Mean: 			11.22
-    	Range: 			(0.00, 84.00)
-
-
-
-![png](EDA_files/EDA_27_157.png)
-
-
-
-
-
-
-
-
-**num_tl_120dpd_2m**: Number of accounts currently 120 days past due (updated in past 2 months)
-
-
-    	Type: 			float64
-    	Missing Values: 	78691 (18.7%)
-    	Mean: 			0.00
-    	Range: 			(0.00, 3.00)
-
-
-
-![png](EDA_files/EDA_27_161.png)
-
-
-
-
-
-
-
-
-**num_tl_30dpd**: Number of accounts currently 30 days past due (updated in past 2 months)
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			0.00
-    	Range: 			(0.00, 4.00)
-
-
-
-![png](EDA_files/EDA_27_165.png)
-
-
-
-
-
-
-
-
-**num_tl_90g_dpd_24m**: Number of accounts 90 or more days past due in last 24 months
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			0.09
-    	Range: 			(0.00, 24.00)
-
-
-
-![png](EDA_files/EDA_27_169.png)
-
-
-
-
-
-
-
-
-**num_tl_op_past_12m**: Number of accounts opened in past 12 months
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			1.94
-    	Range: 			(0.00, 26.00)
-
-
-
-![png](EDA_files/EDA_27_173.png)
-
-
-
-
-
-
-
-
-**open_acc**: The number of open credit lines in the borrower's credit file.
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			11.01
-    	Range: 			(0.00, 84.00)
-
-
-
-![png](EDA_files/EDA_27_177.png)
-
-
-
-
-
-
-
-
-**outlier**: 
-
-
-    	Type: 			int64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			0.00
-    	Range: 			(0.00, 0.00)
-
-
-
-![png](EDA_files/EDA_27_181.png)
-
-
-
-
-
-
-
-
-**pct_tl_nvr_dlq**: Percent of trades never delinquent
-
-
-    	Type: 			float64
-    	Missing Values: 	70390 (16.8%)
-    	Mean: 			94.44
-    	Range: 			(7.70, 100.00)
-
-
-
-![png](EDA_files/EDA_27_185.png)
-
-
-
-
-
-
-
-
-**percent_bc_gt_75**: Percentage of all bankcard accounts > 75% of limit.
-
-
-    	Type: 			float64
-    	Missing Values: 	53858 (12.8%)
-    	Mean: 			50.54
-    	Range: 			(0.00, 100.00)
-
-
-
-![png](EDA_files/EDA_27_189.png)
-
-
-
-
-
-
-
-
-**pub_rec**: Number of derogatory public records
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			0.17
-    	Range: 			(0.00, 63.00)
-
-
-
-![png](EDA_files/EDA_27_193.png)
-
-
-
-
-
-
-
-
-**pub_rec_bankruptcies**: Number of public record bankruptcies
-
-
-    	Type: 			float64
-    	Missing Values: 	1365 (0.3%)
-    	Mean: 			0.11
-    	Range: 			(0.00, 12.00)
-
-
-
-![png](EDA_files/EDA_27_197.png)
-
-
-
-
-
-
-
-
 **purpose**: A category provided by the borrower for the loan request. 
 
 
     	Type: 			object
     	Missing Values: 	0 (0.0%)
-    	Number of Dummies: 	14
+    	Number of Dummies: 	13
     	Most Common Category: 	debt_consolidation
-
-
-
-
-
-
-
-
-**revol_bal**: Total credit revolving balance
-
-
-    	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			15406.16
-    	Range: 			(0.00, 2568995.00)
-
-
-
-![png](EDA_files/EDA_27_204.png)
-
-
-
-
-
-
-
-
-**revol_util**: Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.
-
-
-    	Type: 			float64
-    	Missing Values: 	296 (0.1%)
-    	Mean: 			55.02
-    	Range: 			(0.00, 892.30)
-
-
-
-![png](EDA_files/EDA_27_208.png)
-
-
-
-
-
-
-
-
-**sub_grade**: LC assigned loan subgrade
-
-
-    	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			10.59
-    	Range: 			(1.00, 35.00)
-
-
-
-![png](EDA_files/EDA_27_212.png)
-
-
-
-
-
-
-
-
-**tax_liens**: Number of tax liens
-
-
-    	Type: 			float64
-    	Missing Values: 	105 (0.0%)
-    	Mean: 			0.04
-    	Range: 			(0.00, 63.00)
-
-
-
-![png](EDA_files/EDA_27_216.png)
 
 
 
@@ -1277,158 +321,6 @@ We cleaned each independent variable with type conversions, dummy creation, outl
 
 
 
-**tot_coll_amt**: Total collection amounts ever owed
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			213.03
-    	Range: 			(0.00, 9152545.00)
-
-
-
-![png](EDA_files/EDA_27_223.png)
-
-
-
-
-
-
-
-
-**tot_cur_bal**: Total current balance of all accounts
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			128545.52
-    	Range: 			(0.00, 8000078.00)
-
-
-
-![png](EDA_files/EDA_27_227.png)
-
-
-
-
-
-
-
-
-**tot_hi_cred_lim**: Total high credit/credit limit
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			157552.13
-    	Range: 			(0.00, 9999999.00)
-
-
-
-![png](EDA_files/EDA_27_231.png)
-
-
-
-
-
-
-
-
-**total_acc**: The total number of credit lines currently in the borrower's credit file
-
-
-    	Type: 			float64
-    	Missing Values: 	29 (0.0%)
-    	Mean: 			24.49
-    	Range: 			(1.00, 162.00)
-
-
-
-![png](EDA_files/EDA_27_235.png)
-
-
-
-
-
-
-
-
-**total_bal_ex_mort**: Total credit balance excluding mortgage
-
-
-    	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
-    	Mean: 			44002.55
-    	Range: 			(0.00, 2688920.00)
-
-
-
-![png](EDA_files/EDA_27_239.png)
-
-
-
-
-
-
-
-
-**total_bc_limit**: Total bankcard high credit/credit limit
-
-
-    	Type: 			float64
-    	Missing Values: 	50030 (11.9%)
-    	Mean: 			19602.34
-    	Range: 			(0.00, 760000.00)
-
-
-
-![png](EDA_files/EDA_27_243.png)
-
-
-
-
-
-
-
-
-**total_il_high_credit_limit**: Total installment high credit/credit limit
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			36279.50
-    	Range: 			(0.00, 1241783.00)
-
-
-
-![png](EDA_files/EDA_27_247.png)
-
-
-
-
-
-
-
-
-**total_rev_hi_lim**: Total revolving high credit/credit limit
-
-
-    	Type: 			float64
-    	Missing Values: 	70276 (16.7%)
-    	Mean: 			29473.47
-    	Range: 			(0.00, 9999999.00)
-
-
-
-![png](EDA_files/EDA_27_251.png)
-
-
-
-
-
-
-
-
 **verification_status**: Indicates if income was verified by LC, not verified, or if the income source was verified
 
 
@@ -1443,6 +335,1266 @@ We cleaned each independent variable with type conversions, dummy creation, outl
 
 
 
+### 4C. Independent Numeric Variables
 
 
+
+
+
+
+**acc_now_delinq**: The number of accounts on which the borrower is now delinquent.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.00
+    	Range: 			(0.00, 14.00)
+
+
+
+![png](EDA_files/EDA_32_2.png)
+
+
+
+
+
+
+
+
+**acc_open_past_24mths**: Number of trades opened in past 24 months.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			4.19
+    	Range: 			(0.00, 53.00)
+
+
+
+![png](EDA_files/EDA_32_6.png)
+
+
+
+
+
+
+
+
+**annual_inc**: The self-reported annual income provided by the borrower during registration.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			72270.49
+    	Range: 			(3000.00, 8706582.00)
+
+
+
+![png](EDA_files/EDA_32_10.png)
+
+
+
+
+
+
+
+
+**avg_cur_bal**: Average current balance of all accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	9 (0.0%) <-- Zero Imputation Applied
+    	Mean: 			12722.51
+    	Range: 			(0.00, 958084.00)
+
+
+
+![png](EDA_files/EDA_32_14.png)
+
+
+
+
+
+
+
+
+**bc_open_to_buy**: Total open to buy on revolving bankcards.
+
+
+    	Type: 			float64
+    	Missing Values: 	3342 (1.0%) <-- Zero Imputation Applied
+    	Mean: 			8472.91
+    	Range: 			(0.00, 497445.00)
+
+
+
+![png](EDA_files/EDA_32_18.png)
+
+
+
+
+
+
+
+
+**bc_util**: Ratio of total current balance to high credit/credit limit for all bankcard accounts.
+
+
+    	Type: 			float64
+    	Missing Values: 	3565 (1.0%) <-- Zero Imputation Applied
+    	Mean: 			63.62
+    	Range: 			(0.00, 339.60)
+
+
+
+![png](EDA_files/EDA_32_22.png)
+
+
+
+
+
+
+
+
+**chargeoff_within_12_mths**: Number of charge-offs within 12 months
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.01
+    	Range: 			(0.00, 7.00)
+
+
+
+![png](EDA_files/EDA_32_26.png)
+
+
+
+
+
+
+
+
+**collections_12_mths_ex_med**: Number of collections in 12 months excluding medical collections
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.01
+    	Range: 			(0.00, 20.00)
+
+
+
+![png](EDA_files/EDA_32_30.png)
+
+
+
+
+
+
+
+
+**delinq_2yrs**: The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.31
+    	Range: 			(0.00, 29.00)
+
+
+
+![png](EDA_files/EDA_32_34.png)
+
+
+
+
+
+
+
+
+**delinq_amnt**: The past-due amount owed for the accounts on which the borrower is now delinquent.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			10.54
+    	Range: 			(0.00, 86399.00)
+
+
+
+![png](EDA_files/EDA_32_38.png)
+
+
+
+
+
+
+
+
+**dti**: A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly income.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			17.51
+    	Range: 			(0.00, 39.99)
+
+
+
+![png](EDA_files/EDA_32_42.png)
+
+
+
+
+
+
+
+
+**earliest_cr_line**: The month the borrower's earliest reported credit line was opened
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			5896.14
+    	Range: 			(1096.00, 25933.00)
+
+
+
+![png](EDA_files/EDA_32_46.png)
+
+
+
+
+
+
+
+
+**emp_length**: Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years. 
+
+
+    	Type: 			float64
+    	Missing Values: 	19119 (5.5%) <-- Zero Imputation Applied
+    	Mean: 			5.64
+    	Range: 			(0.00, 10.00)
+
+
+
+![png](EDA_files/EDA_32_50.png)
+
+
+
+
+
+
+
+
+**inq_last_6mths**: The number of inquiries in past 6 months (excluding auto and mortgage inquiries)
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.74
+    	Range: 			(0.00, 8.00)
+
+
+
+![png](EDA_files/EDA_32_54.png)
+
+
+
+
+
+
+
+
+**installment**: The monthly payment owed by the borrower if the loan originates.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			424.83
+    	Range: 			(14.01, 1362.15)
+
+
+
+![png](EDA_files/EDA_32_58.png)
+
+
+
+
+
+
+
+
+**int_rate**: Interest Rate on the loan
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			12.63
+    	Range: 			(5.93, 23.40)
+
+
+
+![png](EDA_files/EDA_32_62.png)
+
+
+
+
+
+
+
+
+**loan_amnt**: The listed amount of the loan applied for by the borrower. If at some point in time, the credit department reduces the loan amount, then it will be reflected in this value.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			12866.54
+    	Range: 			(1000.00, 35000.00)
+
+
+
+![png](EDA_files/EDA_32_66.png)
+
+
+
+
+
+
+
+
+**mo_sin_old_il_acct_R**: Reciprocal of the number of months since oldest bank installment account opened
+
+
+    	Type: 			float64
+    	Missing Values: 	13229 (3.8%) <-- Mean Imputation Applied
+    	Mean: 			0.01
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_32_70.png)
+
+
+
+
+
+
+
+
+**mo_sin_old_rev_tl_op_R**: Reciprocal of the number of months since oldest revolving account opened
+
+
+    	Type: 			float64
+    	Missing Values: 	1 (0.0%) <-- Mean Imputation Applied
+    	Mean: 			0.01
+    	Range: 			(0.00, 0.25)
+
+
+
+![png](EDA_files/EDA_32_74.png)
+
+
+
+
+
+
+
+
+**mo_sin_rcnt_rev_tl_op_R**: Reciprocal of the number of months since most recent revolving account opened
+
+
+    	Type: 			float64
+    	Missing Values: 	1 (0.0%) <-- Mean Imputation Applied
+    	Mean: 			0.16
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_32_78.png)
+
+
+
+
+
+
+
+
+**mo_sin_rcnt_tl_R**: Reciprocal of the number of months since most recent account opened
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.20
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_32_82.png)
+
+
+
+
+
+
+
+
+**mort_acc**: Number of mortgage accounts.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			1.71
+    	Range: 			(0.00, 34.00)
+
+
+
+![png](EDA_files/EDA_32_86.png)
+
+
+
+
+
+
+
+
+**mths_since_last_delinq_R**: Reciprocal of the number of months since the borrower's last delinquency.
+
+
+    	Type: 			float64
+    	Missing Values: 	177266 (51.3%) <-- Mean Imputation Applied
+    	Mean: 			0.05
+    	Range: 			(0.01, 1.00)
+
+
+
+![png](EDA_files/EDA_32_90.png)
+
+
+
+
+
+
+
+
+**mths_since_last_major_derog_R**: Reciprocal of the number of months since most recent 90-day or worse rating
+
+
+    	Type: 			float64
+    	Missing Values: 	255566 (74.0%) <-- Mean Imputation Applied
+    	Mean: 			0.04
+    	Range: 			(0.01, 1.00)
+
+
+
+![png](EDA_files/EDA_32_94.png)
+
+
+
+
+
+
+
+
+**mths_since_last_record_R**: Reciprocal of the number of months since the last public record.
+
+
+    	Type: 			float64
+    	Missing Values: 	291297 (84.3%) <-- Mean Imputation Applied
+    	Mean: 			0.02
+    	Range: 			(0.01, 1.00)
+
+
+
+![png](EDA_files/EDA_32_98.png)
+
+
+
+
+
+
+
+
+**mths_since_recent_bc_R**: Reciprocal of the number of months since most recent bankcard account opened.
+
+
+    	Type: 			float64
+    	Missing Values: 	3024 (0.9%) <-- Mean Imputation Applied
+    	Mean: 			0.11
+    	Range: 			(0.00, 1.00)
+
+
+
+![png](EDA_files/EDA_32_102.png)
+
+
+
+
+
+
+
+
+**mths_since_recent_bc_dlq_R**: Reciprocal of the number of months since most recent bankcard delinquency
+
+
+    	Type: 			float64
+    	Missing Values: 	257999 (74.7%) <-- Mean Imputation Applied
+    	Mean: 			0.04
+    	Range: 			(0.01, 1.00)
+
+
+
+![png](EDA_files/EDA_32_106.png)
+
+
+
+
+
+
+
+
+**mths_since_recent_inq_R**: Reciprocal of the number of months since most recent inquiry.
+
+
+    	Type: 			float64
+    	Missing Values: 	35968 (10.4%) <-- Mean Imputation Applied
+    	Mean: 			0.26
+    	Range: 			(0.04, 1.00)
+
+
+
+![png](EDA_files/EDA_32_110.png)
+
+
+
+
+
+
+
+
+**mths_since_recent_revol_delinq_R**: Reciprocal of the number of months since most recent revolving delinquency.
+
+
+    	Type: 			float64
+    	Missing Values: 	226752 (65.6%) <-- Mean Imputation Applied
+    	Mean: 			0.05
+    	Range: 			(0.01, 1.00)
+
+
+
+![png](EDA_files/EDA_32_114.png)
+
+
+
+
+
+
+
+
+**num_accts_ever_120_pd**: Number of accounts ever 120 or more days past due
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.46
+    	Range: 			(0.00, 35.00)
+
+
+
+![png](EDA_files/EDA_32_118.png)
+
+
+
+
+
+
+
+
+**num_actv_bc_tl**: Number of currently active bankcard accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			3.66
+    	Range: 			(0.00, 30.00)
+
+
+
+![png](EDA_files/EDA_32_122.png)
+
+
+
+
+
+
+
+
+**num_actv_rev_tl**: Number of currently active revolving trades
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			5.66
+    	Range: 			(0.00, 41.00)
+
+
+
+![png](EDA_files/EDA_32_126.png)
+
+
+
+
+
+
+
+
+**num_bc_sats**: Number of satisfactory bankcard accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			4.62
+    	Range: 			(0.00, 46.00)
+
+
+
+![png](EDA_files/EDA_32_130.png)
+
+
+
+
+
+
+
+
+**num_bc_tl**: Number of bankcard accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			8.61
+    	Range: 			(0.00, 65.00)
+
+
+
+![png](EDA_files/EDA_32_134.png)
+
+
+
+
+
+
+
+
+**num_il_tl**: Number of installment accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			7.99
+    	Range: 			(0.00, 150.00)
+
+
+
+![png](EDA_files/EDA_32_138.png)
+
+
+
+
+
+
+
+
+**num_op_rev_tl**: Number of open revolving accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			8.11
+    	Range: 			(0.00, 62.00)
+
+
+
+![png](EDA_files/EDA_32_142.png)
+
+
+
+
+
+
+
+
+**num_rev_accts**: Number of revolving accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			14.95
+    	Range: 			(0.00, 105.00)
+
+
+
+![png](EDA_files/EDA_32_146.png)
+
+
+
+
+
+
+
+
+**num_rev_tl_bal_gt_0**: Number of revolving trades with balance >0
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			5.64
+    	Range: 			(0.00, 38.00)
+
+
+
+![png](EDA_files/EDA_32_150.png)
+
+
+
+
+
+
+
+
+**num_sats**: Number of satisfactory accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			11.23
+    	Range: 			(0.00, 84.00)
+
+
+
+![png](EDA_files/EDA_32_154.png)
+
+
+
+
+
+
+
+
+**num_tl_120dpd_2m**: Number of accounts currently 120 days past due (updated in past 2 months)
+
+
+    	Type: 			float64
+    	Missing Values: 	8411 (2.4%) <-- Zero Imputation Applied
+    	Mean: 			0.00
+    	Range: 			(0.00, 3.00)
+
+
+
+![png](EDA_files/EDA_32_158.png)
+
+
+
+
+
+
+
+
+**num_tl_30dpd**: Number of accounts currently 30 days past due (updated in past 2 months)
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.00
+    	Range: 			(0.00, 4.00)
+
+
+
+![png](EDA_files/EDA_32_162.png)
+
+
+
+
+
+
+
+
+**num_tl_90g_dpd_24m**: Number of accounts 90 or more days past due in last 24 months
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.09
+    	Range: 			(0.00, 24.00)
+
+
+
+![png](EDA_files/EDA_32_166.png)
+
+
+
+
+
+
+
+
+**num_tl_op_past_12m**: Number of accounts opened in past 12 months
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			1.93
+    	Range: 			(0.00, 26.00)
+
+
+
+![png](EDA_files/EDA_32_170.png)
+
+
+
+
+
+
+
+
+**open_acc**: The number of open credit lines in the borrower's credit file.
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			11.27
+    	Range: 			(0.00, 84.00)
+
+
+
+![png](EDA_files/EDA_32_174.png)
+
+
+
+
+
+
+
+
+**outlier**: 
+
+
+    	Type: 			int64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.00
+    	Range: 			(0.00, 0.00)
+
+
+
+![png](EDA_files/EDA_32_178.png)
+
+
+
+
+
+
+
+
+**pct_tl_nvr_dlq**: Percent of trades never delinquent
+
+
+    	Type: 			float64
+    	Missing Values: 	114 (0.0%) <-- Mean Imputation Applied
+    	Mean: 			94.45
+    	Range: 			(7.70, 100.00)
+
+
+
+![png](EDA_files/EDA_32_182.png)
+
+
+
+
+
+
+
+
+**percent_bc_gt_75**: Percentage of all bankcard accounts > 75% of limit.
+
+
+    	Type: 			float64
+    	Missing Values: 	3466 (1.0%) <-- Zero Imputation Applied
+    	Mean: 			49.77
+    	Range: 			(0.00, 100.00)
+
+
+
+![png](EDA_files/EDA_32_186.png)
+
+
+
+
+
+
+
+
+**pub_rec**: Number of derogatory public records
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.20
+    	Range: 			(0.00, 63.00)
+
+
+
+![png](EDA_files/EDA_32_190.png)
+
+
+
+
+
+
+
+
+**pub_rec_bankruptcies**: Number of public record bankruptcies
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.13
+    	Range: 			(0.00, 12.00)
+
+
+
+![png](EDA_files/EDA_32_194.png)
+
+
+
+
+
+
+
+
+**revol_bal**: Total credit revolving balance
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			15645.52
+    	Range: 			(0.00, 2568995.00)
+
+
+
+![png](EDA_files/EDA_32_198.png)
+
+
+
+
+
+
+
+
+**revol_util**: Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.
+
+
+    	Type: 			float64
+    	Missing Values: 	169 (0.0%) <-- Zero Imputation Applied
+    	Mean: 			55.44
+    	Range: 			(0.00, 892.30)
+
+
+
+![png](EDA_files/EDA_32_202.png)
+
+
+
+
+
+
+
+
+**sub_grade**: LC assigned loan subgrade
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			10.28
+    	Range: 			(1.00, 25.00)
+
+
+
+![png](EDA_files/EDA_32_206.png)
+
+
+
+
+
+
+
+
+**tax_liens**: Number of tax liens
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.04
+    	Range: 			(0.00, 63.00)
+
+
+
+![png](EDA_files/EDA_32_210.png)
+
+
+
+
+
+
+
+
+**tot_coll_amt**: Total collection amounts ever owed
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			213.70
+    	Range: 			(0.00, 9152545.00)
+
+
+
+![png](EDA_files/EDA_32_214.png)
+
+
+
+
+
+
+
+
+**tot_cur_bal**: Total current balance of all accounts
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			128920.14
+    	Range: 			(0.00, 8000078.00)
+
+
+
+![png](EDA_files/EDA_32_218.png)
+
+
+
+
+
+
+
+
+**tot_hi_cred_lim**: Total high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			158076.93
+    	Range: 			(0.00, 9999999.00)
+
+
+
+![png](EDA_files/EDA_32_222.png)
+
+
+
+
+
+
+
+
+**total_acc**: The total number of credit lines currently in the borrower's credit file
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			24.93
+    	Range: 			(2.00, 162.00)
+
+
+
+![png](EDA_files/EDA_32_226.png)
+
+
+
+
+
+
+
+
+**total_bal_ex_mort**: Total credit balance excluding mortgage
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			44371.93
+    	Range: 			(0.00, 2688920.00)
+
+
+
+![png](EDA_files/EDA_32_230.png)
+
+
+
+
+
+
+
+
+**total_bc_limit**: Total bankcard high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			19701.56
+    	Range: 			(0.00, 760000.00)
+
+
+
+![png](EDA_files/EDA_32_234.png)
+
+
+
+
+
+
+
+
+**total_il_high_credit_limit**: Total installment high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			36331.58
+    	Range: 			(0.00, 1241783.00)
+
+
+
+![png](EDA_files/EDA_32_238.png)
+
+
+
+
+
+
+
+
+**total_rev_hi_lim**: Total revolving high credit/credit limit
+
+
+    	Type: 			float64
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			29585.21
+    	Range: 			(0.00, 9999999.00)
+
+
+
+![png](EDA_files/EDA_32_242.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+```python
+## Appendix: Custom Cleaning & EDA Functions
+```
+
+
+
+
+```python
+#FUNCTION FOR DUMMY CREATION
+def dummy_attr(attr):
+    """ Create dummmies and drop original attribute"""
+    global ls
+    if attr not in list(ls): return
+    prefix = 'D_' + attr
+    dummies = pd.get_dummies(ls[attr], prefix=prefix)
+    ls.drop([attr], axis=1, inplace=True)
+    ls = pd.concat([ls, dummies], axis=1)
+```
+
+
+
+
+```python
+#FUNCTION FOR OUTLIER DETECTION
+ls['outlier'] = 0 # this column is incremented for identified outlier instances
+def outlier_attr(attr, threshold):
+    """ Identify outliers above threshold""" 
+    outliers = ls[attr] > threshold
+    ls['outlier'] = ls['outlier'] + outliers
+    return outliers
+```
+
+
+
+
+```python
+#FUNCTION FOR MISSING VALUE IMPUTATION
+from sklearn.impute import SimpleImputer
+mnths_since = ['mths_since_last_delinq_R', 'mths_since_last_major_derog_R',
+               'mths_since_last_record_R', 'mths_since_recent_bc_dlq_R',
+               'mths_since_recent_inq_R', 'mths_since_recent_revol_delinq_R']
+def impute_attr(attr, strategy='median'):
+    """ Impute missing values (via mean imputation or constant imputation)"""
+    if attr in mnths_since:
+        imp = SimpleImputer(strategy='constant', fill_value=0)
+    elif ls[attr].min() == 0:                                
+        imp = SimpleImputer(strategy='constant', fill_value=0)
+    else:
+        imp = SimpleImputer(strategy='mean')
+    ls[attr] = imp.fit_transform(ls[[attr]])
+```
+
+
+
+
+```python
+#FUNCTION FOR EDA
+def EDA_attr(attr):
+    """ Display basic EDA for given attribute"""
+    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, ""))))
+    
+    #attribute type
+    attr_type = ls[attr].dtype
+    print('\tType: \t\t\t{}'.format(attr_type))
+    
+    #missing values
+    missing_values = ls[attr].isnull().sum()
+    num_observations = len(ls)
+    print('\tMissing Values: \t{} ({:.1%})'.format(missing_values, missing_values/num_observations), end='')
+    if missing_values > 0:
+        if (ls[attr].min() == 0) or (attr in mnths_since):
+            print(' <-- Zero Imputation Applied', end='')
+        else:
+            print(' <-- Mean Imputation Applied', end='')
+    print()
+    
+    #numerical variables
+    if attr_type == 'float64' or attr_type == 'int64':  
+        impute_attr(attr)  
+        print('\tMean: \t\t\t{:.2f}'.format(ls[attr].mean()))     
+        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls[attr].min(), ls[attr].max()))
+        plt.hist(ls[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
+  
+    #categorical variables
+    if attr_type == 'object':   
+        print('\tNumber of Dummies: \t{}'.format(len(ls.groupby(attr))))
+        print('\tMost Common Category: \t{}'.format(ls.groupby(attr)['loan_amnt'].count().idxmax()))
+        dummy_attr(attr)
+
+    display(Markdown('\n'))
+```
 
