@@ -160,9 +160,9 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 ```
 
 
-## 4. Independent Variable Cleaning
+## 4. Independent Feature Cleaning
 
-We cleaned each independent variable with type converstion, dummy creation and outlier identification. Loans that had missing values in more than 15 of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. See the appendix for the custom functions that we employed.
+We cleaned each independent variable with type converstion, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. See the appendix for the custom functions that we employed.
 
 
 
@@ -204,9 +204,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-## 4. Variable EDA
+## 5. EDA
 
-### 4A. Outcome Variables
+### 5A. Outcome Features
 
 
 
@@ -269,7 +269,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-### 4B. Independent Dummy Variables
+### 5B. Dummy Variables
 
 
 
@@ -335,7 +335,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-### 4C. Independent Numeric Variables
+### 5C. Numeric Variables
 
 
 
@@ -385,7 +385,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			72270.49
+    	Mean: 			72099.75
     	Range: 			(3000.00, 8706582.00)
 
 
@@ -403,8 +403,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	9 (0.0%) <-- Zero Imputation Applied
-    	Mean: 			12722.51
+    	Missing Values: 	13856 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			12232.31
     	Range: 			(0.00, 958084.00)
 
 
@@ -422,8 +422,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3342 (1.0%) <-- Zero Imputation Applied
-    	Mean: 			8472.91
+    	Missing Values: 	3349 (0.9%) <-- Zero Imputation Applied
+    	Mean: 			8455.84
     	Range: 			(0.00, 497445.00)
 
 
@@ -441,8 +441,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3565 (1.0%) <-- Zero Imputation Applied
-    	Mean: 			63.62
+    	Missing Values: 	3579 (1.0%) <-- Zero Imputation Applied
+    	Mean: 			63.65
     	Range: 			(0.00, 339.60)
 
 
@@ -518,7 +518,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			10.54
+    	Mean: 			10.13
     	Range: 			(0.00, 86399.00)
 
 
@@ -537,7 +537,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			17.51
+    	Mean: 			17.49
     	Range: 			(0.00, 39.99)
 
 
@@ -556,7 +556,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			5896.14
+    	Mean: 			5871.88
     	Range: 			(1096.00, 25933.00)
 
 
@@ -574,7 +574,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	19119 (5.5%) <-- Zero Imputation Applied
+    	Missing Values: 	19535 (5.4%) <-- Zero Imputation Applied
     	Mean: 			5.64
     	Range: 			(0.00, 10.00)
 
@@ -613,7 +613,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			424.83
+    	Mean: 			423.83
     	Range: 			(14.01, 1362.15)
 
 
@@ -632,7 +632,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			12.63
+    	Mean: 			12.67
     	Range: 			(5.93, 23.40)
 
 
@@ -651,7 +651,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			12866.54
+    	Mean: 			12855.10
     	Range: 			(1000.00, 35000.00)
 
 
@@ -669,7 +669,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13229 (3.8%) <-- Mean Imputation Applied
+    	Missing Values: 	27076 (7.5%) <-- Mean Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 1.00)
 
@@ -688,7 +688,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	1 (0.0%) <-- Mean Imputation Applied
+    	Missing Values: 	13848 (3.9%) <-- Mean Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 0.25)
 
@@ -707,7 +707,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	1 (0.0%) <-- Mean Imputation Applied
+    	Missing Values: 	13848 (3.9%) <-- Mean Imputation Applied
     	Mean: 			0.16
     	Range: 			(0.00, 1.00)
 
@@ -726,7 +726,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
+    	Missing Values: 	13847 (3.9%) <-- Mean Imputation Applied
     	Mean: 			0.20
     	Range: 			(0.00, 1.00)
 
@@ -746,7 +746,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			1.71
+    	Mean: 			1.70
     	Range: 			(0.00, 34.00)
 
 
@@ -764,9 +764,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	177266 (51.3%) <-- Mean Imputation Applied
-    	Mean: 			0.05
-    	Range: 			(0.01, 1.00)
+    	Missing Values: 	184496 (51.3%) <-- Zero Imputation Applied
+    	Mean: 			0.03
+    	Range: 			(0.00, 1.00)
 
 
 
@@ -783,9 +783,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	255566 (74.0%) <-- Mean Imputation Applied
-    	Mean: 			0.04
-    	Range: 			(0.01, 1.00)
+    	Missing Values: 	269413 (75.0%) <-- Zero Imputation Applied
+    	Mean: 			0.01
+    	Range: 			(0.00, 1.00)
 
 
 
@@ -802,9 +802,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	291297 (84.3%) <-- Mean Imputation Applied
-    	Mean: 			0.02
-    	Range: 			(0.01, 1.00)
+    	Missing Values: 	304602 (84.8%) <-- Zero Imputation Applied
+    	Mean: 			0.00
+    	Range: 			(0.00, 1.00)
 
 
 
@@ -821,7 +821,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3024 (0.9%) <-- Mean Imputation Applied
+    	Missing Values: 	3026 (0.8%) <-- Mean Imputation Applied
     	Mean: 			0.11
     	Range: 			(0.00, 1.00)
 
@@ -840,9 +840,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	257999 (74.7%) <-- Mean Imputation Applied
-    	Mean: 			0.04
-    	Range: 			(0.01, 1.00)
+    	Missing Values: 	271846 (75.6%) <-- Zero Imputation Applied
+    	Mean: 			0.01
+    	Range: 			(0.00, 1.00)
 
 
 
@@ -859,9 +859,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	35968 (10.4%) <-- Mean Imputation Applied
-    	Mean: 			0.26
-    	Range: 			(0.04, 1.00)
+    	Missing Values: 	37435 (10.4%) <-- Zero Imputation Applied
+    	Mean: 			0.23
+    	Range: 			(0.00, 1.00)
 
 
 
@@ -878,9 +878,9 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	226752 (65.6%) <-- Mean Imputation Applied
-    	Mean: 			0.05
-    	Range: 			(0.01, 1.00)
+    	Missing Values: 	235793 (65.6%) <-- Zero Imputation Applied
+    	Mean: 			0.02
+    	Range: 			(0.00, 1.00)
 
 
 
@@ -897,8 +897,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			0.46
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			0.44
     	Range: 			(0.00, 35.00)
 
 
@@ -916,8 +916,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			3.66
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			3.52
     	Range: 			(0.00, 30.00)
 
 
@@ -935,8 +935,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			5.66
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			5.45
     	Range: 			(0.00, 41.00)
 
 
@@ -954,8 +954,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			4.62
+    	Missing Values: 	2698 (0.8%) <-- Zero Imputation Applied
+    	Mean: 			4.58
     	Range: 			(0.00, 46.00)
 
 
@@ -973,8 +973,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			8.61
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			8.28
     	Range: 			(0.00, 65.00)
 
 
@@ -992,8 +992,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			7.99
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			7.68
     	Range: 			(0.00, 150.00)
 
 
@@ -1011,8 +1011,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			8.11
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			7.80
     	Range: 			(0.00, 62.00)
 
 
@@ -1030,8 +1030,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			14.95
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			14.37
     	Range: 			(0.00, 105.00)
 
 
@@ -1049,8 +1049,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			5.64
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			5.43
     	Range: 			(0.00, 38.00)
 
 
@@ -1068,8 +1068,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			11.23
+    	Missing Values: 	2698 (0.8%) <-- Zero Imputation Applied
+    	Mean: 			11.14
     	Range: 			(0.00, 84.00)
 
 
@@ -1087,7 +1087,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	8411 (2.4%) <-- Zero Imputation Applied
+    	Missing Values: 	22258 (6.2%) <-- Zero Imputation Applied
     	Mean: 			0.00
     	Range: 			(0.00, 3.00)
 
@@ -1106,7 +1106,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
     	Mean: 			0.00
     	Range: 			(0.00, 4.00)
 
@@ -1125,8 +1125,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			0.09
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			0.08
     	Range: 			(0.00, 24.00)
 
 
@@ -1144,8 +1144,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			1.93
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			1.86
     	Range: 			(0.00, 26.00)
 
 
@@ -1164,7 +1164,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			11.27
+    	Mean: 			11.26
     	Range: 			(0.00, 84.00)
 
 
@@ -1201,7 +1201,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	114 (0.0%) <-- Mean Imputation Applied
+    	Missing Values: 	13961 (3.9%) <-- Mean Imputation Applied
     	Mean: 			94.45
     	Range: 			(7.70, 100.00)
 
@@ -1220,8 +1220,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3466 (1.0%) <-- Zero Imputation Applied
-    	Mean: 			49.77
+    	Missing Values: 	3473 (1.0%) <-- Zero Imputation Applied
+    	Mean: 			49.84
     	Range: 			(0.00, 100.00)
 
 
@@ -1240,7 +1240,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			0.20
+    	Mean: 			0.19
     	Range: 			(0.00, 63.00)
 
 
@@ -1259,7 +1259,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			0.13
+    	Mean: 			0.12
     	Range: 			(0.00, 12.00)
 
 
@@ -1278,7 +1278,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			15645.52
+    	Mean: 			15574.30
     	Range: 			(0.00, 2568995.00)
 
 
@@ -1296,8 +1296,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	169 (0.0%) <-- Zero Imputation Applied
-    	Mean: 			55.44
+    	Missing Values: 	170 (0.0%) <-- Zero Imputation Applied
+    	Mean: 			55.49
     	Range: 			(0.00, 892.30)
 
 
@@ -1316,7 +1316,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			10.28
+    	Mean: 			10.30
     	Range: 			(1.00, 25.00)
 
 
@@ -1353,8 +1353,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			213.70
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			205.47
     	Range: 			(0.00, 9152545.00)
 
 
@@ -1372,8 +1372,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			128920.14
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			123952.77
     	Range: 			(0.00, 8000078.00)
 
 
@@ -1391,8 +1391,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			158076.93
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			151986.14
     	Range: 			(0.00, 9999999.00)
 
 
@@ -1411,7 +1411,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			24.93
+    	Mean: 			24.90
     	Range: 			(2.00, 162.00)
 
 
@@ -1430,7 +1430,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			44371.93
+    	Mean: 			44161.05
     	Range: 			(0.00, 2688920.00)
 
 
@@ -1449,7 +1449,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			19701.56
+    	Mean: 			19654.58
     	Range: 			(0.00, 760000.00)
 
 
@@ -1467,8 +1467,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			36331.58
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			34931.70
     	Range: 			(0.00, 1241783.00)
 
 
@@ -1486,8 +1486,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			29585.21
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			28445.27
     	Range: 			(0.00, 9999999.00)
 
 
@@ -1504,12 +1504,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-
-
-```python
-## Appendix: Custom Cleaning & EDA Functions
-```
-
+## Appendix: Custom Functions
 
 
 
