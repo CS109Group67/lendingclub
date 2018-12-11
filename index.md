@@ -16,5 +16,5 @@ Our goal was to *propose, build and evaluate data-driven modeling to power a pro
 - [Data Description](https://cs109group67.github.io/lendingclub/DataDescription.html): summary of the datasets
 - [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html): data exploration, cleaning and feature design
 - [Modeling](https://cs109group67.github.io/lendingclub/Models.html): modeling to discern predictive features that influence loan outcomes
-- [Investment Strategy](https://cs109group67.github.io/lendingclub/): investment strategy and evaluation of its predictive quality
+- [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html): investment strategy and evaluation of its predictive quality
 - [Ethical Implications](https://cs109group67.github.io/lendingclub/EthicalImplications.html): investigation of discrimination in the investment strategy and LC's underwriting practices

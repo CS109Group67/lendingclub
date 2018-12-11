@@ -42,7 +42,7 @@ ls = ls[(ls['grade'] != 'F') & (ls['grade'] != 'G')]
 We removed variables from the `loanstats` dataset that would not be meaningful in the modeling for the following reasons:
 1. LC recently began reporting some new variables which are not reported in the term-complete subset. 
 2. LC recently began accepting joint loans and variables related to coborrowers are empty in the term-complete subset. 
-3. We designed three outcome features based on the set of dependent variables (see next section)
+3. We designed three outcome features based on the set of dependent variables (see [Outcome Feature Design](https://cs109group67.github.io/lendingclub/EDA.html#3-outcome-feature-design))
 4. Some variables are non-standard text descriptions or otherwise inconsequential
 
 

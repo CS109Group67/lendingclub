@@ -18,6 +18,8 @@ nav_include: 3
 
 
 
+This section presents the modeling we have undertaken to determine which loan features are most predictive of loan outcomes. A discussion of the results and implications follows in the [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html) section.
+
 ## 1. Preprocessing
 
 ### 1A. Train-Test Split
@@ -39,57 +41,41 @@ The models used in the next sections assume that the features are on similar sca
 
 
 ```python
-#IDENTIFY THE OUTCOME, DUMMY AND NUMERIC VARIABLES
-var_list = set(ls.columns)
-outcome_var_list = set(out_var for out_var in var_list if "OUT_" in out_var)
-dummy_var_list = set(dummy for dummy in var_list if "D_" in dummy)
-numeric_var_list = var_list - outcome_var_list - dummy_var_list
-```
+#SEPARATE OUTCOME, DUMMY AND NUMERIC VARIABLES
+var_list = ls.columns
+outcome_var_list = sorted(out_var for out_var in var_list if "OUT_" in out_var)
+dummy_var_list = sorted(dummy for dummy in var_list if "D_" in dummy)
+numeric_var_list = sorted(set(var_list) - set(outcome_var_list) - set(dummy_var_list))
 
-
-
-
-```python
-#STANDARD SCALER
-scaler = StandardScaler()
-```
-
-
-
-
-```python
-#SCALE THE TRAINING SETS (fit_transform)
-train_vars_scaled = pd.DataFrame(scaler.fit_transform(ls_train[list(numeric_var_list)]),
-                                 index=ls_train.index, 
-                                 columns=ls_train[list(numeric_var_list)].columns)
-feature_train = pd.concat([train_vars_scaled, ls_train[list(dummy_var_list)]], axis=1).sort_index(axis=1)
-```
-
-
-
-
-```python
-#STANDARDIZE THE TEST SET (transform)
-test_vars_scaled = pd.DataFrame(scaler.transform(ls_test[list(numeric_var_list)]),
-                                index=ls_test.index, 
-                                columns=ls_test[list(numeric_var_list)].columns)
-feature_test = pd.concat([test_vars_scaled, ls_test[list(dummy_var_list)]], axis=1).sort_index(axis=1)
-```
-
-
-
-
-```python
-#SET TARGET VARIABLES
+#train target
 outcome_train = ls_train[sorted(outcome_var_list)]
 OUT_Class_train = outcome_train.iloc[:,0]
 OUT_Principle_Repaid_Percentage_train = outcome_train.iloc[:,1]
 OUT_Monthly_Rate_Of_Return_train = outcome_train.iloc[:,2]
 
+#test target
 outcome_test = ls_test[sorted(outcome_var_list)]
 OUT_Class_test = pd.DataFrame(outcome_test.iloc[:,0])
 OUT_Principle_Repaid_Percentage_test = outcome_test.iloc[:,1]
 OUT_Monthly_Rate_Of_Return_test = outcome_test.iloc[:,2]
+```
+
+
+
+
+```python
+#STANDARD SCALING
+scaler = StandardScaler()
+
+#train data -> fit_transform
+train_vars_scaled = pd.DataFrame(scaler.fit_transform(ls_train[numeric_var_list]),
+                                 index=ls_train.index, columns=ls_train[numeric_var_list].columns)
+feature_train = pd.concat([train_vars_scaled, ls_train[dummy_var_list]], axis=1).sort_index(axis=1)
+
+#test data -> transform
+test_vars_scaled = pd.DataFrame(scaler.transform(ls_test[numeric_var_list]),
+                                index=ls_test.index, columns=ls_test[numeric_var_list].columns)
+feature_test = pd.concat([test_vars_scaled, ls_test[dummy_var_list]], axis=1).sort_index(axis=1)
 ```
 
 
@@ -112,12 +98,13 @@ def model_scoring(model, feature, target, modeltype='C', cv=5):
 
 
 ```python
+class_names = ['Fully Repaid', 'Not Fully Repaid']
 def display_confusion_matrix(target, target_predicted):
     """Displays confusion matrix for classification models"""
     fig, ax = plt.subplots(figsize=(8,4))
     matrix = pd.DataFrame(confusion_matrix(target, target_predicted),
-                      index=['Fully Repaid', 'Not Fully Repaid'],
-                      columns=['Fully Repaid', 'Not Fully Repaid'])
+                      index=class_names,
+                      columns=class_names)
     sns.heatmap(matrix, annot=True, fmt='g', cbar=None, cmap='Blues')
     plt.title('Confusion Matrix'), plt.ylabel('True Class'), plt.xlabel('Predicted Class')
     ax.set_xticklabels(['Charged Off', 'Fully Repaid'], va='center')
@@ -146,13 +133,10 @@ def display_ROC_curve(target, target_probabilities):
 ```
 
 
-## 2. Baseline Models
+## 2. `OUT_Class` Modeling
 
-It is insightful to create some very simple models that we can use as a baseline to compare against our actual model. sklearn's `DummyClassifier` and `DummyRegressor` allow us to concretely state the the benefits of usings a machine learning approach.
-
-### 2A. Baseline Classification
-
-A basic measure of a classifier's performance is how much it improves on random guessing. Using sklearn's `dummyclassifer` with flag `strategy='uniform'` generates predictions uniformly at random between the training set's two classes.
+### 2A. Baseline Classifier
+It is insightful to create some very simple models that we can use as a baseline to compare against our actual model. A basic measure of a classifier's performance is how much it improves on random guessing. Using sklearn's `dummyclassifer` with flag `strategy='uniform'` generates predictions uniformly at random between the training set's two classes.
 
 
 
@@ -169,39 +153,7 @@ model_scoring(dummy_classifier, feature_train, OUT_Class_train)
     Cross-validation recall: 0.8642
 
 
-### 2B. Baseline Regression
-
-A basic measure of a regressor's performance is how much better it is than a very simple model that makes constant predictions. Using sklearn's `DummyRegressor` with the flag `strategy='mean'` we get baseline predictions of the mean value in the training set.
-
-
-
-```python
-#DUMMY REGRESSOR OF 'OUT_Principle_Repaid_Percentage' 
-dummy_regressor = DummyRegressor(strategy='mean')
-dummy_regressor.fit(feature_train, OUT_Principle_Repaid_Percentage_train)
-model_scoring(dummy_regressor, feature_train, OUT_Principle_Repaid_Percentage_train, modeltype='R')
-```
-
-
-    Cross-validation neg_mean_squared_error: -0.00223
-    Cross-validation r2: -1.209e-05
-
-
-
-
-```python
-#DUMMY REGRESSOR OF 'OUT_Monthly_Rate_Of_Return' 
-dummy_regressor = DummyRegressor(strategy='mean')
-dummy_regressor.fit(feature_train, OUT_Monthly_Rate_Of_Return_train)
-model_scoring(dummy_regressor, feature_train, OUT_Monthly_Rate_Of_Return_train, modeltype='R')
-```
-
-
-    Cross-validation neg_mean_squared_error: -0.04668
-    Cross-validation r2: -1.986e-05
-
-
-## 2. Binary Classifier
+### 2B. Logistic Regression Classifier
 
 This model is a logistic regression on the outcome variable `OUT_class` which is the binary classification for loans are either fully repaid (1) or charged off (0). The flag `class_weight='balanced'` ensures that both classes are equally represented in each set. 
 
@@ -223,13 +175,31 @@ model_scoring(classifier, feature_train, OUT_Class_train, modeltype='C')
 
 
 ```python
+print(classification_report(OUT_Class_test, classifier.predict(feature_test), target_names=class_names))
+```
+
+
+                      precision    recall  f1-score   support
+    
+        Fully Repaid       0.21      0.63      0.32      9337
+    Not Fully Repaid       0.92      0.63      0.75     59566
+    
+           micro avg       0.63      0.63      0.63     68903
+           macro avg       0.56      0.63      0.53     68903
+        weighted avg       0.82      0.63      0.69     68903
+    
+
+
+
+
+```python
 #CONFUSION MATRIX
 display_confusion_matrix(OUT_Class_test, classifier.predict(feature_test))
 ```
 
 
 
-![png](Modeling_files/Modeling_27_0.png)
+![png](Modeling_files/Modeling_23_0.png)
 
 
 
@@ -241,34 +211,218 @@ display_ROC_curve(OUT_Class_test, classifier.predict_proba(feature_test)[:,0])
 
 
 
-![png](Modeling_files/Modeling_28_0.png)
+![png](Modeling_files/Modeling_24_0.png)
 
 
-## 3. Linear Regression
+## 3 `OUT_Principle_Repaid_Percentage` Modeling
 
-## 4. Trees and Forest
-
-## 5. K-Nearest Neighbors
+### 3A. Baseline Regression
+A basic measure of a regressor's performance is how much better it is than a very simple model that makes constant predictions. Using sklearn's `DummyRegressor` with the flag `strategy='mean'` we get baseline predictions of the mean value in the training set.
 
 
 
 ```python
-#target_train_predicted = classifier.predict(feature_train)
-#target_train_probabilities = classifier.predict_proba(feature_train)[:,0]
-#target_test_predicted = classifier.predict(feature_test)
-#target_test_probabilities = classifier.predict_proba(feature_test)[:,0]
+#DUMMY REGRESSOR OF 'OUT_Principle_Repaid_Percentage' 
+dummy_regression = DummyRegressor(strategy='mean')
+dummy_regression.fit(feature_train, OUT_Principle_Repaid_Percentage_train)
+model_scoring(dummy_regression, feature_train, OUT_Principle_Repaid_Percentage_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -0.00223
+    Cross-validation r2: -1.209e-05
+
+
+### 3B. Linear Regression
+Linear regression assumes that the relationship between the features and the outcome vector is approximately linear. We use the flag `fit_intercept=False` because by applying one-hot encoding for the dummy variables without discarding one dummy variable we have already inplicitly added an intercept term.
+
+
+
+```python
+linear_regression = LinearRegression(fit_intercept=False)
+linear_regression.fit(feature_train, OUT_Principle_Repaid_Percentage_train)
+model_scoring(linear_regression, feature_train, OUT_Principle_Repaid_Percentage_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -0.002212
+    Cross-validation r2: 0.007783
+
+
+### 3C. Polynomial Regression
+Polynomial regression is an extension of linear regression to model non-linear relationships. 
+
+#### Degree 2 (no interaction terms)
+
+
+
+```python
+train_2 = pd.DataFrame(np.hstack((feature_train.iloc[:,22:]**(i+1) for i in range(2))),
+                      index=feature_train.index, 
+                      columns=numeric_var_list+[s+'_2' for s in numeric_var_list])
+feature_train_2 = pd.concat([ls_train[dummy_var_list], train_2], axis=1).sort_index(axis=1)
 ```
 
 
 
 
 ```python
-##ACCURACY
-#train_set_accuracy = dummy_classifier.score(feature_train, target_train)
-#print('Train Set Accuracy: {:.4}'.format(train_set_accuracy))
-
-##ACCURACY
-#test_set_accuracy = dummy_classifier.score(feature_test, target_test)
-#print('Test Set Accuracy: {:.4}'.format(test_set_accuracy))
+test_2 = pd.DataFrame(np.hstack((feature_test.iloc[:,22:]**(i+1) for i in range(2))),
+                      index=feature_test.index, 
+                      columns=numeric_var_list+[s+'_2' for s in numeric_var_list])
+feature_test_2 = pd.concat([ls_test[dummy_var_list], test_2], axis=1).sort_index(axis=1)
 ```
+
+
+
+
+```python
+poly2_regression = LinearRegression(fit_intercept=False)
+poly2_regression.fit(feature_train_2, OUT_Principle_Repaid_Percentage_train)
+model_scoring(poly2_regression, feature_train_2, OUT_Principle_Repaid_Percentage_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -0.002568
+    Cross-validation r2: -0.1488
+
+
+#### Degree 3 (no interaction terms)
+
+
+
+```python
+feature_train_3 = pd.DataFrame(np.hstack((feature_train.iloc[:,22:]**(i+1) for i in range(3))),
+                               index=feature_train.index, 
+                               columns=numeric_var_list+[s+'_'+str(i) for i in range(2,4) for s in numeric_var_list])
+feature_train_3 = pd.concat([ls_train[dummy_var_list], feature_train_3], axis=1).sort_index(axis=1)
+```
+
+
+
+
+```python
+feature_test_3 = pd.DataFrame(np.hstack((feature_test.iloc[:,22:]**(i+1) for i in range(3))),
+                               index=feature_test.index, 
+                               columns=numeric_var_list+[s+'_'+str(i) for i in range(2,4) for s in numeric_var_list])
+feature_test_3 = pd.concat([ls_train[dummy_var_list], feature_test_3], axis=1).sort_index(axis=1)
+```
+
+
+
+
+```python
+poly3_regression = LinearRegression(fit_intercept=False)
+poly3_regression.fit(feature_train_3, OUT_Principle_Repaid_Percentage_train)
+model_scoring(poly3_regression, feature_train_3, OUT_Principle_Repaid_Percentage_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -8.682e+05
+    Cross-validation r2: -3.952e+08
+
+
+## 4. `OUT_Monthly_Rate_Of_Return` Modeling
+
+### 4A. Baseline Regression
+
+
+
+```python
+#DUMMY REGRESSOR OF  `OUT_Monthly_Rate_Of_Return`
+dummy_regression = DummyRegressor(strategy='mean')
+dummy_regression.fit(feature_train, OUT_Monthly_Rate_Of_Return_train)
+model_scoring(dummy_regression, feature_train, OUT_Monthly_Rate_Of_Return_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -0.04668
+    Cross-validation r2: -1.986e-05
+
+
+### 4B. Linear Regression
+
+
+
+```python
+linear_regression = LinearRegression(fit_intercept=False)
+linear_regression.fit(feature_train, OUT_Monthly_Rate_Of_Return_train)
+model_scoring(linear_regression, feature_train, OUT_Monthly_Rate_Of_Return_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -0.04429
+    Cross-validation r2: 0.05122
+
+
+### 4C. Polynomial Regression
+
+#### Degree 2 (no interaction terms)
+
+
+
+```python
+train_2 = pd.DataFrame(np.hstack((feature_train.iloc[:,22:]**(i+1) for i in range(2))),
+                      index=feature_train.index, 
+                      columns=numeric_var_list+[s+'_2' for s in numeric_var_list])
+feature_train_2 = pd.concat([ls_train[dummy_var_list], train_2], axis=1).sort_index(axis=1)
+```
+
+
+
+
+```python
+test_2 = pd.DataFrame(np.hstack((feature_test.iloc[:,22:]**(i+1) for i in range(2))),
+                      index=feature_test.index, 
+                      columns=numeric_var_list+[s+'_2' for s in numeric_var_list])
+feature_test_2 = pd.concat([ls_test[dummy_var_list], test_2], axis=1).sort_index(axis=1)
+```
+
+
+
+
+```python
+poly2_regression = LinearRegression(fit_intercept=False)
+poly2_regression.fit(feature_train_2, OUT_Monthly_Rate_Of_Return_train)
+model_scoring(poly2_regression, feature_train_2, OUT_Monthly_Rate_Of_Return_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -0.04538
+    Cross-validation r2: 0.02776
+
+
+#### Degree 3 (no interaction terms)
+
+
+
+```python
+feature_train_3 = pd.DataFrame(np.hstack((feature_train.iloc[:,22:]**(i+1) for i in range(3))),
+                               index=feature_train.index, 
+                               columns=numeric_var_list+[s+'_'+str(i) for i in range(2,4) for s in numeric_var_list])
+feature_train_3 = pd.concat([ls_train[dummy_var_list], feature_train_3], axis=1).sort_index(axis=1)
+```
+
+
+
+
+```python
+feature_test_3 = pd.DataFrame(np.hstack((feature_test.iloc[:,22:]**(i+1) for i in range(3))),
+                               index=feature_test.index, 
+                               columns=numeric_var_list+[s+'_'+str(i) for i in range(2,4) for s in numeric_var_list])
+feature_test_3 = pd.concat([ls_train[dummy_var_list], feature_test_3], axis=1).sort_index(axis=1)
+```
+
+
+
+
+```python
+poly3_regression = LinearRegression(fit_intercept=False)
+poly3_regression.fit(feature_train_3, OUT_Principle_Repaid_Percentage_train)
+model_scoring(poly3_regression, feature_train_3, OUT_Monthly_Rate_Of_Return_train, modeltype='R')
+```
+
+
+    Cross-validation neg_mean_squared_error: -3.298e+07
+    Cross-validation r2: -7.097e+08
 
