@@ -16,7 +16,7 @@ nav_include: 1
 
 ## 1. LoanStats
 
-Lending Club publishes funded loan data (`LoanStats`) each quarter. We accessed the data as of the 2018Q2 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans. The issue dates range from June 2007 to June 2018 and the loan terms are 36 months or 60 months. After cleaning `loanstats` the dataset contains 3 outcome features, 23 dummy variables and  60 numeric variables . The file summaries and loan issue amounts are visualized below. See the [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html) section for more details on the `loanstats` data.
+Lending Club publishes funded loan data (`LoanStats`) each quarter. We accessed the data as of the 2018Q2 update. These quarterly datasets were merged to create a DataFrame which initially contained 145 features for 2,004,063 approved loans. The issue dates range from June 2007 to June 2018 and the loan terms are 36 months or 60 months. After cleaning, the dataset was reduced to 359,377 term-complete loans with 3 outcome features, 23 dummy variables and  60 numeric variables. See the [EDA & Cleaning](https://cs109group67.github.io/lendingclub/EDA.html) section for more details on the `loanstats` data.
 
 
 

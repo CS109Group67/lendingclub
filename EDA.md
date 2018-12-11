@@ -162,7 +162,7 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 ## 4. Independent Feature Cleaning
 
-We cleaned each independent variable with type converstion, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. See the appendix for the custom functions that we employed.
+We cleaned each independent variable with type conversion, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. See the appendix for the custom functions that we employed.
 
 
 
@@ -669,7 +669,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	27076 (7.5%) <-- Mean Imputation Applied
+    	Missing Values: 	27076 (7.5%) <-- Zero Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 1.00)
 
@@ -688,7 +688,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13848 (3.9%) <-- Mean Imputation Applied
+    	Missing Values: 	13848 (3.9%) <-- Zero Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 0.25)
 
@@ -707,7 +707,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13848 (3.9%) <-- Mean Imputation Applied
+    	Missing Values: 	13848 (3.9%) <-- Zero Imputation Applied
     	Mean: 			0.16
     	Range: 			(0.00, 1.00)
 
@@ -726,8 +726,8 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Mean Imputation Applied
-    	Mean: 			0.20
+    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Mean: 			0.19
     	Range: 			(0.00, 1.00)
 
 
@@ -821,7 +821,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3026 (0.8%) <-- Mean Imputation Applied
+    	Missing Values: 	3026 (0.8%) <-- Zero Imputation Applied
     	Mean: 			0.11
     	Range: 			(0.00, 1.00)
 

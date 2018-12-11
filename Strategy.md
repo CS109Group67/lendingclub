@@ -29,68 +29,52 @@ plt.rcParams['figure.figsize'] = (8, 5)
 
 ```python
 #LOAD LOANSTATS
-directory = '../../../data/'
-ls = pd.read_hdf(directory + 'LS_CLEAN.h5', 'LS_CLEAN')
+directory = '../../data/'
+ls = pd.read_hdf(directory + 'ls_CLEAN.h5', 'ls_CLEAN')
 ls.sort_index(axis=1, inplace=True)
 ```
 
 
-## Preprocessing
+## 1. Preprocessing
 
 ### Test Set
 
 
 
-```python
-#IDENTIFY THE OUTCOME, DUMMY AND NUMERIC VARIABLES
-var_list = set(ls.columns)
-outcome_var_list = set(out_var for out_var in var_list if "OUT_" in out_var)
-dummy_var_list = set(dummy for dummy in var_list if "D_" in dummy)
-numeric_var_list = var_list - outcome_var_list - dummy_var_list
-```
 
 
 
 
-```python
-#STANDARD SCALER
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-```
 
 
 
 
-```python
-#SCALE THE TRAINING SETS (fit_transform)
-train_vars_scaled = pd.DataFrame(scaler.fit_transform(ls_train[list(numeric_var_list)]),
-                                 index=ls_train.index, 
-                                 columns=ls_train[list(numeric_var_list)].columns)
-feature_train = pd.concat([train_vars_scaled, 
-                           ls_train[list(dummy_var_list)]], 
-                          axis=1).sort_index(axis=1)
-outcome_train = ls_train[list(outcome_var_list)]
-```
+
+
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    <ipython-input-8-c5218a2ddf05> in <module>()
+          1 #SCALE THE TRAINING SETS (fit_transform)
+    ----> 2 train_vars_scaled = pd.DataFrame(scaler.fit_transform(ls_train[list(numeric_var_list)]),
+          3                                  index=ls_train.index,
+          4                                  columns=ls_train[list(numeric_var_list)].columns)
+          5 feature_train = pd.concat([train_vars_scaled, 
+
+
+    NameError: name 'ls_train' is not defined
 
 
 
 
-```python
-#STANDARDIZE THE TEST SET (transform)
-test_vars_scaled = pd.DataFrame(scaler.transform(ls_test[list(numeric_var_list)]),
-                                index=ls_test.index, 
-                                columns=ls_test[list(numeric_var_list)].columns)
-feature_test = pd.concat([test_vars_scaled, 
-                          ls_test[list(dummy_var_list)]], 
-                         axis=1).sort_index(axis=1)
-outcome_test = ls_test[list(outcome_var_list)]
-```
 
 
-## Model Selection
+## 2. Model Selection
 
-## Key Variables Driving Investment Decisions
+## 3. Key Variables Driving Investment Decisions
 
-## Predictive Quality of Model
+## 4. Predictive Quality of Model
 
-##  Expected Risk and Return
+##  5. Expected Risk and Return

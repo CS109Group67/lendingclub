@@ -18,9 +18,9 @@ nav_include: 3
 
 
 
-## 0. Preprocessing
+## 1. Preprocessing
 
-### Train-Test Split
+### 1A. Train-Test Split
 
 Before we begin modeling, we set aside a test set that we will use later to evaluate the predictive quality of our investment strategy. We do this in a stratified fashion ensuring that the outcome classes (fully paid loans and not fully paid loans) are equally represented in the train and test sets. For the splitting algorithm, we use `sklearn`'s `train_test_split` function. This function creates random train and test subsets of the dataset. The flag `stratify` ensures that both classes are equally represented in each set. 
 
@@ -32,7 +32,7 @@ ls_train, ls_test = train_test_split(ls, test_size=0.15, stratify=ls['OUT_Class'
 ```
 
 
-### Standard Scaling
+### 1A. Standard Scaling
 
 The models used in the next sections assume that the features are on similar scales. To achieve this, we transform the numeric variables to a standard scale with mean 0 and standard deviation 1 using sklearn's `StandardScaler` function.
 
@@ -70,7 +70,7 @@ outcome_train = ls_train[list(outcome_var_list)]
 ```
 
 
-## 1. Logisitic Regression Classification
+## 2. Logisitic Classification
 
 The first model is a logistic regression on the outcome variable `OUT_class` which is the binary classification for loans are either fully repaid (1) or charged off (0). The flag `class_weight='balanced'` ensures that both classes are equally represented in each set. 
 
@@ -78,7 +78,7 @@ The first model is a logistic regression on the outcome variable `OUT_class` whi
 
 ```python
 #SET TARGET VARIABLE 'OUT_Class'
-target_train = outcome_train.iloc[:,1]
+target_train = outcome_train.iloc[:,0]
 ```
 
 
@@ -89,41 +89,19 @@ target_train = outcome_train.iloc[:,1]
 from sklearn.linear_model import LogisticRegression
 classifier = LogisticRegression(random_state=0, solver='lbfgs', max_iter=10000, class_weight='balanced')
 classifier.fit(feature_train, target_train)
-target_predicted = classifier.predict(feature_test)
-target_probabilities = classifier.predict_proba(feature_test)[:,1]
+#target_predicted = classifier.predict(feature_test)
+#target_probabilities = classifier.predict_proba(feature_test)[:,0]
 ```
 
 
 
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-9-39aaa05880b1> in <module>()
-          2 from sklearn.linear_model import LogisticRegression
-          3 classifier = LogisticRegression(random_state=0, solver='lbfgs', max_iter=10000, class_weight='balanced')
-    ----> 4 classifier.fit(feature_train, target_train)
-          5 target_predicted = classifier.predict(feature_test)
-          6 target_probabilities = classifier.predict_proba(feature_test)[:,1]
 
 
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/logistic.py in fit(self, X, y, sample_weight)
-       1283         X, y = check_X_y(X, y, accept_sparse='csr', dtype=_dtype, order="C",
-       1284                          accept_large_sparse=solver != 'liblinear')
-    -> 1285         check_classification_targets(y)
-       1286         self.classes_ = np.unique(y)
-       1287         n_samples, n_features = X.shape
+    LogisticRegression(C=1.0, class_weight='balanced', dual=False,
+              fit_intercept=True, intercept_scaling=1, max_iter=10000,
+              multi_class='warn', n_jobs=None, penalty='l2', random_state=0,
+              solver='lbfgs', tol=0.0001, verbose=0, warm_start=False)
 
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/utils/multiclass.py in check_classification_targets(y)
-        169     if y_type not in ['binary', 'multiclass', 'multiclass-multioutput',
-        170                       'multilabel-indicator', 'multilabel-sequences']:
-    --> 171         raise ValueError("Unknown label type: %r" % y_type)
-        172 
-        173 
-
-
-    ValueError: Unknown label type: 'continuous'
 
 
 
@@ -146,120 +124,9 @@ print('Recall: {:.4}'.format(recall))
 ```
 
 
-    /Users/michal/anaconda3/lib/python3.6/site-packages/sklearn/model_selection/_validation.py:542: FutureWarning: From version 0.22, errors during fit will result in a cross validation score of NaN by default. Use error_score='raise' if you want an exception raised or error_score=np.nan to adopt the behavior from version 0.22.
-      FutureWarning)
-
-
-
-    ---------------------------------------------------------------------------
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-10-a5d7e096d108> in <module>()
-          3 
-          4 #ACCURACY
-    ----> 5 cross_val_accuracy = cross_val_score(classifier, feature_train, target_train, scoring='accuracy', cv=5).mean()
-          6 print('Accuracy: {:.4}'.format(cross_val_accuracy))
-          7 
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/model_selection/_validation.py in cross_val_score(estimator, X, y, groups, scoring, cv, n_jobs, verbose, fit_params, pre_dispatch, error_score)
-        400                                 fit_params=fit_params,
-        401                                 pre_dispatch=pre_dispatch,
-    --> 402                                 error_score=error_score)
-        403     return cv_results['test_score']
-        404 
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/model_selection/_validation.py in cross_validate(estimator, X, y, groups, scoring, cv, n_jobs, verbose, fit_params, pre_dispatch, return_train_score, return_estimator, error_score)
-        238             return_times=True, return_estimator=return_estimator,
-        239             error_score=error_score)
-    --> 240         for train, test in cv.split(X, y, groups))
-        241 
-        242     zipped_scores = list(zip(*scores))
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py in __call__(self, iterable)
-        981             # remaining jobs.
-        982             self._iterating = False
-    --> 983             if self.dispatch_one_batch(iterator):
-        984                 self._iterating = self._original_iterator is not None
-        985 
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py in dispatch_one_batch(self, iterator)
-        823                 return False
-        824             else:
-    --> 825                 self._dispatch(tasks)
-        826                 return True
-        827 
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py in _dispatch(self, batch)
-        780         with self._lock:
-        781             job_idx = len(self._jobs)
-    --> 782             job = self._backend.apply_async(batch, callback=cb)
-        783             # A job can complete so quickly than its callback is
-        784             # called before we get here, causing self._jobs to
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/_parallel_backends.py in apply_async(self, func, callback)
-        180     def apply_async(self, func, callback=None):
-        181         """Schedule a func to be run"""
-    --> 182         result = ImmediateResult(func)
-        183         if callback:
-        184             callback(result)
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/_parallel_backends.py in __init__(self, batch)
-        543         # Don't delay the application, to avoid keeping the input
-        544         # arguments in memory
-    --> 545         self.results = batch()
-        546 
-        547     def get(self):
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py in __call__(self)
-        259         with parallel_backend(self._backend):
-        260             return [func(*args, **kwargs)
-    --> 261                     for func, args, kwargs in self.items]
-        262 
-        263     def __len__(self):
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py in <listcomp>(.0)
-        259         with parallel_backend(self._backend):
-        260             return [func(*args, **kwargs)
-    --> 261                     for func, args, kwargs in self.items]
-        262 
-        263     def __len__(self):
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/model_selection/_validation.py in _fit_and_score(estimator, X, y, scorer, train, test, verbose, parameters, fit_params, return_train_score, return_parameters, return_n_test_samples, return_times, return_estimator, error_score)
-        526             estimator.fit(X_train, **fit_params)
-        527         else:
-    --> 528             estimator.fit(X_train, y_train, **fit_params)
-        529 
-        530     except Exception as e:
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/linear_model/logistic.py in fit(self, X, y, sample_weight)
-       1283         X, y = check_X_y(X, y, accept_sparse='csr', dtype=_dtype, order="C",
-       1284                          accept_large_sparse=solver != 'liblinear')
-    -> 1285         check_classification_targets(y)
-       1286         self.classes_ = np.unique(y)
-       1287         n_samples, n_features = X.shape
-
-
-    ~/anaconda3/lib/python3.6/site-packages/sklearn/utils/multiclass.py in check_classification_targets(y)
-        169     if y_type not in ['binary', 'multiclass', 'multiclass-multioutput',
-        170                       'multilabel-indicator', 'multilabel-sequences']:
-    --> 171         raise ValueError("Unknown label type: %r" % y_type)
-        172 
-        173 
-
-
-    ValueError: Unknown label type: 'continuous'
+    Accuracy: 0.6301
+    Precision: 0.9156
+    Recall: 0.6294
 
 
 
@@ -285,6 +152,22 @@ plt.show()
 
 
 
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    <ipython-input-25-473876e84076> in <module>()
+          2 from sklearn.metrics import confusion_matrix
+          3 
+    ----> 4 matrix = pd.DataFrame(confusion_matrix(target_test, target_predicted),
+          5                       index=['Fully Repaid', 'Not Fully Repaid'],
+          6                       columns=['Fully Repaid', 'Not Fully Repaid'])
+
+
+    NameError: name 'target_test' is not defined
+
+
+
 
 ```python
 #ROC CURVE
@@ -302,8 +185,8 @@ plt.show()
 ```
 
 
-## Regression
+## 3. Linear Regression
 
-## Trees and Forest
+## 4. Trees and Forest
 
-## K-Nearest Neighbors
+## 5. K-Nearest Neighbors
