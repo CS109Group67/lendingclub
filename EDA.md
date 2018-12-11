@@ -22,25 +22,9 @@ nav_include: 2
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 1. Term-Complete Representative Subset
 
-'Term-complete' loans have completed their full term whereas 'in-force' loans have not completed their term.  To get the most representative outcome information we first remove the loan instances that are not term-complete. Also, LC no longer offers loans of of the lowest grades of F or G, so we remove these loans from the dataset.
+'Term-complete' loans have completed their full term whereas 'in-force' loans have not completed their term.  To get the most representative outcome information we first remove the loan instances that are not term-complete. Also, LC no longer offers loans of the lowest grades F or G, so we removed these loans from the dataset.
 
 
 
@@ -141,7 +125,7 @@ ls['OUT_Principle_Repaid_Percentage'] = ls['total_rec_prncp'] / ls['loan_amnt']
 ```
 
 
-### 3C. `OUT_Monthly_Rate_of_Return`
+### 3C. `OUT_Monthly_Rate_Of_Return`
 
 This outcome variable represents the simple monthly rate of return that investors recieved by holding the loan. This is the most comprehensive of the three outcome features because it takes into account the total amount repaid (including interest) for the effective term of the loan. The median monthly rate of return is 0.6%.
 
@@ -162,7 +146,9 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 ## 4. Independent Feature Cleaning
 
-We cleaned each independent variable with type conversion, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. See the appendix for the custom functions that we employed.
+We cleaned each independent variable with type conversion, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. This section presents the custom functions that we used and the following section [EDA](https://cs109group67.github.io/lendingclub/EDA.html#5-eda) summarizes the cleaned features.
+
+### 4A. Type Conversions
 
 
 
@@ -200,11 +186,107 @@ ls.drop(mnths_since, axis=1, inplace=True)
 ```
 
 
+### 4B. Dummy Creation
+
+
+
+```python
+#FUNCTION FOR DUMMY CREATION
+def dummy_attr(attr):
+    """ Create dummmies and drop original attribute"""
+    global ls
+    if attr not in list(ls): return
+    prefix = 'D_' + attr
+    dummies = pd.get_dummies(ls[attr], prefix=prefix)
+    ls.drop([attr], axis=1, inplace=True)
+    ls = pd.concat([ls, dummies], axis=1)
+```
+
+
+### 4C. Outlier Identification
+
+
+
+```python
+#FUNCTION FOR OUTLIER DETECTION
+ls['outlier'] = 0 # this column is incremented for identified outlier instances
+def outlier_attr(attr, threshold):
+    """ Identify outliers above threshold""" 
+    outliers = ls[attr] > threshold
+    ls['outlier'] = ls['outlier'] + outliers
+    return outliers
+```
+
+
+### 4D. Missing Value Imputation
+
+
+
+```python
+#REMOVE LOANS WITH MANY MISSING FEATURES
+ls = ls[ls.isnull().sum(axis=1) < 30]
+
+#FUNCTION FOR MISSING VALUE IMPUTATION
+from sklearn.impute import SimpleImputer
+def impute_attr(attr, strategy='median'):
+    """ Impute missing values (via mean imputation or constant imputation)"""
+    mnths_since = ls.columns[ls.columns.str.contains('mo_sin|mths_since')]
+    if attr in mnths_since:
+        imp = SimpleImputer(strategy='constant', fill_value=0)
+    elif ls[attr].min() == 0:                                
+        imp = SimpleImputer(strategy='constant', fill_value=0)
+    else:
+        imp = SimpleImputer(strategy='mean')
+    ls[attr] = imp.fit_transform(ls[[attr]])
+```
+
+
 
 
 
 
 ## 5. EDA
+
+
+
+```python
+#FUNCTION FOR EDA
+def EDA_attr(attr):
+    """ Display basic EDA for given attribute"""
+    mnths_since = ls.columns[ls.columns.str.contains('mo_sin|mths_since')]
+    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, ""))))
+    
+    #attribute type
+    attr_type = ls[attr].dtype
+    print('\tType: \t\t\t{}'.format(attr_type))
+    
+    #missing values
+    missing_values = ls[attr].isnull().sum()
+    num_observations = len(ls)
+    print('\tMissing Values: \t{} ({:.1%})'.format(missing_values, missing_values/num_observations), end='')
+    if missing_values > 0:
+        if (ls[attr].min() == 0) or (attr in mnths_since):
+            print(' <-- Zero Imputation Applied', end='')
+        else:
+            print(' <-- Mean Imputation Applied', end='')
+    print()
+    
+    #numerical variables
+    if attr_type == 'float64' or attr_type == 'int64':  
+        impute_attr(attr)  
+        print('\tMean: \t\t\t{:.2f}'.format(ls[attr].mean()))     
+        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls[attr].min(), ls[attr].max()))
+        plt.hist(ls[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
+  
+    #categorical variables
+    if attr_type == 'object':   
+        print('\tNumber of Dummies: \t{}'.format(len(ls.groupby(attr))))
+        print('\tMost Common Category: \t{}'.format(ls.groupby(attr)['loan_amnt'].count().idxmax()))
+        dummy_attr(attr)
+
+    display(Markdown('\n'))
+```
+
 
 ### 5A. Outcome Features
 
@@ -223,7 +305,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_28_2.png)
+![png](EDA_files/EDA_32_2.png)
 
 
 
@@ -242,7 +324,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_28_6.png)
+![png](EDA_files/EDA_32_6.png)
 
 
 
@@ -261,7 +343,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_28_10.png)
+![png](EDA_files/EDA_32_10.png)
 
 
 
@@ -352,7 +434,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_32_2.png)
+![png](EDA_files/EDA_36_2.png)
 
 
 
@@ -366,12 +448,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			4.19
+    	Mean: 			4.20
     	Range: 			(0.00, 53.00)
 
 
 
-![png](EDA_files/EDA_32_6.png)
+![png](EDA_files/EDA_36_6.png)
 
 
 
@@ -385,12 +467,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			72099.75
+    	Mean: 			72306.85
     	Range: 			(3000.00, 8706582.00)
 
 
 
-![png](EDA_files/EDA_32_10.png)
+![png](EDA_files/EDA_36_10.png)
 
 
 
@@ -403,13 +485,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13856 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			12232.31
+    	Missing Values: 	2 (0.0%) <-- Zero Imputation Applied
+    	Mean: 			12702.21
     	Range: 			(0.00, 958084.00)
 
 
 
-![png](EDA_files/EDA_32_14.png)
+![png](EDA_files/EDA_36_14.png)
 
 
 
@@ -422,13 +504,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3349 (0.9%) <-- Zero Imputation Applied
-    	Mean: 			8455.84
+    	Missing Values: 	2328 (0.7%) <-- Zero Imputation Applied
+    	Mean: 			8497.89
     	Range: 			(0.00, 497445.00)
 
 
 
-![png](EDA_files/EDA_32_18.png)
+![png](EDA_files/EDA_36_18.png)
 
 
 
@@ -441,13 +523,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3579 (1.0%) <-- Zero Imputation Applied
-    	Mean: 			63.65
+    	Missing Values: 	2550 (0.7%) <-- Zero Imputation Applied
+    	Mean: 			63.80
     	Range: 			(0.00, 339.60)
 
 
 
-![png](EDA_files/EDA_32_22.png)
+![png](EDA_files/EDA_36_22.png)
 
 
 
@@ -466,7 +548,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_32_26.png)
+![png](EDA_files/EDA_36_26.png)
 
 
 
@@ -485,7 +567,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_32_30.png)
+![png](EDA_files/EDA_36_30.png)
 
 
 
@@ -504,7 +586,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_32_34.png)
+![png](EDA_files/EDA_36_34.png)
 
 
 
@@ -518,12 +600,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			10.13
+    	Mean: 			10.57
     	Range: 			(0.00, 86399.00)
 
 
 
-![png](EDA_files/EDA_32_38.png)
+![png](EDA_files/EDA_36_38.png)
 
 
 
@@ -537,12 +619,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			17.49
+    	Mean: 			17.51
     	Range: 			(0.00, 39.99)
 
 
 
-![png](EDA_files/EDA_32_42.png)
+![png](EDA_files/EDA_36_42.png)
 
 
 
@@ -556,12 +638,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			5871.88
+    	Mean: 			5898.49
     	Range: 			(1096.00, 25933.00)
 
 
 
-![png](EDA_files/EDA_32_46.png)
+![png](EDA_files/EDA_36_46.png)
 
 
 
@@ -574,13 +656,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	19535 (5.4%) <-- Zero Imputation Applied
+    	Missing Values: 	18998 (5.5%) <-- Zero Imputation Applied
     	Mean: 			5.64
     	Range: 			(0.00, 10.00)
 
 
 
-![png](EDA_files/EDA_32_50.png)
+![png](EDA_files/EDA_36_50.png)
 
 
 
@@ -599,7 +681,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_32_54.png)
+![png](EDA_files/EDA_36_54.png)
 
 
 
@@ -613,12 +695,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			423.83
+    	Mean: 			425.16
     	Range: 			(14.01, 1362.15)
 
 
 
-![png](EDA_files/EDA_32_58.png)
+![png](EDA_files/EDA_36_58.png)
 
 
 
@@ -632,12 +714,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			12.67
+    	Mean: 			12.62
     	Range: 			(5.93, 23.40)
 
 
 
-![png](EDA_files/EDA_32_62.png)
+![png](EDA_files/EDA_36_62.png)
 
 
 
@@ -651,12 +733,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			12855.10
+    	Mean: 			12877.13
     	Range: 			(1000.00, 35000.00)
 
 
 
-![png](EDA_files/EDA_32_66.png)
+![png](EDA_files/EDA_36_66.png)
 
 
 
@@ -669,13 +751,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	27076 (7.5%) <-- Zero Imputation Applied
+    	Missing Values: 	13193 (3.8%) <-- Zero Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_70.png)
+![png](EDA_files/EDA_36_70.png)
 
 
 
@@ -688,13 +770,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13848 (3.9%) <-- Zero Imputation Applied
+    	Missing Values: 	0 (0.0%)
     	Mean: 			0.01
-    	Range: 			(0.00, 0.25)
+    	Range: 			(0.00, 0.20)
 
 
 
-![png](EDA_files/EDA_32_74.png)
+![png](EDA_files/EDA_36_74.png)
 
 
 
@@ -707,13 +789,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13848 (3.9%) <-- Zero Imputation Applied
+    	Missing Values: 	0 (0.0%)
     	Mean: 			0.16
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_78.png)
+![png](EDA_files/EDA_36_78.png)
 
 
 
@@ -726,13 +808,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			0.19
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.20
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_82.png)
+![png](EDA_files/EDA_36_82.png)
 
 
 
@@ -746,12 +828,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			1.70
+    	Mean: 			1.71
     	Range: 			(0.00, 34.00)
 
 
 
-![png](EDA_files/EDA_32_86.png)
+![png](EDA_files/EDA_36_86.png)
 
 
 
@@ -764,13 +846,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	184496 (51.3%) <-- Zero Imputation Applied
+    	Missing Values: 	176305 (51.2%) <-- Zero Imputation Applied
     	Mean: 			0.03
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_90.png)
+![png](EDA_files/EDA_36_90.png)
 
 
 
@@ -783,13 +865,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	269413 (75.0%) <-- Zero Imputation Applied
+    	Missing Values: 	254556 (73.9%) <-- Zero Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_94.png)
+![png](EDA_files/EDA_36_94.png)
 
 
 
@@ -802,13 +884,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	304602 (84.8%) <-- Zero Imputation Applied
+    	Missing Values: 	290340 (84.3%) <-- Zero Imputation Applied
     	Mean: 			0.00
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_98.png)
+![png](EDA_files/EDA_36_98.png)
 
 
 
@@ -821,13 +903,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3026 (0.8%) <-- Zero Imputation Applied
+    	Missing Values: 	2027 (0.6%) <-- Zero Imputation Applied
     	Mean: 			0.11
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_102.png)
+![png](EDA_files/EDA_36_102.png)
 
 
 
@@ -840,13 +922,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	271846 (75.6%) <-- Zero Imputation Applied
+    	Missing Values: 	256984 (74.6%) <-- Zero Imputation Applied
     	Mean: 			0.01
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_106.png)
+![png](EDA_files/EDA_36_106.png)
 
 
 
@@ -859,13 +941,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	37435 (10.4%) <-- Zero Imputation Applied
+    	Missing Values: 	35743 (10.4%) <-- Zero Imputation Applied
     	Mean: 			0.23
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_110.png)
+![png](EDA_files/EDA_36_110.png)
 
 
 
@@ -878,13 +960,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	235793 (65.6%) <-- Zero Imputation Applied
+    	Missing Values: 	225741 (65.5%) <-- Zero Imputation Applied
     	Mean: 			0.02
     	Range: 			(0.00, 1.00)
 
 
 
-![png](EDA_files/EDA_32_114.png)
+![png](EDA_files/EDA_36_114.png)
 
 
 
@@ -897,13 +979,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			0.44
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.46
     	Range: 			(0.00, 35.00)
 
 
 
-![png](EDA_files/EDA_32_118.png)
+![png](EDA_files/EDA_36_118.png)
 
 
 
@@ -916,13 +998,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			3.52
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			3.67
     	Range: 			(0.00, 30.00)
 
 
 
-![png](EDA_files/EDA_32_122.png)
+![png](EDA_files/EDA_36_122.png)
 
 
 
@@ -935,13 +1017,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			5.45
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			5.67
     	Range: 			(0.00, 41.00)
 
 
 
-![png](EDA_files/EDA_32_126.png)
+![png](EDA_files/EDA_36_126.png)
 
 
 
@@ -954,13 +1036,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	2698 (0.8%) <-- Zero Imputation Applied
-    	Mean: 			4.58
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			4.63
     	Range: 			(0.00, 46.00)
 
 
 
-![png](EDA_files/EDA_32_130.png)
+![png](EDA_files/EDA_36_130.png)
 
 
 
@@ -973,13 +1055,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			8.28
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			8.63
     	Range: 			(0.00, 65.00)
 
 
 
-![png](EDA_files/EDA_32_134.png)
+![png](EDA_files/EDA_36_134.png)
 
 
 
@@ -992,13 +1074,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			7.68
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			7.99
     	Range: 			(0.00, 150.00)
 
 
 
-![png](EDA_files/EDA_32_138.png)
+![png](EDA_files/EDA_36_138.png)
 
 
 
@@ -1011,13 +1093,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			7.80
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			8.12
     	Range: 			(0.00, 62.00)
 
 
 
-![png](EDA_files/EDA_32_142.png)
+![png](EDA_files/EDA_36_142.png)
 
 
 
@@ -1030,13 +1112,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			14.37
-    	Range: 			(0.00, 105.00)
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			14.96
+    	Range: 			(1.00, 105.00)
 
 
 
-![png](EDA_files/EDA_32_146.png)
+![png](EDA_files/EDA_36_146.png)
 
 
 
@@ -1049,13 +1131,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			5.43
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			5.65
     	Range: 			(0.00, 38.00)
 
 
 
-![png](EDA_files/EDA_32_150.png)
+![png](EDA_files/EDA_36_150.png)
 
 
 
@@ -1068,13 +1150,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	2698 (0.8%) <-- Zero Imputation Applied
-    	Mean: 			11.14
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			11.25
     	Range: 			(0.00, 84.00)
 
 
 
-![png](EDA_files/EDA_32_154.png)
+![png](EDA_files/EDA_36_154.png)
 
 
 
@@ -1087,13 +1169,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	22258 (6.2%) <-- Zero Imputation Applied
+    	Missing Values: 	8410 (2.4%) <-- Zero Imputation Applied
     	Mean: 			0.00
     	Range: 			(0.00, 3.00)
 
 
 
-![png](EDA_files/EDA_32_158.png)
+![png](EDA_files/EDA_36_158.png)
 
 
 
@@ -1106,13 +1188,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
+    	Missing Values: 	0 (0.0%)
     	Mean: 			0.00
     	Range: 			(0.00, 4.00)
 
 
 
-![png](EDA_files/EDA_32_162.png)
+![png](EDA_files/EDA_36_162.png)
 
 
 
@@ -1125,13 +1207,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			0.08
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			0.09
     	Range: 			(0.00, 24.00)
 
 
 
-![png](EDA_files/EDA_32_166.png)
+![png](EDA_files/EDA_36_166.png)
 
 
 
@@ -1144,13 +1226,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			1.86
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			1.93
     	Range: 			(0.00, 26.00)
 
 
 
-![png](EDA_files/EDA_32_170.png)
+![png](EDA_files/EDA_36_170.png)
 
 
 
@@ -1164,31 +1246,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			11.26
+    	Mean: 			11.29
     	Range: 			(0.00, 84.00)
 
 
 
-![png](EDA_files/EDA_32_174.png)
-
-
-
-
-
-
-
-
-**outlier**: 
-
-
-    	Type: 			int64
-    	Missing Values: 	0 (0.0%)
-    	Mean: 			0.00
-    	Range: 			(0.00, 0.00)
-
-
-
-![png](EDA_files/EDA_32_178.png)
+![png](EDA_files/EDA_36_174.png)
 
 
 
@@ -1201,13 +1264,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13961 (3.9%) <-- Mean Imputation Applied
-    	Mean: 			94.45
+    	Missing Values: 	114 (0.0%) <-- Mean Imputation Applied
+    	Mean: 			94.43
     	Range: 			(7.70, 100.00)
 
 
 
-![png](EDA_files/EDA_32_182.png)
+![png](EDA_files/EDA_36_178.png)
 
 
 
@@ -1220,13 +1283,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	3473 (1.0%) <-- Zero Imputation Applied
-    	Mean: 			49.84
+    	Missing Values: 	2451 (0.7%) <-- Zero Imputation Applied
+    	Mean: 			49.92
     	Range: 			(0.00, 100.00)
 
 
 
-![png](EDA_files/EDA_32_186.png)
+![png](EDA_files/EDA_36_182.png)
 
 
 
@@ -1240,12 +1303,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			0.19
+    	Mean: 			0.20
     	Range: 			(0.00, 63.00)
 
 
 
-![png](EDA_files/EDA_32_190.png)
+![png](EDA_files/EDA_36_186.png)
 
 
 
@@ -1259,12 +1322,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			0.12
+    	Mean: 			0.13
     	Range: 			(0.00, 12.00)
 
 
 
-![png](EDA_files/EDA_32_194.png)
+![png](EDA_files/EDA_36_190.png)
 
 
 
@@ -1278,12 +1341,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			15574.30
+    	Mean: 			15667.71
     	Range: 			(0.00, 2568995.00)
 
 
 
-![png](EDA_files/EDA_32_198.png)
+![png](EDA_files/EDA_36_194.png)
 
 
 
@@ -1296,13 +1359,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	170 (0.0%) <-- Zero Imputation Applied
-    	Mean: 			55.49
+    	Missing Values: 	106 (0.0%) <-- Zero Imputation Applied
+    	Mean: 			55.46
     	Range: 			(0.00, 892.30)
 
 
 
-![png](EDA_files/EDA_32_202.png)
+![png](EDA_files/EDA_36_198.png)
 
 
 
@@ -1316,12 +1379,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			10.30
+    	Mean: 			10.27
     	Range: 			(1.00, 25.00)
 
 
 
-![png](EDA_files/EDA_32_206.png)
+![png](EDA_files/EDA_36_202.png)
 
 
 
@@ -1340,7 +1403,7 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-![png](EDA_files/EDA_32_210.png)
+![png](EDA_files/EDA_36_206.png)
 
 
 
@@ -1353,13 +1416,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			205.47
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			214.08
     	Range: 			(0.00, 9152545.00)
 
 
 
-![png](EDA_files/EDA_32_214.png)
+![png](EDA_files/EDA_36_210.png)
 
 
 
@@ -1372,13 +1435,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			123952.77
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			128972.49
     	Range: 			(0.00, 8000078.00)
 
 
 
-![png](EDA_files/EDA_32_218.png)
+![png](EDA_files/EDA_36_214.png)
 
 
 
@@ -1391,13 +1454,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			151986.14
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			158161.62
     	Range: 			(0.00, 9999999.00)
 
 
 
-![png](EDA_files/EDA_32_222.png)
+![png](EDA_files/EDA_36_218.png)
 
 
 
@@ -1411,12 +1474,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			24.90
+    	Mean: 			24.95
     	Range: 			(2.00, 162.00)
 
 
 
-![png](EDA_files/EDA_32_226.png)
+![png](EDA_files/EDA_36_222.png)
 
 
 
@@ -1430,12 +1493,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			44161.05
+    	Mean: 			44398.18
     	Range: 			(0.00, 2688920.00)
 
 
 
-![png](EDA_files/EDA_32_230.png)
+![png](EDA_files/EDA_36_226.png)
 
 
 
@@ -1449,12 +1512,12 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
     	Type: 			float64
     	Missing Values: 	0 (0.0%)
-    	Mean: 			19654.58
+    	Mean: 			19759.53
     	Range: 			(0.00, 760000.00)
 
 
 
-![png](EDA_files/EDA_32_234.png)
+![png](EDA_files/EDA_36_230.png)
 
 
 
@@ -1467,13 +1530,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			34931.70
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			36340.74
     	Range: 			(0.00, 1241783.00)
 
 
 
-![png](EDA_files/EDA_32_238.png)
+![png](EDA_files/EDA_36_234.png)
 
 
 
@@ -1486,13 +1549,13 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
     	Type: 			float64
-    	Missing Values: 	13847 (3.9%) <-- Zero Imputation Applied
-    	Mean: 			28445.27
+    	Missing Values: 	0 (0.0%)
+    	Mean: 			29633.92
     	Range: 			(0.00, 9999999.00)
 
 
 
-![png](EDA_files/EDA_32_242.png)
+![png](EDA_files/EDA_36_238.png)
 
 
 
@@ -1502,94 +1565,4 @@ ls.drop(mnths_since, axis=1, inplace=True)
 
 
 
-
-
-## Appendix: Custom Functions
-
-
-
-```python
-#FUNCTION FOR DUMMY CREATION
-def dummy_attr(attr):
-    """ Create dummmies and drop original attribute"""
-    global ls
-    if attr not in list(ls): return
-    prefix = 'D_' + attr
-    dummies = pd.get_dummies(ls[attr], prefix=prefix)
-    ls.drop([attr], axis=1, inplace=True)
-    ls = pd.concat([ls, dummies], axis=1)
-```
-
-
-
-
-```python
-#FUNCTION FOR OUTLIER DETECTION
-ls['outlier'] = 0 # this column is incremented for identified outlier instances
-def outlier_attr(attr, threshold):
-    """ Identify outliers above threshold""" 
-    outliers = ls[attr] > threshold
-    ls['outlier'] = ls['outlier'] + outliers
-    return outliers
-```
-
-
-
-
-```python
-#FUNCTION FOR MISSING VALUE IMPUTATION
-from sklearn.impute import SimpleImputer
-mnths_since = ['mths_since_last_delinq_R', 'mths_since_last_major_derog_R',
-               'mths_since_last_record_R', 'mths_since_recent_bc_dlq_R',
-               'mths_since_recent_inq_R', 'mths_since_recent_revol_delinq_R']
-def impute_attr(attr, strategy='median'):
-    """ Impute missing values (via mean imputation or constant imputation)"""
-    if attr in mnths_since:
-        imp = SimpleImputer(strategy='constant', fill_value=0)
-    elif ls[attr].min() == 0:                                
-        imp = SimpleImputer(strategy='constant', fill_value=0)
-    else:
-        imp = SimpleImputer(strategy='mean')
-    ls[attr] = imp.fit_transform(ls[[attr]])
-```
-
-
-
-
-```python
-#FUNCTION FOR EDA
-def EDA_attr(attr):
-    """ Display basic EDA for given attribute"""
-    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, ""))))
-    
-    #attribute type
-    attr_type = ls[attr].dtype
-    print('\tType: \t\t\t{}'.format(attr_type))
-    
-    #missing values
-    missing_values = ls[attr].isnull().sum()
-    num_observations = len(ls)
-    print('\tMissing Values: \t{} ({:.1%})'.format(missing_values, missing_values/num_observations), end='')
-    if missing_values > 0:
-        if (ls[attr].min() == 0) or (attr in mnths_since):
-            print(' <-- Zero Imputation Applied', end='')
-        else:
-            print(' <-- Mean Imputation Applied', end='')
-    print()
-    
-    #numerical variables
-    if attr_type == 'float64' or attr_type == 'int64':  
-        impute_attr(attr)  
-        print('\tMean: \t\t\t{:.2f}'.format(ls[attr].mean()))     
-        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls[attr].min(), ls[attr].max()))
-        plt.hist(ls[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
-  
-    #categorical variables
-    if attr_type == 'object':   
-        print('\tNumber of Dummies: \t{}'.format(len(ls.groupby(attr))))
-        print('\tMost Common Category: \t{}'.format(ls.groupby(attr)['loan_amnt'].count().idxmax()))
-        dummy_attr(attr)
-
-    display(Markdown('\n'))
-```
 
