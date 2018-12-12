@@ -371,7 +371,9 @@ Further, of the loans that were accepted, we checked to see if there were notice
 
 Going forward in the modelling, we chose to focus on the demographic measures as a percentage of the total population, because demographic information by zip code gets muddled by how populous the zip code is when using population counts. As we can see in the histograms in **Figures 1-4**, using counts makes the acceptance distributions slightly to the right of the rejection distributions for all demographic groups because accepted loans tended to come from more populous zip codes as shown in **Figure 1**, in the distributions by Population size.
 
-## 5. Modelling
+## 5. Is there evidence of discrimination in LendingClub loans?
+
+To evaluate whether certain demographic features might have influenced whether LendingClub accepted or rejected a loan application, we use random forests. For each tree in the forest, we recorded what the most important feature was, i.e. the feature on which the first split of that tree was made. Across all the trees in the forest, we created a frequency chart to assess relative feature importance (**Figure 10**).
 
 
 
@@ -383,153 +385,310 @@ Going forward in the modelling, we chose to focus on the demographic measures as
 
 
 
+
+
+
+
+
+
+    The test accuracy of the RandomForestClassifier with max_depth 25 and 50 trees is 0.91.
+
+
+
+
+
+
+**Figure 10. Feature Importance in Loan Acceptances vs. Rejections**
+
+
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_62_0.png)
+
+
+The random forest was able to predicted whether the loan decision was accept or reject with 91% accuracy on a separate test set. As we can see from the feature importance chart above, many of the most important features are related to income and ability to pay back, such as debt-to-income ratio, the percentage of the population that falls in certain income brackets, employment length (indicating a stable source of income), and the percentage of the population that has at least a Bachelor's degree (which improves earning potential). Interestingly, the percentage of the population that is Asian is the fourth most important feature. Looking back at **Figure 3**, it seems that a higher Asian percentage of the population is favorable towards a loan acceptance.
+
+
+
+
+
+The interest rate that a borrower is charged depends on the grade and sub-grade LendingClub assigns their loan. LendingClub determines the grade and sub-grade of the loan using a formula that considers credit score and credit risk. By the Equal Credit Opportunity Act (ECOA), lenders are also not permitted to discriminate loan terms on the basis of certain demographic group memberships. Thus, we investigated whether the demographic features in our dataset revealed a significant influence on loan sub-grade by conducting a linear regression. We removed some of the percent variables to reduce multi-collinearity, because summing all the percent variables of a certain demographic characteristic results in 100% (e.g. Male percent + Female percent). We replaced the income related variables in the Census dataset with the income data that was specific to each loan from the LoanStats dataset. We also included a select few variables that are related to credit score and credit risk, which LendingClub factors into loan grade and sub-grade assignment.
+
+
+
+
+
+
+
+
+
+
+
+
+
+    The R^2 on the test set is 0.05.
+
+
+
+
+
+
+
+
+
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>        <td>sub_grade</td>    <th>  R-squared:         </th>  <td>   0.042</td>  
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th>  <td>   0.042</td>  
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   902.3</td>  
+</tr>
+<tr>
+  <th>Date:</th>             <td>Wed, 12 Dec 2018</td> <th>  Prob (F-statistic):</th>   <td>  0.00</td>   
+</tr>
+<tr>
+  <th>Time:</th>                 <td>02:50:10</td>     <th>  Log-Likelihood:    </th> <td>-1.1519e+06</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>371729</td>      <th>  AIC:               </th>  <td>2.304e+06</td> 
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>371710</td>      <th>  BIC:               </th>  <td>2.304e+06</td> 
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>    18</td>      <th>                     </th>      <td> </td>     
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>      <td> </td>     
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+               <td></td>                  <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th>                       <td>   15.2258</td> <td>    0.896</td> <td>   17.002</td> <td> 0.000</td> <td>   13.471</td> <td>   16.981</td>
+</tr>
+<tr>
+  <th>annual_inc</th>                  <td> -4.91e-06</td> <td> 1.65e-07</td> <td>  -29.775</td> <td> 0.000</td> <td>-5.23e-06</td> <td>-4.59e-06</td>
+</tr>
+<tr>
+  <th>earliest_cr_line</th>            <td>   -0.0003</td> <td> 3.37e-06</td> <td>  -77.131</td> <td> 0.000</td> <td>   -0.000</td> <td>   -0.000</td>
+</tr>
+<tr>
+  <th>emp_length</th>                  <td>   -0.0111</td> <td>    0.002</td> <td>   -4.622</td> <td> 0.000</td> <td>   -0.016</td> <td>   -0.006</td>
+</tr>
+<tr>
+  <th>loan_amnt</th>                   <td>  1.21e-05</td> <td> 1.24e-06</td> <td>    9.786</td> <td> 0.000</td> <td> 9.67e-06</td> <td> 1.45e-05</td>
+</tr>
+<tr>
+  <th>dti</th>                         <td>    0.0909</td> <td>    0.001</td> <td>   79.482</td> <td> 0.000</td> <td>    0.089</td> <td>    0.093</td>
+</tr>
+<tr>
+  <th>Population</th>                  <td>-1.679e-08</td> <td> 1.72e-08</td> <td>   -0.974</td> <td> 0.330</td> <td>-5.06e-08</td> <td>  1.7e-08</td>
+</tr>
+<tr>
+  <th>High_School_pct</th>             <td>    0.0148</td> <td>    0.005</td> <td>    2.908</td> <td> 0.004</td> <td>    0.005</td> <td>    0.025</td>
+</tr>
+<tr>
+  <th>Some_College_pct</th>            <td>    0.0072</td> <td>    0.004</td> <td>    1.640</td> <td> 0.101</td> <td>   -0.001</td> <td>    0.016</td>
+</tr>
+<tr>
+  <th>Bachelors_Degree_pct</th>        <td>   -0.0146</td> <td>    0.005</td> <td>   -2.809</td> <td> 0.005</td> <td>   -0.025</td> <td>   -0.004</td>
+</tr>
+<tr>
+  <th>Graduate_Degree_pct</th>         <td>   -0.0009</td> <td>    0.005</td> <td>   -0.175</td> <td> 0.861</td> <td>   -0.012</td> <td>    0.010</td>
+</tr>
+<tr>
+  <th>Family_Poverty_pct</th>          <td>   -0.0100</td> <td>    0.005</td> <td>   -1.910</td> <td> 0.056</td> <td>   -0.020</td> <td>    0.000</td>
+</tr>
+<tr>
+  <th>Unemployment_Rate_pct</th>       <td>    0.0349</td> <td>    0.007</td> <td>    4.829</td> <td> 0.000</td> <td>    0.021</td> <td>    0.049</td>
+</tr>
+<tr>
+  <th>White_pct</th>                   <td>   -0.0130</td> <td>    0.003</td> <td>   -4.116</td> <td> 0.000</td> <td>   -0.019</td> <td>   -0.007</td>
+</tr>
+<tr>
+  <th>Black_pct</th>                   <td>   -0.0037</td> <td>    0.003</td> <td>   -1.146</td> <td> 0.252</td> <td>   -0.010</td> <td>    0.003</td>
+</tr>
+<tr>
+  <th>Asian_pct</th>                   <td>    0.0053</td> <td>    0.004</td> <td>    1.257</td> <td> 0.209</td> <td>   -0.003</td> <td>    0.013</td>
+</tr>
+<tr>
+  <th>Hispanic_pct</th>                <td>   -0.0046</td> <td>    0.003</td> <td>   -1.400</td> <td> 0.162</td> <td>   -0.011</td> <td>    0.002</td>
+</tr>
+<tr>
+  <th>Male_pct</th>                    <td>   -0.0947</td> <td>    0.012</td> <td>   -7.967</td> <td> 0.000</td> <td>   -0.118</td> <td>   -0.071</td>
+</tr>
+<tr>
+  <th>Married_couple_families_pct</th> <td>    0.0075</td> <td>    0.002</td> <td>    3.983</td> <td> 0.000</td> <td>    0.004</td> <td>    0.011</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>14958.557</td> <th>  Durbin-Watson:     </th> <td>   2.001</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>   <th>  Jarque-Bera (JB):  </th> <td>16269.535</td>
+</tr>
+<tr>
+  <th>Skew:</th>           <td> 0.498</td>   <th>  Prob(JB):          </th> <td>    0.00</td> 
+</tr>
+<tr>
+  <th>Kurtosis:</th>       <td> 2.755</td>   <th>  Cond. No.          </th> <td>1.12e+08</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 1.12e+08. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
+
+
+
+Of the demographic features, `Bachelors_Degree_pct`, `Unemployment_Rate_pct`, `White_pct`, `Male_pct`, and `Married_couple_families_pct` are the only ones that have coefficients that are statistically significant at the 1% level. Loans from a 3-digit zip code areas that have a higher percentage of the population that is educated to the Bachelors level, a higher percentage of the population that is White, and a higher percentage of the population that is Male tend to have more favorable loan grade assignments (negative coefficients). On the other hand, loans from a 3-digit zip code areas that have a higher percentage of the population that is unemployed and a higher percentage of households with a married couple tend to have less favorable loan grade assignments (positive coefficients). Despite the statistical significance of some of the coefficients, the $R^2$ of the model is only 4%, so from these results, I would not conclude that there is discrimination in determination of loan sub-grade (which has implications for the loan terms).
+
+
+
+```python
+#set up data for OLS with the census vars only
+ols_cen_data = ols_df[census_pct_keep+['sub_grade']]
+ols_cen_X = ols_cen_data.drop('sub_grade', axis=1)
+ols_cen_y = ols_cen_data['sub_grade']
+
+#set a random seed to keep results constant each time notebook is re-run
+random.seed(9)
+ols_cen, r2_test_cen = run_ols(ols_cen_X, ols_cen_y)
+print("The R^2 on the test set is {:.2f}.".format(r2_test_cen))
+```
+
+
+    The R^2 on the test set is 0.00.
 
 
 
 
 ```python
-#train and test random forest classifier
-n_use = 50
-depth_use = 25
-rf = RandomForestClassifier(n_estimators=n_use, max_depth=depth_use)
-rf.fit(X_train_rf, y_train_rf)
-rf_score_test = accuracy_score(y_test_rf, rf.predict(X_test_rf))
-print("The test accuracy of the RandomForestClassifier with max_depth {} and {} trees is {:.2f}."
-      .format(depth_use, n_use, rf_score_test))
-```
-
-
-    The test accuracy of the RandomForestClassifier with max_depth 25 and 50 trees is 0.91.
-
-
-
-
-
-
-
-
-
-
-
-![png](EthicalImplications_files/EthicalImplications_60_0.png)
-
-
-
-
-```python
-#remove 1 of each of the demographic groups to avoid perfect colinearity
-#e.g. Male_pct + Female_pct = 1
-#leave 'int_rate' out as the response
-ols_predictors_int_rate = ['loan_amnt',
- 'term',
- 'sub_grade',
- 'emp_length',
- 'home_ownership',
- 'annual_inc',
- 'verification_status',
- 'dti',
- 'Population',
- 'Households',
- 'No_Diploma_pct',
- 'High_School_pct',
- 'Some_College_pct',
- 'Bachelors_Degree_pct',
- 'Graduate_Degree_pct',
- 'Family_Poverty_pct',
- 'Unemployment_Rate_pct',
- 'Housing_Units',
- 'White_pct',
- 'Black_pct',
- 'Native_pct',
- 'Asian_pct',
- 'Islander_pct',
- 'Two_pct',
- 'Hispanic_pct',
- 'Male_pct',
- 'From_25000_to_49999_pct',
- 'From_50000_to_74999_pct',
- 'From_75000_to_99999_pct',
- 'From_100000_to_149999_pct',
- 'From_150000_to_199999_pct',
- 'From_200000_or_more_pct',
- 'Married_couple_families_pct',
- 'Married_couple_child_under_18_pct',
- 'Single_parent_families_pct',
- 'Single_parent_child_under_18_pct']
-```
-
-
-
-
-```python
-accepted_joined_df.dtypes
+ols_cen.summary()
 ```
 
 
 
 
 
-    loan_amnt                                float64
-    term                                      object
-    int_rate                                 float64
-    installment                              float64
-    grade                                     object
-    emp_length                               float64
-    home_ownership                            object
-    annual_inc                               float64
-    verification_status                       object
-    Zip                                       object
-    dti                                      float64
-    accepted                                   int64
-    Population                               float64
-    White                                    float64
-    Black                                    float64
-    Native                                   float64
-    Asian                                    float64
-    Islander                                 float64
-    Other                                    float64
-    Two                                      float64
-    Hispanic                                 float64
-    Households                               float64
-    Less_than_24999                          float64
-    From_25000_to_49999                      float64
-    From_50000_to_74999                      float64
-    From_75000_to_99999                      float64
-    From_100000_to_149999                    float64
-    From_150000_to_199999                    float64
-    From_200000_or_more                      float64
-    No_Diploma_pct                           float64
-                                              ...   
-    Male                                     float64
-    White_pct                                float64
-    Black_pct                                float64
-    Native_pct                               float64
-    Asian_pct                                float64
-    Islander_pct                             float64
-    Other_pct                                float64
-    Two_pct                                  float64
-    Hispanic_pct                             float64
-    Female_pct                               float64
-    Male_pct                                 float64
-    Less_than_24999_pct                      float64
-    From_25000_to_49999_pct                  float64
-    From_50000_to_74999_pct                  float64
-    From_75000_to_99999_pct                  float64
-    From_100000_to_149999_pct                float64
-    From_150000_to_199999_pct                float64
-    From_200000_or_more_pct                  float64
-    Families_pct                             float64
-    Married_couple_families_pct              float64
-    Married_couple_child_under_18_pct        float64
-    Married_couple_no_child_under_18_pct     float64
-    Single_parent_families_pct               float64
-    Single_parent_child_under_18_pct         float64
-    Single_parent_no_child_under_18_pct      float64
-    Non_families_pct                         float64
-    Householder_living_alone_pct             float64
-    Householder_living_with_unrelated_pct    float64
-    Occupied_pct                             float64
-    Household_size                           float64
-    Length: 79, dtype: object
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>        <td>sub_grade</td>    <th>  R-squared:         </th>  <td>   0.003</td>  
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th>  <td>   0.003</td>  
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   86.19</td>  
+</tr>
+<tr>
+  <th>Date:</th>             <td>Wed, 12 Dec 2018</td> <th>  Prob (F-statistic):</th>  <td>5.31e-231</td> 
+</tr>
+<tr>
+  <th>Time:</th>                 <td>02:53:08</td>     <th>  Log-Likelihood:    </th> <td>-1.1594e+06</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>371729</td>      <th>  AIC:               </th>  <td>2.319e+06</td> 
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>371715</td>      <th>  BIC:               </th>  <td>2.319e+06</td> 
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>    13</td>      <th>                     </th>      <td> </td>     
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>      <td> </td>     
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+               <td></td>                  <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th>                       <td>   14.3117</td> <td>    0.914</td> <td>   15.661</td> <td> 0.000</td> <td>   12.521</td> <td>   16.103</td>
+</tr>
+<tr>
+  <th>Population</th>                  <td>-3.608e-08</td> <td> 1.76e-08</td> <td>   -2.054</td> <td> 0.040</td> <td>-7.05e-08</td> <td>-1.66e-09</td>
+</tr>
+<tr>
+  <th>High_School_pct</th>             <td>    0.0263</td> <td>    0.005</td> <td>    5.045</td> <td> 0.000</td> <td>    0.016</td> <td>    0.036</td>
+</tr>
+<tr>
+  <th>Some_College_pct</th>            <td>    0.0175</td> <td>    0.004</td> <td>    3.927</td> <td> 0.000</td> <td>    0.009</td> <td>    0.026</td>
+</tr>
+<tr>
+  <th>Bachelors_Degree_pct</th>        <td>   -0.0119</td> <td>    0.005</td> <td>   -2.246</td> <td> 0.025</td> <td>   -0.022</td> <td>   -0.002</td>
+</tr>
+<tr>
+  <th>Graduate_Degree_pct</th>         <td>   -0.0017</td> <td>    0.006</td> <td>   -0.312</td> <td> 0.755</td> <td>   -0.013</td> <td>    0.009</td>
+</tr>
+<tr>
+  <th>Family_Poverty_pct</th>          <td>    0.0061</td> <td>    0.005</td> <td>    1.138</td> <td> 0.255</td> <td>   -0.004</td> <td>    0.017</td>
+</tr>
+<tr>
+  <th>Unemployment_Rate_pct</th>       <td>    0.0061</td> <td>    0.007</td> <td>    0.826</td> <td> 0.409</td> <td>   -0.008</td> <td>    0.021</td>
+</tr>
+<tr>
+  <th>White_pct</th>                   <td>   -0.0160</td> <td>    0.003</td> <td>   -4.955</td> <td> 0.000</td> <td>   -0.022</td> <td>   -0.010</td>
+</tr>
+<tr>
+  <th>Black_pct</th>                   <td>   -0.0061</td> <td>    0.003</td> <td>   -1.833</td> <td> 0.067</td> <td>   -0.013</td> <td>    0.000</td>
+</tr>
+<tr>
+  <th>Asian_pct</th>                   <td>    0.0028</td> <td>    0.004</td> <td>    0.664</td> <td> 0.507</td> <td>   -0.006</td> <td>    0.011</td>
+</tr>
+<tr>
+  <th>Hispanic_pct</th>                <td>   -0.0065</td> <td>    0.003</td> <td>   -1.949</td> <td> 0.051</td> <td>   -0.013</td> <td> 3.59e-05</td>
+</tr>
+<tr>
+  <th>Male_pct</th>                    <td>   -0.0851</td> <td>    0.012</td> <td>   -7.025</td> <td> 0.000</td> <td>   -0.109</td> <td>   -0.061</td>
+</tr>
+<tr>
+  <th>Married_couple_families_pct</th> <td>    0.0056</td> <td>    0.002</td> <td>    2.932</td> <td> 0.003</td> <td>    0.002</td> <td>    0.009</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>15456.771</td> <th>  Durbin-Watson:     </th> <td>   1.998</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>   <th>  Jarque-Bera (JB):  </th> <td>15353.546</td>
+</tr>
+<tr>
+  <th>Skew:</th>           <td> 0.459</td>   <th>  Prob(JB):          </th> <td>    0.00</td> 
+</tr>
+<tr>
+  <th>Kurtosis:</th>       <td> 2.615</td>   <th>  Cond. No.          </th> <td>1.12e+08</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 1.12e+08. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
 
 
+
+We also ran the linear regression with demographic predictors only (i.e. not controlling for the selected loan features included in the first regression). While similar coefficients are statistically significant, the $R^2$ is close to 0%, so from these results, I also would not conclude that there is discrimination in determination of loan sub-grade (which has implications for the loan terms).
+
+## 6. Is there evidence of discrimination in our proposed investment strategy?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**Commentary about what's showing up in the top features.**
