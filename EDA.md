@@ -146,7 +146,7 @@ ls['OUT_Monthly_Rate_Of_Return'] = (Net_Repayment / Repayment_Period) / ls['loan
 
 ## 4. Independent Feature Cleaning
 
-We cleaned each independent variable with type conversion, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. This section presents the custom functions that we used and the following section [EDA](https://cs109group67.github.io/lendingclub/EDA.html#5-eda) summarizes the cleaned features.
+We cleaned the independent variables with type conversions, dummy creation and outlier identification. Loans that had missing values in more than half of the independent variables were dropped while the remaining missing values were imputed with mean imputation or zero imputation. This section presents the custom functions that we used and the following section [EDA](https://cs109group67.github.io/lendingclub/EDA.html#5-eda) summarizes the cleaned features.
 
 ### 4A. Type Conversions
 
@@ -246,46 +246,10 @@ def impute_attr(attr, strategy='median'):
 
 
 ## 5. EDA
+Here we examine some summary statistics for each variable:
 
 
 
-```python
-#FUNCTION FOR EDA
-def EDA_attr(attr):
-    """ Display basic EDA for given attribute"""
-    mnths_since = ls.columns[ls.columns.str.contains('mo_sin|mths_since')]
-    display(Markdown('**{}**: {}'.format(attr, data_dict.get(attr, ""))))
-    
-    #attribute type
-    attr_type = ls[attr].dtype
-    print('\tType: \t\t\t{}'.format(attr_type))
-    
-    #missing values
-    missing_values = ls[attr].isnull().sum()
-    num_observations = len(ls)
-    print('\tMissing Values: \t{} ({:.1%})'.format(missing_values, missing_values/num_observations), end='')
-    if missing_values > 0:
-        if (ls[attr].min() == 0) or (attr in mnths_since):
-            print(' <-- Zero Imputation Applied', end='')
-        else:
-            print(' <-- Mean Imputation Applied', end='')
-    print()
-    
-    #numerical variables
-    if attr_type == 'float64' or attr_type == 'int64':  
-        impute_attr(attr)  
-        print('\tMean: \t\t\t{:.2f}'.format(ls[attr].mean()))     
-        print('\tRange: \t\t\t({:.2f}, {:.2f})'.format(ls[attr].min(), ls[attr].max()))
-        plt.hist(ls[attr]); plt.ylabel('Number of Loans'); plt.xlabel(attr); plt.show()
-  
-    #categorical variables
-    if attr_type == 'object':   
-        print('\tNumber of Dummies: \t{}'.format(len(ls.groupby(attr))))
-        print('\tMost Common Category: \t{}'.format(ls.groupby(attr)['loan_amnt'].count().idxmax()))
-        dummy_attr(attr)
-
-    display(Markdown('\n'))
-```
 
 
 ### 5A. Outcome Features

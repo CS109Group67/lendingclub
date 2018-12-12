@@ -103,7 +103,7 @@ def model_scoring(model, feature, target, modeltype='C', cv=5):
 class_names = ['Fully Repaid', 'Not Fully Repaid']
 def display_confusion_matrix(target, target_predicted):
     """Displays confusion matrix for classification models"""
-    fig, ax = plt.subplots(figsize=(8,4))
+    fig, ax = plt.subplots()
     matrix = pd.DataFrame(confusion_matrix(target, target_predicted),
                       index=class_names,
                       columns=class_names)
@@ -121,7 +121,7 @@ def display_confusion_matrix(target, target_predicted):
 ```python
 def display_ROC_curve(target, target_probabilities):
     """Displays the ROC curve for classification models"""
-    fig, ax = plt.subplots(figsize=(10,4))
+    fig, ax = plt.subplots()
     true_pr, false_pr, threshold = roc_curve(target, target_probabilities)
 
     ax.plot(false_pr, true_pr, label='ROC')
@@ -171,12 +171,6 @@ It is insightful to create some very simple models that we can use as a baseline
 
 
     DummyClassifier(constant=None, random_state=1, strategy='uniform')
-
-
-
-
-
-
     Train scores:
     	Cross-validation accuracy: 0.5016
     	Cross-validation precision: 0.864
@@ -199,19 +193,6 @@ This model is a logistic regression on the outcome variable `OUT_class` which is
                fit_intercept=False, intercept_scaling=1.0, max_iter=10000,
                multi_class='warn', n_jobs=None, penalty='l2', random_state=0,
                refit=True, scoring=None, solver='lbfgs', tol=0.0001, verbose=0)
-
-
-
-
-```python
-print('Train scores:')
-model_scoring(log_reg, X_train_scaled, OUT_Class_train)
-print('Test scores:')
-model_scoring(log_reg, X_test_scaled, OUT_Class_test)
-print()
-```
-
-
     Train scores:
     	Cross-validation accuracy: 0.5648
     	Cross-validation precision: 0.9258
@@ -220,12 +201,6 @@ print()
     	Cross-validation accuracy: 0.5654
     	Cross-validation precision: 0.9255
     	Cross-validation recall: 0.5407
-
-
-
-
-
-
                       precision    recall  f1-score   support
     
         Fully Repaid       0.20      0.72      0.31      9337
@@ -242,7 +217,7 @@ print()
 
 
 
-![png](Modeling_files/Modeling_26_0.png)
+![png](Modeling_files/Modeling_23_0.png)
 
 
 
@@ -250,7 +225,7 @@ print()
 
 
 
-![png](Modeling_files/Modeling_27_0.png)
+![png](Modeling_files/Modeling_24_0.png)
 
 
 
@@ -258,7 +233,7 @@ print()
 
 
 
-![png](Modeling_files/Modeling_28_0.png)
+![png](Modeling_files/Modeling_25_0.png)
 
 
 ## 3 `OUT_Principle_Repaid_Percentage`
@@ -271,12 +246,6 @@ A basic measure of a regressor's performance is how much better it is than a ver
 
 
     DummyRegressor(constant=None, quantile=None, strategy='mean')
-
-
-
-
-
-
     Train scores:
     	Cross-validation neg_mean_squared_error: -0.00223
     	Cross-validation r2: -1.209e-05
@@ -294,12 +263,6 @@ Linear regression assumes that the relationship between the features and the out
 
     LinearRegression(copy_X=True, fit_intercept=False, n_jobs=None,
              normalize=False)
-
-
-
-
-
-
     Train scores:
     	Cross-validation neg_mean_squared_error: -0.002214
     	Cross-validation r2: 0.00711
@@ -313,7 +276,7 @@ Linear regression assumes that the relationship between the features and the out
 
 
 
-![png](Modeling_files/Modeling_36_0.png)
+![png](Modeling_files/Modeling_31_0.png)
 
 
 ### 3C. Ridge Regression
@@ -323,22 +286,10 @@ It will be useful to reduce the variance of the coefficients. By applying a shri
 
 
 
-
-
-
-    RidgeCV(alphas=array([ 0.1,  1. , 10. ]), cv=None, fit_intercept=False,
-        gcv_mode=None, normalize=False, scoring=None, store_cv_values=False)
-
-
-
-
-
-
-
-    Train set scores:
+    Train scores:
     	Cross-validation neg_mean_squared_error: -0.002213
     	Cross-validation r2: 0.007235
-    Test set scores:
+    Test scores:
     	Cross-validation neg_mean_squared_error: -0.002223
     	Cross-validation r2: 0.005698
 
@@ -348,7 +299,7 @@ It will be useful to reduce the variance of the coefficients. By applying a shri
 
 
 
-![png](Modeling_files/Modeling_40_0.png)
+![png](Modeling_files/Modeling_34_0.png)
 
 
 ### 3D. Lasso Regression
@@ -362,16 +313,10 @@ Lasso regression often produces more interpretable models than Ridge regression.
         max_iter=1000, n_alphas=100, n_jobs=None, normalize=False,
         positive=False, precompute='auto', random_state=None,
         selection='cyclic', tol=0.0001, verbose=False)
-
-
-
-
-
-
-    Train set scores:
+    Train scores:
     	Cross-validation neg_mean_squared_error: -0.002212
     	Cross-validation r2: 0.00806
-    Test set scores:
+    Test scores:
     	Cross-validation neg_mean_squared_error: -0.002223
     	Cross-validation r2: 0.005764
 
@@ -381,7 +326,7 @@ Lasso regression often produces more interpretable models than Ridge regression.
 
 
 
-![png](Modeling_files/Modeling_44_0.png)
+![png](Modeling_files/Modeling_37_0.png)
 
 
 ### 3E. Polynomial Lasso Regression
@@ -399,12 +344,7 @@ poly_2 = pd.DataFrame(np.hstack((X_test.iloc[:,22:]**(i+1) for i in range(2))),
                       index=X_test.index, 
                       columns=numeric_var_list+[s+'_2' for s in numeric_var_list])
 X_test_2 = pd.concat([ls_test[dummy_var_list], poly_2], axis=1).sort_index(axis=1)
-```
 
-
-
-
-```python
 #STANDARD SCALING
 scaler = StandardScaler()
 X_train_scaled_2 = pd.DataFrame(scaler.fit_transform(X_train_2),index=X_train_2.index, columns=X_train_2.columns)
@@ -420,12 +360,6 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
         max_iter=1000, n_alphas=100, n_jobs=None, normalize=False,
         positive=False, precompute='auto', random_state=None,
         selection='cyclic', tol=0.0001, verbose=False)
-
-
-
-
-
-
     Train scores:
     	Cross-validation neg_mean_squared_error: -0.00221
     	Cross-validation r2: 0.008666
@@ -439,7 +373,7 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
 
-![png](Modeling_files/Modeling_50_0.png)
+![png](Modeling_files/Modeling_41_0.png)
 
 
 ## 4. `OUT_Monthly_Rate_Of_Return`
@@ -451,12 +385,6 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
     DummyRegressor(constant=None, quantile=None, strategy='mean')
-
-
-
-
-
-
     Train scores:
     	Cross-validation neg_mean_squared_error: -0.04668
     	Cross-validation r2: -1.986e-05
@@ -473,12 +401,6 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
     LinearRegression(copy_X=True, fit_intercept=False, n_jobs=None,
              normalize=False)
-
-
-
-
-
-
     Train scores:
     	Cross-validation neg_mean_squared_error: -0.9982
     	Cross-validation r2: -20.4
@@ -492,7 +414,7 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
 
-![png](Modeling_files/Modeling_58_0.png)
+![png](Modeling_files/Modeling_47_0.png)
 
 
 ### 4C. Ridge Regression
@@ -501,22 +423,10 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
 
-
-
-
-    RidgeCV(alphas=array([ 0.1,  1. , 10. ]), cv=None, fit_intercept=False,
-        gcv_mode=None, normalize=False, scoring=None, store_cv_values=False)
-
-
-
-
-
-
-
-    Train set scores:
+    Train scores:
     	Cross-validation neg_mean_squared_error: -0.9208
     	Cross-validation r2: -18.73
-    Test set scores:
+    Test scores:
     	Cross-validation neg_mean_squared_error: -0.8948
     	Cross-validation r2: -18.01
 
@@ -526,7 +436,7 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
 
-![png](Modeling_files/Modeling_62_0.png)
+![png](Modeling_files/Modeling_50_0.png)
 
 
 ### 4D. Lasso Regression
@@ -539,16 +449,10 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
         max_iter=1000, n_alphas=100, n_jobs=None, normalize=False,
         positive=False, precompute='auto', random_state=None,
         selection='cyclic', tol=0.0001, verbose=False)
-
-
-
-
-
-
-    Train set scores:
+    Train scores:
     	Cross-validation neg_mean_squared_error: -0.8948
     	Cross-validation r2: -18.17
-    Test set scores:
+    Test scores:
     	Cross-validation neg_mean_squared_error: -0.8939
     	Cross-validation r2: -17.99
 
@@ -558,7 +462,7 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
 
-![png](Modeling_files/Modeling_66_0.png)
+![png](Modeling_files/Modeling_53_0.png)
 
 
 ### 4E. Polynomial Lasso Regression
@@ -571,12 +475,6 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
         max_iter=1000, n_alphas=100, n_jobs=None, normalize=False,
         positive=False, precompute='auto', random_state=None,
         selection='cyclic', tol=0.0001, verbose=False)
-
-
-
-
-
-
     Train scores:
     	Cross-validation neg_mean_squared_error: -305.1
     	Cross-validation r2: -6.566e+03
@@ -590,5 +488,5 @@ X_test_scaled_2 = pd.DataFrame(scaler.transform(X_test_2),index=X_test_2.index, 
 
 
 
-![png](Modeling_files/Modeling_70_0.png)
+![png](Modeling_files/Modeling_56_0.png)
 
