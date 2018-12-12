@@ -1,7 +1,6 @@
 ---
 title: Investment Strategy
 notebook: Strategy.ipynb
-nav_include: 4
 ---
 
 ## Contents
@@ -38,16 +37,6 @@ nav_include: 4
 
 
 
-
-
-
-    LassoCV(alphas=None, copy_X=True, cv='warn', eps=0.001, fit_intercept=False,
-        max_iter=1000, n_alphas=100, n_jobs=None, normalize=False,
-        positive=False, precompute='auto', random_state=None,
-        selection='cyclic', tol=0.0001, verbose=False)
-
-
-
 ## 1. Modeling Summary
 
 
@@ -61,7 +50,9 @@ In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) sect
 
 
 
-**OUT_Class:**
+**`OUT_Class`:**
+
+
 
 
 
@@ -120,11 +111,19 @@ In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) sect
 </div>
 
 
-    
 
 
 
-**OUT_Principle_Repaid:**
+```python
+display(Markdown('**`OUT_Principle_Repaid`:**'))
+OUT_PRP_results
+```
+
+
+
+**`OUT_Principle_Repaid`:**
+
+
 
 
 
@@ -198,11 +197,19 @@ In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) sect
 </div>
 
 
-    
 
 
 
-**OUT_Monthly_Rate_Of_Return:**
+```python
+display(Markdown('**`OUT_Monthly_Rate_Of_Return`:**'))
+OUT_MRR_results
+```
+
+
+
+**`OUT_Monthly_Rate_Of_Return`:**
+
+
 
 
 
@@ -276,26 +283,11 @@ In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) sect
 </div>
 
 
-The classification and regression models did not perform well at predicting the target features, but they did provide important information about which variables potentially hold the most inferential information for a prospective investor. The visualizations below display cofficients assigned across the models. The focus is on features that have significant magnitude across distinct models.
+
+The classification and regression models did not perform well at predicting the target features, but they did provide important information about which variables potentially hold the most inferential information for a prospective investor. The visualizations below display cofficients assigned across the models. The focus is on features that have the most significant magnitude across distinct models.
 
 
 
-
-
-
-
-
-
-
-![png](Strategy_files/Strategy_14_0.png)
-
-
-
-
-
-
-
-![png](Strategy_files/Strategy_15_0.png)
 
 
 
@@ -306,9 +298,25 @@ The classification and regression models did not perform well at predicting the 
 ![png](Strategy_files/Strategy_16_0.png)
 
 
+
+
+
+
+
+![png](Strategy_files/Strategy_17_0.png)
+
+
+
+
+
+
+
+![png](Strategy_files/Strategy_18_0.png)
+
+
 ## 2. Key Variables Driving Investment Decisions
 
-The modeling has revealed the most likely key variables that should power the investment decisions: those which have significant coefficients across the distinct classification and regression models. These form the subset for our investment strategy formulation. This will aid interpretation and understanding for the investor at the loss of minimal investment efficacy. 
+The modeling has revealed key variables that should power the investment decisions: those which have significant coefficients across the distinct classification and regression models. These form the subset for our investment strategy formulation. This will aid interpretation and understanding for the investor at the loss of minimal investment efficacy. 
 
 **Top 10 Key Variables**:
 
@@ -331,7 +339,48 @@ The modeling has revealed the most likely key variables that should power the in
 
 ## 3. Investment Strategy
 
-With the key variables established, we now perform decision tree and random forest analysis on this key subset to establish the investment strategy.
+With the key variables established, we examine decision tree and random forest analysis on this key subset to establish the investment strategy.
+
+
+
+```python
+decisiontree = DecisionTreeRegressor(random_state=0, 
+                                     max_depth=10, 
+                                     min_samples_split=.05,
+                                    max_leaf_nodes=20)
+decisiontree.fit(X_train_scaled, OUT_Monthly_Rate_Of_Return_train)
+```
+
+
+
+
+
+    DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
+               max_leaf_nodes=20, min_impurity_decrease=0.0,
+               min_impurity_split=None, min_samples_leaf=1,
+               min_samples_split=0.05, min_weight_fraction_leaf=0.0,
+               presort=False, random_state=0, splitter='best')
+
+
+
+
+
+```python
+from sklearn.tree import export_graphviz
+from graphviz import Source
+from IPython.display import display, SVG
+graph = Source(export_graphviz(decisiontree, 
+                               class_names=['Charged Off', 'Fully Paid'],
+                               feature_names=X_train_scaled.columns,
+                               out_file=None, 
+                               filled = True))
+display(SVG(graph.pipe(format='svg')))
+```
+
+
+
+![svg](Strategy_files/Strategy_26_0.svg)
+
 
 ## 4. Predictive Quality of Model
 
