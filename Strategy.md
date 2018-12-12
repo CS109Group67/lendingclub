@@ -1,6 +1,7 @@
 ---
 title: Investment Strategy
 notebook: Strategy.ipynb
+nav_include: 4
 ---
 
 ## Contents
@@ -339,48 +340,72 @@ The modeling has revealed key variables that should power the investment decisio
 
 ## 3. Investment Strategy
 
-With the key variables established, we examine decision tree and random forest analysis on this key subset to establish the investment strategy.
+With the key variables established, we examine decision tree and random forest analysis on this key subset to establish the investment strategy. We focus on the most comprehensive outcome feature of `OUT_Monthly_Rate_Of_Return` since this feature takes into account the total amount repeiad with interest for the effective term of the loan. We visualize both a larger tree (for completeness and demonstrative purposes) and a simplified tree. 
 
 
 
-```python
-decisiontree = DecisionTreeRegressor(random_state=0, 
-                                     max_depth=10, 
-                                     min_samples_split=.05,
-                                    max_leaf_nodes=20)
-decisiontree.fit(X_train_scaled, OUT_Monthly_Rate_Of_Return_train)
-```
 
 
 
+**FULL Key Feaure Decision Tree on OUT_Class**:
 
 
     DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
-               max_leaf_nodes=20, min_impurity_decrease=0.0,
+               max_leaf_nodes=None, min_impurity_decrease=0.0,
                min_impurity_split=None, min_samples_leaf=1,
                min_samples_split=0.05, min_weight_fraction_leaf=0.0,
                presort=False, random_state=0, splitter='best')
 
 
 
-
-
-```python
-from sklearn.tree import export_graphviz
-from graphviz import Source
-from IPython.display import display, SVG
-graph = Source(export_graphviz(decisiontree, 
-                               class_names=['Charged Off', 'Fully Paid'],
-                               feature_names=X_train_scaled.columns,
-                               out_file=None, 
-                               filled = True))
-display(SVG(graph.pipe(format='svg')))
-```
+![svg](Strategy_files/Strategy_25_2.svg)
 
 
 
-![svg](Strategy_files/Strategy_26_0.svg)
 
+
+
+
+**Key Feature Decision Tree on OUT_Monthly_Rate_Of_Return**:
+
+
+    DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
+               max_leaf_nodes=10, min_impurity_decrease=0.0,
+               min_impurity_split=None, min_samples_leaf=1,
+               min_samples_split=0.05, min_weight_fraction_leaf=0.0,
+               presort=False, random_state=0, splitter='best')
+
+
+
+![svg](Strategy_files/Strategy_26_2.svg)
+
+
+
+
+
+
+
+**Key Feature Random Forest on OUT_Monthly_Rate_Of_Return**:
+
+
+    RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
+               max_features='auto', max_leaf_nodes=None,
+               min_impurity_decrease=0.0, min_impurity_split=None,
+               min_samples_leaf=1, min_samples_split=2,
+               min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
+               oob_score=False, random_state=None, verbose=0, warm_start=False)
+
+
+
+![png](Strategy_files/Strategy_27_2.png)
+
+
+Based on reviewing all this modeling, we postulate the following investment strategy: Only invest in loans that meet the following criteria:
+- **no renters**: `home_ownership` values of OWN, MORTGAGE or OTHER
+- **short term**: `term` of 36_months
+- **fewer recent accounts opened**: `acc_open_past_24_months` less than 4
+- **low debt-to-income obligations**: `dti` less than 50%
+- **solidly employed**: `emp_length` greater than 5 years
 
 ## 4. Predictive Quality of Model
 
