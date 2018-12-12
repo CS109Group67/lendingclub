@@ -479,5 +479,6 @@ def forward_selection(model, model_type, x_train, y_train, num_pred=5):
     return list(zip(best_scores, best_models))
 
 
+#fs = forward_selection(LogisticRegressionCV(cv=5, random_state=0), 'classifier', x_train, y_train, 3)
 ```
 
