@@ -551,17 +551,6 @@ Of the demographic features, `Bachelors_Degree_pct`, `Unemployment_Rate_pct`, `W
 
 
 
-```python
-#set up data for OLS with the census vars only
-ols_cen_data = ols_df[census_pct_keep+['sub_grade']]
-ols_cen_X = ols_cen_data.drop('sub_grade', axis=1)
-ols_cen_y = ols_cen_data['sub_grade']
-
-#set a random seed to keep results constant each time notebook is re-run
-random.seed(9)
-ols_cen, r2_test_cen = run_ols(ols_cen_X, ols_cen_y)
-print("The R^2 on the test set is {:.2f}.".format(r2_test_cen))
-```
 
 
     The R^2 on the test set is 0.00.
@@ -569,9 +558,6 @@ print("The R^2 on the test set is {:.2f}.".format(r2_test_cen))
 
 
 
-```python
-ols_cen.summary()
-```
 
 
 
