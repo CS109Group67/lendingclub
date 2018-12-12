@@ -385,7 +385,7 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-**Key Feature Random Forest on OUT_Monthly_Rate_Of_Return**:
+**SIMPLIFIED Key Feature Random Forest on OUT_Monthly_Rate_Of_Return**:
 
 
     RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
@@ -400,12 +400,13 @@ With the key variables established, we examine decision tree and random forest a
 ![png](Strategy_files/Strategy_27_2.png)
 
 
-Based on reviewing all this modeling, we postulate the following investment strategy: Only invest in loans that meet the following criteria:
-- **no renters**: `home_ownership` values of OWN, MORTGAGE or OTHER
+Based on the models, we postulate the following simple investment strategy: Only invest in loans that meet the following criteria:
+- **no renters**: `home_ownership` values of Own, Morgage or Other
 - **short term**: `term` of 36_months
-- **fewer recent accounts opened**: `acc_open_past_24_months` less than 4
+- **few recent accounts opened**: `acc_open_past_24_months` less than 4
 - **low debt-to-income obligations**: `dti` less than 50%
 - **solidly employed**: `emp_length` greater than 5 years
+- **low subgrades**
 
 ## 4. Predictive Quality of Model
 
