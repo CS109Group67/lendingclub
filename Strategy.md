@@ -483,12 +483,7 @@ strategy = non_renters & short_term & few_recent_accounts & low_dti & solid_emp 
     Low Grade: 95.75% of all loans
     
     Full Strategy: 9.60% of all loans
-
-
-
-
-
-
+    
     OUT_Class
     	Strategy Mean: 0.925 
     	Random Mean: 0.8645
