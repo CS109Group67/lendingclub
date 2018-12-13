@@ -115,10 +115,6 @@ In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) sect
 
 
 
-```python
-display(Markdown('**`OUT_Principle_Repaid`:**'))
-OUT_PRP_results
-```
 
 
 
@@ -201,10 +197,6 @@ OUT_PRP_results
 
 
 
-```python
-display(Markdown('**`OUT_Monthly_Rate_Of_Return`:**'))
-OUT_MRR_results
-```
 
 
 
@@ -345,7 +337,7 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-**FULL Key Feaure Decision Tree on OUT_Class**:
+**FULL Key Feaure Decision Tree**:
 
 
     DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
@@ -359,12 +351,15 @@ With the key variables established, we examine decision tree and random forest a
 ![svg](Strategy_files/Strategy_24_2.svg)
 
 
+    
 
 
 
 
 
-**Key Feature Decision Tree on OUT_Monthly_Rate_Of_Return**:
+
+
+**SIMPLIFIED Key Feature Decision Tree**:
 
 
     DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
@@ -378,19 +373,22 @@ With the key variables established, we examine decision tree and random forest a
 ![svg](Strategy_files/Strategy_25_2.svg)
 
 
+    
 
 
 
 
 
-**SIMPLIFIED Key Feature Random Forest on OUT_Monthly_Rate_Of_Return**:
+
+
+**Key Feature Random Forest**:
 
 
     RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
                max_features='auto', max_leaf_nodes=None,
                min_impurity_decrease=0.0, min_impurity_split=None,
                min_samples_leaf=1, min_samples_split=2,
-               min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=None,
+               min_weight_fraction_leaf=0.0, n_estimators=10, n_jobs=None,
                oob_score=False, random_state=None, verbose=0, warm_start=False)
 
 
@@ -408,7 +406,7 @@ Based on the completed analysis, we postulate the following simple investment st
 5. **Solidly employed**: `emp_length` > 5
 6. **Low grade**: `subgrades` < 20
 
-To reduce their risk and get the full benefit of diversification, we recommended that the investor should make the mimimun qualifying investment across as many qualifying loans as possible.
+To reduce risk and get the full benefit of diversification, we recommended that the mimimun qualifying investment should be made across as many qualifying loans as possible, .
 
 ## 4. Predictive Quality of Model
 
