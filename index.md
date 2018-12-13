@@ -18,3 +18,9 @@ Our goal was to *propose, build and evaluate data-driven modeling to power a pro
 - [Modeling](https://cs109group67.github.io/lendingclub/Models.html): modeling to discern predictive features that influence loan outcomes
 - [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html): investment strategy and evaluation of its predictive quality
 - [Ethical Implications](https://cs109group67.github.io/lendingclub/EthicalImplications.html): investigation of discrimination in the investment strategy and LC's underwriting practices
+
+
+### Results:
+
+We were only able to make a 4.12 percent improvement on our main response variable (OUT_Principle_Repaid_Percentage). However, this is still quite an accomplishment considering that a random selection still yields about 92.14 percent (see [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html)). Because the random percentage is already so high (probably due to LeandingClumb rigorously filtering bad loans), any further improvement is welcome.
+If we were able to consistently make this same profit we would be making our clients substantially more then if they just picked loans to invest in at random.
