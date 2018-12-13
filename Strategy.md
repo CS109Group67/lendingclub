@@ -398,16 +398,60 @@ With the key variables established, we examine decision tree and random forest a
 
 ## 3. Investment Strategy
 
-Based on the completed analysis, we postulate the following simple investment strategy to only invest in loans that meet the following criteria:
-1. **No renters**: `home_ownership` = Own, Morgage or Other
-2. **Short term**: `term` = 36_months
-3. **Few recent accounts opened**: `acc_open_past_24_months` < 4
-4. **Low debt-to-income obligations**: `dti` < 0.5
-5. **Solidly employed**: `emp_length` > 5
-6. **Low grade**: `subgrades` < 20
+Based on the completed analysis, we postulate the following simple investment strategy to only invest in loans that meet the following criteria. To reduce risk and get the full benefit of diversification, we recommended that the mimimun qualifying investment should be made across as many qualifying loans as possible.
 
-To reduce risk and get the full benefit of diversification, we recommended that the mimimun qualifying investment should be made across as many qualifying loans as possible, .
+#### No Renters
+
+Only invest in loans with `'home_ownership' != 'RENT'`
+
+
+
+```python
+non_renters = (ls['D_home_ownership_RENT'] == 1)
+non_renter_perc = (non_renters).sum() / len(ls)
+print("Percentage of loans that are Non-Renter: {:.1%}".format(non_renter_perc))
+
+```
+
+
+    Percentage of Non-Renter Loans: 42.3%
+
+
+#### Short term
+
+Only select loans with `'term' == '36_months'`
+
+#### Few Recent Accounts Opened
+
+Only select loans with `'acc_open_past_24_months' < 4`
+
+#### Low Debt-to-Income Ratio
+
+Only select loans with `'dti' < 0.5`
+
+#### Solidly Employed
+
+Only select loans with `'emp_length' > 5`
+
+#### Low grade
+
+Only select loans with `'sub_grade' < 20`
 
 ## 4. Predictive Quality of Model
+
+
+
+```python
+(ls['D_home_ownership_RENT'] == 1).sum() / len(ls)
+
+```
+
+
+
+
+
+    0.42331516280905856
+
+
 
 **Expected Risk and Return**
