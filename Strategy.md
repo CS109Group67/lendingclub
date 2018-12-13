@@ -338,8 +338,6 @@ The modeling has revealed key variables that should power the investment decisio
     Name: key_variables, dtype: object
 
 
-## 3. Investment Strategy
-
 With the key variables established, we examine decision tree and random forest analysis on this key subset to establish the investment strategy. We focus on the most comprehensive outcome feature of `OUT_Monthly_Rate_Of_Return` since this feature takes into account the total amount repeiad with interest for the effective term of the loan. We visualize both a larger tree (for completeness and demonstrative purposes) and a simplified tree. 
 
 
@@ -358,7 +356,7 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-![svg](Strategy_files/Strategy_25_2.svg)
+![svg](Strategy_files/Strategy_24_2.svg)
 
 
 
@@ -377,7 +375,7 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-![svg](Strategy_files/Strategy_26_2.svg)
+![svg](Strategy_files/Strategy_25_2.svg)
 
 
 
@@ -397,16 +395,20 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-![png](Strategy_files/Strategy_27_2.png)
+![png](Strategy_files/Strategy_26_2.png)
 
 
-Based on the models, we postulate the following simple investment strategy: Only invest in loans that meet the following criteria:
-- **no renters**: `home_ownership` values of Own, Morgage or Other
-- **short term**: `term` of 36_months
-- **few recent accounts opened**: `acc_open_past_24_months` less than 4
-- **low debt-to-income obligations**: `dti` less than 50%
-- **solidly employed**: `emp_length` greater than 5 years
-- **low subgrades**
+## 3. Investment Strategy
+
+Based on the completed analysis, we postulate the following simple investment strategy to only invest in loans that meet the following criteria:
+1. **No renters**: `home_ownership` = Own, Morgage or Other
+2. **Short term**: `term` = 36_months
+3. **Few recent accounts opened**: `acc_open_past_24_months` < 4
+4. **Low debt-to-income obligations**: `dti` < 0.5
+5. **Solidly employed**: `emp_length` > 5
+6. **Low grade**: `subgrades` < 20
+
+To reduce their risk and get the full benefit of diversification, we recommended that the investor should make the mimimun qualifying investment across as many qualifying loans as possible.
 
 ## 4. Predictive Quality of Model
 

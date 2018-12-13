@@ -1,1002 +1,277 @@
-<svg height="758pt" viewBox="0.00 0.00 3499.00 758.00" width="3499pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g class="graph" id="graph0" transform="scale(1 1) rotate(0) translate(4 754)">
+<svg height="458pt" viewBox="0.00 0.00 1114.00 458.00" width="1114pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="graph0" transform="scale(1 1) rotate(0) translate(4 454)">
 <title>Tree</title>
-<polygon fill="#ffffff" points="-4,4 -4,-754 3494.999,-754 3494.999,4 -4,4" stroke="transparent"/>
+<polygon fill="#ffffff" points="-4,4 -4,-454 1109.999,-454 1109.999,4 -4,4" stroke="transparent"/>
 <!-- 0 -->
 <g class="node" id="node1">
 <title>0</title>
-<polygon fill="#e58139" fill-opacity="0.701961" points="2389.8287,-750 2262.1703,-750 2262.1703,-686 2389.8287,-686 2389.8287,-750" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2325.9995" y="-734.8">sub_grade &lt;= 0.227</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2325.9995" y="-720.8">mse = 0.047</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2325.9995" y="-706.8">samples = 275611</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2325.9995" y="-692.8">value = 0.922</text>
+<polygon fill="#e58139" fill-opacity="0.733333" points="562.3287,-450 434.6703,-450 434.6703,-386 562.3287,-386 562.3287,-450" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="498.4995" y="-434.8">sub_grade &lt;= 0.227</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="498.4995" y="-420.8">mse = 0.047</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="498.4995" y="-406.8">samples = 275611</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="498.4995" y="-392.8">value = 0.922</text>
 </g>
 <!-- 1 -->
 <g class="node" id="node2">
 <title>1</title>
-<polygon fill="#e58139" fill-opacity="0.831373" points="1797.4916,-650 1664.5074,-650 1664.5074,-586 1797.4916,-586 1797.4916,-650" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-634.8">sub_grade &lt;= -0.518</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-620.8">mse = 0.029</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-606.8">samples = 170569</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-592.8">value = 0.95</text>
+<polygon fill="#e58139" fill-opacity="0.870588" points="441.9916,-350 309.0074,-350 309.0074,-286 441.9916,-286 441.9916,-350" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-334.8">sub_grade &lt;= -0.518</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-320.8">mse = 0.029</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-306.8">samples = 170569</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-292.8">value = 0.95</text>
 </g>
 <!-- 0&#45;&gt;1 -->
 <g class="edge" id="edge1">
 <title>0-&gt;1</title>
-<path d="M2262.0417,-707.2508C2151.6541,-688.6983 1925.8437,-650.7469 1807.3904,-630.8388" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1807.7541,-627.3509 1797.3123,-629.145 1806.5938,-634.2541 1807.7541,-627.3509" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1811.8155" y="-645.3081">True</text>
-</g>
-<!-- 44 -->
-<g class="node" id="node45">
-<title>44</title>
-<polygon fill="#e58139" fill-opacity="0.494118" points="2910.3287,-650 2789.6703,-650 2789.6703,-586 2910.3287,-586 2910.3287,-650" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-634.8">sub_grade &lt;= 1.53</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-620.8">mse = 0.071</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-606.8">samples = 105042</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-592.8">value = 0.876</text>
-</g>
-<!-- 0&#45;&gt;44 -->
-<g class="edge" id="edge44">
-<title>0-&gt;44</title>
-<path d="M2389.9901,-705.7881C2488.6761,-686.9548 2677.2951,-650.9589 2779.6784,-631.4201" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2780.4465,-634.8367 2789.6131,-629.5241 2779.1342,-627.9608 2780.4465,-634.8367" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2775.5626" y="-646.0022">False</text>
+<path d="M458.9045,-385.8089C447.4924,-376.5308 434.9228,-366.3116 423.08,-356.6833" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="424.9875,-353.7234 415.0203,-350.1308 420.5717,-359.1548 424.9875,-353.7234" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="417.5852" y="-370.7988">True</text>
 </g>
 <!-- 2 -->
-<g class="node" id="node3">
+<g class="node" id="node9">
 <title>2</title>
-<polygon fill="#e58139" fill-opacity="0.901961" points="966.4916,-550 833.5074,-550 833.5074,-486 966.4916,-486 966.4916,-550" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-534.8">sub_grade &lt;= -1.076</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-520.8">mse = 0.02</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-506.8">samples = 92693</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-492.8">value = 0.966</text>
+<polygon fill="#e58139" fill-opacity="0.517647" points="689.8287,-350 569.1703,-350 569.1703,-286 689.8287,-286 689.8287,-350" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-334.8">sub_grade &lt;= 1.53</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-320.8">mse = 0.071</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-306.8">samples = 105042</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-292.8">value = 0.876</text>
 </g>
-<!-- 1&#45;&gt;2 -->
-<g class="edge" id="edge2">
-<title>1-&gt;2</title>
-<path d="M1664.7493,-610.0276C1512.5545,-591.713 1138.6351,-546.7167 976.7627,-527.2374" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="976.7582,-523.7117 966.4117,-525.9918 975.9218,-530.6616 976.7582,-523.7117" stroke="#000000"/>
-</g>
-<!-- 23 -->
-<g class="node" id="node24">
-<title>23</title>
-<polygon fill="#e58139" fill-opacity="0.745098" points="1786.4985,-550 1675.5005,-550 1675.5005,-486 1786.4985,-486 1786.4985,-550" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-534.8">dti &lt;= 0.135</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-520.8">mse = 0.04</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-506.8">samples = 77876</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1730.9995" y="-492.8">value = 0.932</text>
-</g>
-<!-- 1&#45;&gt;23 -->
-<g class="edge" id="edge23">
-<title>1-&gt;23</title>
-<path d="M1730.9995,-585.8089C1730.9995,-577.6906 1730.9995,-568.8517 1730.9995,-560.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1734.4996,-560.1307 1730.9995,-550.1308 1727.4996,-560.1308 1734.4996,-560.1307" stroke="#000000"/>
-</g>
-<!-- 3 -->
-<g class="node" id="node4">
-<title>3</title>
-<polygon fill="#e58139" fill-opacity="0.956863" points="495.4916,-450 362.5074,-450 362.5074,-386 495.4916,-386 495.4916,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-434.8">sub_grade &lt;= -1.263</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-420.8">mse = 0.013</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-406.8">samples = 39850</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-392.8">value = 0.978</text>
-</g>
-<!-- 2&#45;&gt;3 -->
-<g class="edge" id="edge3">
-<title>2-&gt;3</title>
-<path d="M833.5157,-503.8845C747.1151,-485.5405 596.5638,-453.5763 505.5081,-434.2439" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="506.0341,-430.7776 495.5252,-432.1243 504.5802,-437.625 506.0341,-430.7776" stroke="#000000"/>
-</g>
-<!-- 12 -->
-<g class="node" id="node13">
-<title>12</title>
-<polygon fill="#e58139" fill-opacity="0.858824" points="955.4985,-450 844.5005,-450 844.5005,-386 955.4985,-386 955.4985,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-434.8">dti &lt;= 0.296</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-420.8">mse = 0.025</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-406.8">samples = 52843</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="899.9995" y="-392.8">value = 0.957</text>
-</g>
-<!-- 2&#45;&gt;12 -->
-<g class="edge" id="edge12">
-<title>2-&gt;12</title>
-<path d="M899.9995,-485.8089C899.9995,-477.6906 899.9995,-468.8517 899.9995,-460.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="903.4996,-460.1307 899.9995,-450.1308 896.4996,-460.1308 903.4996,-460.1307" stroke="#000000"/>
-</g>
-<!-- 4 -->
-<g class="node" id="node5">
-<title>4</title>
-<polygon fill="#e58139" fill-opacity="0.976471" points="298.4985,-350 187.5005,-350 187.5005,-286 298.4985,-286 298.4985,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-334.8">dti &lt;= 0.514</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-320.8">mse = 0.01</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-306.8">samples = 25913</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-292.8">value = 0.982</text>
-</g>
-<!-- 3&#45;&gt;4 -->
-<g class="edge" id="edge4">
-<title>3-&gt;4</title>
-<path d="M369.3805,-385.9467C349.7534,-375.3946 327.8393,-363.6128 307.8427,-352.8619" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="309.2703,-349.6557 298.8052,-348.003 305.9555,-355.8212 309.2703,-349.6557" stroke="#000000"/>
-</g>
-<!-- 9 -->
-<g class="node" id="node10">
-<title>9</title>
-<polygon fill="#e58139" fill-opacity="0.917647" points="484.4985,-350 373.5005,-350 373.5005,-286 484.4985,-286 484.4985,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-334.8">dti &lt;= 0.201</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-320.8">mse = 0.018</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-306.8">samples = 13937</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="428.9995" y="-292.8">value = 0.97</text>
-</g>
-<!-- 3&#45;&gt;9 -->
-<g class="edge" id="edge9">
-<title>3-&gt;9</title>
-<path d="M428.9995,-385.8089C428.9995,-377.6906 428.9995,-368.8517 428.9995,-360.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="432.4996,-360.1307 428.9995,-350.1308 425.4996,-360.1308 432.4996,-360.1307" stroke="#000000"/>
+<!-- 0&#45;&gt;2 -->
+<g class="edge" id="edge8">
+<title>0-&gt;2</title>
+<path d="M540.6698,-385.8089C552.941,-376.4416 566.4689,-366.115 579.188,-356.4057" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="581.5832,-358.9806 587.4082,-350.1308 577.3357,-353.4165 581.5832,-358.9806" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="584.083" y="-370.7086">False</text>
 </g>
 <!-- 5 -->
-<g class="node" id="node6">
+<g class="node" id="node3">
 <title>5</title>
-<polygon fill="#e58139" fill-opacity="0.984314" points="172.7118,-250 55.2872,-250 55.2872,-186 172.7118,-186 172.7118,-250" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="113.9995" y="-234.8">int_rate &lt;= -1.624</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="113.9995" y="-220.8">mse = 0.009</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="113.9995" y="-206.8">samples = 20899</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="113.9995" y="-192.8">value = 0.984</text>
+<polygon fill="#e58139" fill-opacity="0.941176" points="250.9916,-250 118.0074,-250 118.0074,-186 250.9916,-186 250.9916,-250" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-234.8">sub_grade &lt;= -1.076</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-220.8">mse = 0.02</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-206.8">samples = 92693</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-192.8">value = 0.966</text>
 </g>
-<!-- 4&#45;&gt;5 -->
-<g class="edge" id="edge5">
-<title>4-&gt;5</title>
-<path d="M201.473,-285.8089C189.3892,-276.4416 176.0679,-266.115 163.5429,-256.4057" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="165.496,-253.4913 155.4482,-250.1308 161.2073,-259.0237 165.496,-253.4913" stroke="#000000"/>
-</g>
-<!-- 8 -->
-<g class="node" id="node9">
-<title>8</title>
-<polygon fill="#e58139" fill-opacity="0.937255" points="294.9985,-243 191.0005,-243 191.0005,-193 294.9985,-193 294.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-227.8">mse = 0.015</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-213.8">samples = 5014</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="242.9995" y="-199.8">value = 0.974</text>
-</g>
-<!-- 4&#45;&gt;8 -->
-<g class="edge" id="edge8">
-<title>4-&gt;8</title>
-<path d="M242.9995,-285.8089C242.9995,-275.446 242.9995,-263.909 242.9995,-253.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="246.4996,-253.1555 242.9995,-243.1555 239.4996,-253.1556 246.4996,-253.1555" stroke="#000000"/>
+<!-- 1&#45;&gt;5 -->
+<g class="edge" id="edge2">
+<title>1-&gt;5</title>
+<path d="M314.2778,-285.9467C295.2586,-275.989 274.148,-264.9364 254.5743,-254.6884" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="256.1849,-251.581 245.7022,-250.0433 252.938,-257.7824 256.1849,-251.581" stroke="#000000"/>
 </g>
 <!-- 6 -->
-<g class="node" id="node7">
+<g class="node" id="node6">
 <title>6</title>
-<polygon fill="#e58139" points="103.9985,-143 .0005,-143 .0005,-93 103.9985,-93 103.9985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="51.9995" y="-127.8">mse = 0.007</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="51.9995" y="-113.8">samples = 7469</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="51.9995" y="-99.8">value = 0.988</text>
+<polygon fill="#e58139" fill-opacity="0.780392" points="430.9985,-250 320.0005,-250 320.0005,-186 430.9985,-186 430.9985,-250" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-234.8">dti &lt;= 0.135</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-220.8">mse = 0.04</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-206.8">samples = 77876</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="375.4995" y="-192.8">value = 0.932</text>
 </g>
-<!-- 5&#45;&gt;6 -->
-<g class="edge" id="edge6">
-<title>5-&gt;6</title>
-<path d="M94.041,-185.8089C87.2814,-174.9063 79.716,-162.7041 72.8862,-151.6882" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="75.8401,-149.8103 67.5959,-143.1555 69.8907,-153.4989 75.8401,-149.8103" stroke="#000000"/>
+<!-- 1&#45;&gt;6 -->
+<g class="edge" id="edge5">
+<title>1-&gt;6</title>
+<path d="M375.4995,-285.8089C375.4995,-277.6906 375.4995,-268.8517 375.4995,-260.3186" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="378.9996,-260.1307 375.4995,-250.1308 371.9996,-260.1308 378.9996,-260.1307" stroke="#000000"/>
 </g>
-<!-- 7 -->
-<g class="node" id="node8">
-<title>7</title>
-<polygon fill="#e58139" fill-opacity="0.972549" points="232.4985,-143 121.5005,-143 121.5005,-93 232.4985,-93 232.4985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="176.9995" y="-127.8">mse = 0.01</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="176.9995" y="-113.8">samples = 13430</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="176.9995" y="-99.8">value = 0.982</text>
+<!-- 9 -->
+<g class="node" id="node4">
+<title>9</title>
+<polygon fill="#e58139" points="110.9985,-143 .0005,-143 .0005,-93 110.9985,-93 110.9985,-143" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="55.4995" y="-127.8">mse = 0.013</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="55.4995" y="-113.8">samples = 39850</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="55.4995" y="-99.8">value = 0.978</text>
 </g>
-<!-- 5&#45;&gt;7 -->
-<g class="edge" id="edge7">
-<title>5-&gt;7</title>
-<path d="M134.2799,-185.8089C141.1486,-174.9063 148.8359,-162.7041 155.7759,-151.6882" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="158.7824,-153.4821 161.1515,-143.1555 152.8598,-149.7508 158.7824,-153.4821" stroke="#000000"/>
+<!-- 5&#45;&gt;9 -->
+<g class="edge" id="edge3">
+<title>5-&gt;9</title>
+<path d="M142.973,-185.8089C127.9338,-174.1506 110.9778,-161.0064 96.0258,-149.4157" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="97.9979,-146.5161 87.9502,-143.1555 93.7092,-152.0485 97.9979,-146.5161" stroke="#000000"/>
 </g>
 <!-- 10 -->
-<g class="node" id="node11">
+<g class="node" id="node5">
 <title>10</title>
-<polygon fill="#e58139" fill-opacity="0.937255" points="416.9985,-243 313.0005,-243 313.0005,-193 416.9985,-193 416.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="364.9995" y="-227.8">mse = 0.015</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="364.9995" y="-213.8">samples = 9404</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="364.9995" y="-199.8">value = 0.974</text>
+<polygon fill="#e58139" fill-opacity="0.898039" points="239.9985,-143 129.0005,-143 129.0005,-93 239.9985,-93 239.9985,-143" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-127.8">mse = 0.025</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-113.8">samples = 52843</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.4995" y="-99.8">value = 0.957</text>
 </g>
-<!-- 9&#45;&gt;10 -->
+<!-- 5&#45;&gt;10 -->
+<g class="edge" id="edge4">
+<title>5-&gt;10</title>
+<path d="M184.4995,-185.8089C184.4995,-175.446 184.4995,-163.909 184.4995,-153.3327" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="187.9996,-153.1555 184.4995,-143.1555 180.9996,-153.1556 187.9996,-153.1555" stroke="#000000"/>
+</g>
+<!-- 15 -->
+<g class="node" id="node7">
+<title>15</title>
+<polygon fill="#e58139" fill-opacity="0.823529" points="368.9985,-143 258.0005,-143 258.0005,-93 368.9985,-93 368.9985,-143" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="313.4995" y="-127.8">mse = 0.035</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="313.4995" y="-113.8">samples = 43882</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="313.4995" y="-99.8">value = 0.941</text>
+</g>
+<!-- 6&#45;&gt;15 -->
+<g class="edge" id="edge6">
+<title>6-&gt;15</title>
+<path d="M355.541,-185.8089C348.7814,-174.9063 341.216,-162.7041 334.3862,-151.6882" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="337.3401,-149.8103 329.0959,-143.1555 331.3907,-153.4989 337.3401,-149.8103" stroke="#000000"/>
+</g>
+<!-- 16 -->
+<g class="node" id="node8">
+<title>16</title>
+<polygon fill="#e58139" fill-opacity="0.725490" points="497.9985,-143 387.0005,-143 387.0005,-93 497.9985,-93 497.9985,-143" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="442.4995" y="-127.8">mse = 0.046</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="442.4995" y="-113.8">samples = 33994</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="442.4995" y="-99.8">value = 0.92</text>
+</g>
+<!-- 6&#45;&gt;16 -->
+<g class="edge" id="edge7">
+<title>6-&gt;16</title>
+<path d="M397.0675,-185.8089C404.3723,-174.9063 412.5478,-162.7041 419.9284,-151.6882" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="422.9868,-153.4114 425.6453,-143.1555 417.1714,-149.5151 422.9868,-153.4114" stroke="#000000"/>
+</g>
+<!-- 3 -->
+<g class="node" id="node10">
+<title>3</title>
+<polygon fill="#e58139" fill-opacity="0.572549" points="693.3287,-250 565.6703,-250 565.6703,-186 693.3287,-186 693.3287,-250" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-234.8">sub_grade &lt;= 0.972</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-220.8">mse = 0.064</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-206.8">samples = 82124</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="629.4995" y="-192.8">value = 0.888</text>
+</g>
+<!-- 2&#45;&gt;3 -->
+<g class="edge" id="edge9">
+<title>2-&gt;3</title>
+<path d="M629.4995,-285.8089C629.4995,-277.6906 629.4995,-268.8517 629.4995,-260.3186" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="632.9996,-260.1307 629.4995,-250.1308 625.9996,-260.1308 632.9996,-260.1307" stroke="#000000"/>
+</g>
+<!-- 4 -->
+<g class="node" id="node15">
+<title>4</title>
+<polygon fill="#e58139" fill-opacity="0.313725" points="880.9985,-250 770.0005,-250 770.0005,-186 880.9985,-186 880.9985,-250" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-234.8">dti &lt;= -0.462</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-220.8">mse = 0.094</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-206.8">samples = 22918</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-192.8">value = 0.834</text>
+</g>
+<!-- 2&#45;&gt;4 -->
+<g class="edge" id="edge14">
+<title>2-&gt;4</title>
+<path d="M689.9053,-287.1807C712.446,-275.6804 738.1142,-262.5843 761.0086,-250.9035" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="762.6484,-253.9962 769.9654,-246.3337 759.4671,-247.7608 762.6484,-253.9962" stroke="#000000"/>
+</g>
+<!-- 7 -->
+<g class="node" id="node11">
+<title>7</title>
+<polygon fill="#e58139" fill-opacity="0.615686" points="626.9985,-150 516.0005,-150 516.0005,-86 626.9985,-86 626.9985,-150" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="571.4995" y="-134.8">dti &lt;= 0.355</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="571.4995" y="-120.8">mse = 0.059</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="571.4995" y="-106.8">samples = 56169</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="571.4995" y="-92.8">value = 0.897</text>
+</g>
+<!-- 3&#45;&gt;7 -->
 <g class="edge" id="edge10">
-<title>9-&gt;10</title>
-<path d="M408.3972,-285.8089C401.4195,-274.9063 393.6101,-262.7041 386.56,-251.6882" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="389.4376,-249.6916 381.0991,-243.1555 383.5417,-253.465 389.4376,-249.6916" stroke="#000000"/>
+<title>3-&gt;7</title>
+<path d="M610.8287,-185.8089C605.8613,-177.2445 600.4289,-167.8782 595.2302,-158.915" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="598.1802,-157.0251 590.1354,-150.1308 592.125,-160.5371 598.1802,-157.0251" stroke="#000000"/>
+</g>
+<!-- 8 -->
+<g class="node" id="node14">
+<title>8</title>
+<polygon fill="#e58139" fill-opacity="0.482353" points="755.9985,-143 645.0005,-143 645.0005,-93 755.9985,-93 755.9985,-143" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="700.4995" y="-127.8">mse = 0.075</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="700.4995" y="-113.8">samples = 25955</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="700.4995" y="-99.8">value = 0.869</text>
+</g>
+<!-- 3&#45;&gt;8 -->
+<g class="edge" id="edge13">
+<title>3-&gt;8</title>
+<path d="M652.3552,-185.8089C660.1727,-174.7983 668.9313,-162.4623 676.8129,-151.3614" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="679.7037,-153.3356 682.6391,-143.1555 673.996,-149.2831 679.7037,-153.3356" stroke="#000000"/>
 </g>
 <!-- 11 -->
 <g class="node" id="node12">
 <title>11</title>
-<polygon fill="#e58139" fill-opacity="0.886275" points="538.9985,-243 435.0005,-243 435.0005,-193 538.9985,-193 538.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="486.9995" y="-227.8">mse = 0.022</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="486.9995" y="-213.8">samples = 4533</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="486.9995" y="-199.8">value = 0.963</text>
+<polygon fill="#e58139" fill-opacity="0.666667" points="562.9985,-50 452.0005,-50 452.0005,0 562.9985,0 562.9985,-50" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="507.4995" y="-34.8">mse = 0.054</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="507.4995" y="-20.8">samples = 33335</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="507.4995" y="-6.8">value = 0.908</text>
 </g>
-<!-- 9&#45;&gt;11 -->
+<!-- 7&#45;&gt;11 -->
 <g class="edge" id="edge11">
-<title>9-&gt;11</title>
-<path d="M447.6703,-285.8089C453.9313,-275.0142 460.9311,-262.9456 467.2704,-252.0158" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="470.4197,-253.5619 472.4093,-243.1555 464.3645,-250.0498 470.4197,-253.5619" stroke="#000000"/>
+<title>7-&gt;11</title>
+<path d="M549.4743,-85.9947C543.3365,-77.0756 536.6547,-67.3661 530.4643,-58.3706" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="533.2658,-56.2677 524.7135,-50.014 527.4993,-60.2361 533.2658,-56.2677" stroke="#000000"/>
+</g>
+<!-- 12 -->
+<g class="node" id="node13">
+<title>12</title>
+<polygon fill="#e58139" fill-opacity="0.541176" points="691.9985,-50 581.0005,-50 581.0005,0 691.9985,0 691.9985,-50" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="636.4995" y="-34.8">mse = 0.067</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="636.4995" y="-20.8">samples = 22834</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="636.4995" y="-6.8">value = 0.881</text>
+</g>
+<!-- 7&#45;&gt;12 -->
+<g class="edge" id="edge12">
+<title>7-&gt;12</title>
+<path d="M593.8688,-85.9947C600.1026,-77.0756 606.8888,-67.3661 613.1759,-58.3706" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="616.1566,-60.2156 619.0166,-50.014 610.4191,-56.2054 616.1566,-60.2156" stroke="#000000"/>
 </g>
 <!-- 13 -->
-<g class="node" id="node14">
+<g class="node" id="node16">
 <title>13</title>
-<polygon fill="#e58139" fill-opacity="0.878431" points="867.4916,-350 734.5074,-350 734.5074,-286 867.4916,-286 867.4916,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="800.9995" y="-334.8">sub_grade &lt;= -0.704</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="800.9995" y="-320.8">mse = 0.023</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="800.9995" y="-306.8">samples = 35336</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="800.9995" y="-292.8">value = 0.961</text>
+<polygon fill="#e58139" fill-opacity="0.462745" points="877.4985,-143 773.5005,-143 773.5005,-93 877.4985,-93 877.4985,-143" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-127.8">mse = 0.081</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-113.8">samples = 6825</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="825.4995" y="-99.8">value = 0.864</text>
 </g>
-<!-- 12&#45;&gt;13 -->
-<g class="edge" id="edge13">
-<title>12-&gt;13</title>
-<path d="M868.1303,-385.8089C859.1217,-376.7092 849.2168,-366.7043 839.8465,-357.2394" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="842.3317,-354.7749 832.809,-350.1308 837.3571,-359.6997 842.3317,-354.7749" stroke="#000000"/>
-</g>
-<!-- 20 -->
-<g class="node" id="node21">
-<title>20</title>
-<polygon fill="#e58139" fill-opacity="0.823529" points="1112.6343,-350 885.3647,-350 885.3647,-286 1112.6343,-286 1112.6343,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="998.9995" y="-334.8">D_home_ownership_RENT &lt;= 0.155</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="998.9995" y="-320.8">mse = 0.03</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="998.9995" y="-306.8">samples = 17507</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="998.9995" y="-292.8">value = 0.949</text>
-</g>
-<!-- 12&#45;&gt;20 -->
-<g class="edge" id="edge20">
-<title>12-&gt;20</title>
-<path d="M931.8687,-385.8089C940.8774,-376.7092 950.7822,-366.7043 960.1525,-357.2394" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="962.6419,-359.6997 967.1901,-350.1308 957.6673,-354.7749 962.6419,-359.6997" stroke="#000000"/>
+<!-- 4&#45;&gt;13 -->
+<g class="edge" id="edge15">
+<title>4-&gt;13</title>
+<path d="M825.4995,-185.8089C825.4995,-175.446 825.4995,-163.909 825.4995,-153.3327" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="828.9996,-153.1555 825.4995,-143.1555 821.9996,-153.1556 828.9996,-153.1555" stroke="#000000"/>
 </g>
 <!-- 14 -->
-<g class="node" id="node15">
-<title>14</title>
-<polygon fill="#e58139" fill-opacity="0.894118" points="762.5878,-250 557.4112,-250 557.4112,-186 762.5878,-186 762.5878,-250" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="659.9995" y="-234.8">acc_open_past_24mths &lt;= -0.603</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="659.9995" y="-220.8">mse = 0.021</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="659.9995" y="-206.8">samples = 22558</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="659.9995" y="-192.8">value = 0.964</text>
-</g>
-<!-- 13&#45;&gt;14 -->
-<g class="edge" id="edge14">
-<title>13-&gt;14</title>
-<path d="M755.6101,-285.8089C742.2764,-276.3524 727.5642,-265.9182 713.7607,-256.1285" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="715.4855,-253.0609 705.3039,-250.1308 711.436,-258.7707 715.4855,-253.0609" stroke="#000000"/>
-</g>
-<!-- 19 -->
-<g class="node" id="node20">
-<title>19</title>
-<polygon fill="#e58139" fill-opacity="0.847059" points="891.4985,-243 780.5005,-243 780.5005,-193 891.4985,-193 891.4985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="835.9995" y="-227.8">mse = 0.027</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="835.9995" y="-213.8">samples = 12778</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="835.9995" y="-199.8">value = 0.954</text>
-</g>
-<!-- 13&#45;&gt;19 -->
-<g class="edge" id="edge19">
-<title>13-&gt;19</title>
-<path d="M812.2664,-285.8089C815.969,-275.2301 820.0998,-263.4278 823.864,-252.6729" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="827.195,-253.7504 827.1951,-243.1555 820.588,-251.4379 827.195,-253.7504" stroke="#000000"/>
-</g>
-<!-- 15 -->
-<g class="node" id="node16">
-<title>15</title>
-<polygon fill="#e58139" fill-opacity="0.925490" points="649.9985,-143 546.0005,-143 546.0005,-93 649.9985,-93 649.9985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="597.9995" y="-127.8">mse = 0.016</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="597.9995" y="-113.8">samples = 8742</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="597.9995" y="-99.8">value = 0.972</text>
-</g>
-<!-- 14&#45;&gt;15 -->
-<g class="edge" id="edge15">
-<title>14-&gt;15</title>
-<path d="M640.041,-185.8089C633.2814,-174.9063 625.716,-162.7041 618.8862,-151.6882" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="621.8401,-149.8103 613.5959,-143.1555 615.8907,-153.4989 621.8401,-149.8103" stroke="#000000"/>
-</g>
-<!-- 16 -->
 <g class="node" id="node17">
-<title>16</title>
-<polygon fill="#e58139" fill-opacity="0.874510" points="778.4985,-150 667.5005,-150 667.5005,-86 778.4985,-86 778.4985,-150" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="722.9995" y="-134.8">dti &lt;= 0.157</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="722.9995" y="-120.8">mse = 0.024</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="722.9995" y="-106.8">samples = 13816</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="722.9995" y="-92.8">value = 0.96</text>
+<title>14</title>
+<polygon fill="#e58139" fill-opacity="0.254902" points="1081.9458,-150 895.0532,-150 895.0532,-86 1081.9458,-86 1081.9458,-150" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="988.4995" y="-134.8">D_term_ 36 months &lt;= -3.129</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="988.4995" y="-120.8">mse = 0.099</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="988.4995" y="-106.8">samples = 16093</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="988.4995" y="-92.8">value = 0.821</text>
 </g>
-<!-- 14&#45;&gt;16 -->
+<!-- 4&#45;&gt;14 -->
 <g class="edge" id="edge16">
-<title>14-&gt;16</title>
-<path d="M680.2799,-185.8089C685.7317,-177.1553 691.6992,-167.683 697.3994,-158.635" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="700.388,-160.4573 702.7571,-150.1308 694.4654,-156.726 700.388,-160.4573" stroke="#000000"/>
+<title>4-&gt;14</title>
+<path d="M877.971,-185.8089C893.6759,-176.174 911.0352,-165.5241 927.2522,-155.575" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="929.4329,-158.3434 936.1264,-150.1308 925.7723,-152.3768 929.4329,-158.3434" stroke="#000000"/>
 </g>
 <!-- 17 -->
 <g class="node" id="node18">
 <title>17</title>
-<polygon fill="#e58139" fill-opacity="0.878431" points="716.4985,-50 605.5005,-50 605.5005,0 716.4985,0 716.4985,-50" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="660.9995" y="-34.8">mse = 0.023</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="660.9995" y="-20.8">samples = 12731</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="660.9995" y="-6.8">value = 0.961</text>
+<polygon fill="transparent" points="977.4985,-50 873.5005,-50 873.5005,0 977.4985,0 977.4985,-50" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="925.4995" y="-34.8">mse = 0.125</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="925.4995" y="-20.8">samples = 1785</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="925.4995" y="-6.8">value = 0.767</text>
 </g>
-<!-- 16&#45;&gt;17 -->
+<!-- 14&#45;&gt;17 -->
 <g class="edge" id="edge17">
-<title>16-&gt;17</title>
-<path d="M701.6626,-85.9947C695.7166,-77.0756 689.2436,-67.3661 683.2466,-58.3706" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="686.1348,-56.3931 677.6755,-50.014 680.3104,-60.276 686.1348,-56.3931" stroke="#000000"/>
+<title>14-&gt;17</title>
+<path d="M966.8185,-85.9947C960.7766,-77.0756 954.1991,-67.3661 948.1054,-58.3706" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="950.9507,-56.3303 942.4445,-50.014 945.1553,-60.2562 950.9507,-56.3303" stroke="#000000"/>
 </g>
 <!-- 18 -->
 <g class="node" id="node19">
 <title>18</title>
-<polygon fill="#e58139" fill-opacity="0.807843" points="837.9985,-50 734.0005,-50 734.0005,0 837.9985,0 837.9985,-50" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="785.9995" y="-34.8">mse = 0.033</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="785.9995" y="-20.8">samples = 1085</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="785.9995" y="-6.8">value = 0.945</text>
+<polygon fill="#e58139" fill-opacity="0.286275" points="1105.9985,-50 995.0005,-50 995.0005,0 1105.9985,0 1105.9985,-50" stroke="#000000"/>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1050.4995" y="-34.8">mse = 0.096</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1050.4995" y="-20.8">samples = 14308</text>
+<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1050.4995" y="-6.8">value = 0.827</text>
 </g>
-<!-- 16&#45;&gt;18 -->
+<!-- 14&#45;&gt;18 -->
 <g class="edge" id="edge18">
-<title>16-&gt;18</title>
-<path d="M744.6805,-85.9947C750.7225,-77.0756 757.2999,-67.3661 763.3936,-58.3706" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="766.3437,-60.2562 769.0545,-50.014 760.5483,-56.3303 766.3437,-60.2562" stroke="#000000"/>
-</g>
-<!-- 21 -->
-<g class="node" id="node22">
-<title>21</title>
-<polygon fill="#e58139" fill-opacity="0.850980" points="1020.4869,-243 909.5121,-243 909.5121,-193 1020.4869,-193 1020.4869,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="964.9995" y="-227.8">mse = 0.026</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="964.9995" y="-213.8">samples = 11203</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="964.9995" y="-199.8">value = 0.955</text>
-</g>
-<!-- 20&#45;&gt;21 -->
-<g class="edge" id="edge21">
-<title>20-&gt;21</title>
-<path d="M988.0545,-285.8089C984.4577,-275.2301 980.445,-263.4278 976.7883,-252.6729" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="980.0852,-251.4966 973.5524,-243.1555 973.4578,-253.75 980.0852,-251.4966" stroke="#000000"/>
-</g>
-<!-- 22 -->
-<g class="node" id="node23">
-<title>22</title>
-<polygon fill="#e58139" fill-opacity="0.772549" points="1141.9985,-243 1038.0005,-243 1038.0005,-193 1141.9985,-193 1141.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1089.9995" y="-227.8">mse = 0.036</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1089.9995" y="-213.8">samples = 6304</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1089.9995" y="-199.8">value = 0.938</text>
-</g>
-<!-- 20&#45;&gt;22 -->
-<g class="edge" id="edge22">
-<title>20-&gt;22</title>
-<path d="M1028.2934,-285.8089C1038.5095,-274.5824 1049.9795,-261.978 1060.2336,-250.7098" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1062.9662,-252.9073 1067.108,-243.1555 1057.7889,-248.196 1062.9662,-252.9073" stroke="#000000"/>
-</g>
-<!-- 24 -->
-<g class="node" id="node25">
-<title>24</title>
-<polygon fill="#e58139" fill-opacity="0.788235" points="1698.4916,-450 1565.5074,-450 1565.5074,-386 1698.4916,-386 1698.4916,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-434.8">sub_grade &lt;= -0.145</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-420.8">mse = 0.035</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-406.8">samples = 43882</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-392.8">value = 0.941</text>
-</g>
-<!-- 23&#45;&gt;24 -->
-<g class="edge" id="edge24">
-<title>23-&gt;24</title>
-<path d="M1699.1303,-485.8089C1690.1217,-476.7092 1680.2168,-466.7043 1670.8465,-457.2394" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1673.3317,-454.7749 1663.809,-450.1308 1668.3571,-459.6997 1673.3317,-454.7749" stroke="#000000"/>
-</g>
-<!-- 35 -->
-<g class="node" id="node36">
-<title>35</title>
-<polygon fill="#e58139" fill-opacity="0.694118" points="2001.5878,-450 1796.4112,-450 1796.4112,-386 2001.5878,-386 2001.5878,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-434.8">acc_open_past_24mths &lt;= -0.248</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-420.8">mse = 0.046</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-406.8">samples = 33994</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-392.8">value = 0.92</text>
-</g>
-<!-- 23&#45;&gt;35 -->
-<g class="edge" id="edge35">
-<title>23-&gt;35</title>
-<path d="M1785.0805,-485.8089C1801.4171,-476.0848 1819.4904,-465.3268 1836.3374,-455.2989" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1838.2171,-458.2532 1845.0198,-450.1308 1834.6367,-452.2381 1838.2171,-458.2532" stroke="#000000"/>
-</g>
-<!-- 25 -->
-<g class="node" id="node26">
-<title>25</title>
-<polygon fill="#e58139" fill-opacity="0.819608" points="1470.4458,-350 1283.5532,-350 1283.5532,-286 1470.4458,-286 1470.4458,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-334.8">D_term_ 36 months &lt;= -3.129</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-320.8">mse = 0.031</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-306.8">samples = 24285</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-292.8">value = 0.948</text>
-</g>
-<!-- 24&#45;&gt;25 -->
-<g class="edge" id="edge25">
-<title>24-&gt;25</title>
-<path d="M1565.6669,-391.9872C1535.9842,-380.347 1500.5051,-366.4335 1468.365,-353.8296" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1469.5411,-350.5314 1458.9535,-350.1388 1466.9855,-357.0482 1469.5411,-350.5314" stroke="#000000"/>
-</g>
-<!-- 30 -->
-<g class="node" id="node31">
-<title>30</title>
-<polygon fill="#e58139" fill-opacity="0.749020" points="1702.5493,-350 1561.4497,-350 1561.4497,-286 1702.5493,-286 1702.5493,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-334.8">emp_length &lt;= -1.358</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-320.8">mse = 0.04</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-306.8">samples = 19597</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1631.9995" y="-292.8">value = 0.932</text>
-</g>
-<!-- 24&#45;&gt;30 -->
-<g class="edge" id="edge30">
-<title>24-&gt;30</title>
-<path d="M1631.9995,-385.8089C1631.9995,-377.6906 1631.9995,-368.8517 1631.9995,-360.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1635.4996,-360.1307 1631.9995,-350.1308 1628.4996,-360.1308 1635.4996,-360.1307" stroke="#000000"/>
-</g>
-<!-- 26 -->
-<g class="node" id="node27">
-<title>26</title>
-<polygon fill="#e58139" fill-opacity="0.568627" points="1256.4985,-243 1159.5005,-243 1159.5005,-193 1256.4985,-193 1256.4985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1207.9995" y="-227.8">mse = 0.065</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1207.9995" y="-213.8">samples = 373</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1207.9995" y="-199.8">value = 0.893</text>
-</g>
-<!-- 25&#45;&gt;26 -->
-<g class="edge" id="edge26">
-<title>25-&gt;26</title>
-<path d="M1322.5966,-285.8089C1302.2556,-273.7728 1279.238,-260.1529 1259.1961,-248.2938" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1260.901,-245.2358 1250.5124,-243.1555 1257.3362,-251.2602 1260.901,-245.2358" stroke="#000000"/>
-</g>
-<!-- 27 -->
-<g class="node" id="node28">
-<title>27</title>
-<polygon fill="#e58139" fill-opacity="0.823529" points="1479.5878,-250 1274.4112,-250 1274.4112,-186 1479.5878,-186 1479.5878,-250" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-234.8">acc_open_past_24mths &lt;= -0.248</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-220.8">mse = 0.03</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-206.8">samples = 23912</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1376.9995" y="-192.8">value = 0.949</text>
-</g>
-<!-- 25&#45;&gt;27 -->
-<g class="edge" id="edge27">
-<title>25-&gt;27</title>
-<path d="M1376.9995,-285.8089C1376.9995,-277.6906 1376.9995,-268.8517 1376.9995,-260.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1380.4996,-260.1307 1376.9995,-250.1308 1373.4996,-260.1308 1380.4996,-260.1307" stroke="#000000"/>
-</g>
-<!-- 28 -->
-<g class="node" id="node29">
-<title>28</title>
-<polygon fill="#e58139" fill-opacity="0.850980" points="1392.4985,-143 1281.5005,-143 1281.5005,-93 1392.4985,-93 1392.4985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1336.9995" y="-127.8">mse = 0.027</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1336.9995" y="-113.8">samples = 12400</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1336.9995" y="-99.8">value = 0.955</text>
-</g>
-<!-- 27&#45;&gt;28 -->
-<g class="edge" id="edge28">
-<title>27-&gt;28</title>
-<path d="M1364.1231,-185.8089C1359.8916,-175.2301 1355.1706,-163.4278 1350.8687,-152.6729" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1354.0254,-151.1404 1347.0617,-143.1555 1347.526,-153.7402 1354.0254,-151.1404" stroke="#000000"/>
-</g>
-<!-- 29 -->
-<g class="node" id="node30">
-<title>29</title>
-<polygon fill="#e58139" fill-opacity="0.792157" points="1521.4869,-143 1410.5121,-143 1410.5121,-93 1521.4869,-93 1521.4869,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1465.9995" y="-127.8">mse = 0.033</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1465.9995" y="-113.8">samples = 11512</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1465.9995" y="-99.8">value = 0.942</text>
-</g>
-<!-- 27&#45;&gt;29 -->
-<g class="edge" id="edge29">
-<title>27-&gt;29</title>
-<path d="M1405.6496,-185.8089C1415.6412,-174.5824 1426.8591,-161.978 1436.8878,-150.7098" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1439.5773,-152.9524 1443.6111,-143.1555 1434.3483,-148.2986 1439.5773,-152.9524" stroke="#000000"/>
-</g>
-<!-- 31 -->
-<g class="node" id="node32">
-<title>31</title>
-<polygon fill="#e58139" fill-opacity="0.643137" points="1601.9985,-243 1498.0005,-243 1498.0005,-193 1601.9985,-193 1601.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1549.9995" y="-227.8">mse = 0.052</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1549.9995" y="-213.8">samples = 2528</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1549.9995" y="-199.8">value = 0.909</text>
-</g>
-<!-- 30&#45;&gt;31 -->
-<g class="edge" id="edge31">
-<title>30-&gt;31</title>
-<path d="M1605.6028,-285.8089C1596.4856,-274.6904 1586.2602,-262.2203 1577.0884,-251.0352" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1579.6743,-248.669 1570.6271,-243.1555 1574.2614,-253.1075 1579.6743,-248.669" stroke="#000000"/>
-</g>
-<!-- 32 -->
-<g class="node" id="node33">
-<title>32</title>
-<polygon fill="#e58139" fill-opacity="0.764706" points="1825.5878,-250 1620.4112,-250 1620.4112,-186 1825.5878,-186 1825.5878,-250" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1722.9995" y="-234.8">acc_open_past_24mths &lt;= -0.248</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1722.9995" y="-220.8">mse = 0.038</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1722.9995" y="-206.8">samples = 17069</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1722.9995" y="-192.8">value = 0.936</text>
-</g>
-<!-- 30&#45;&gt;32 -->
-<g class="edge" id="edge32">
-<title>30-&gt;32</title>
-<path d="M1661.2934,-285.8089C1669.4117,-276.8877 1678.3219,-267.0963 1686.7844,-257.7968" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1689.6187,-259.8825 1693.7605,-250.1308 1684.4415,-255.1712 1689.6187,-259.8825" stroke="#000000"/>
-</g>
-<!-- 33 -->
-<g class="node" id="node34">
-<title>33</title>
-<polygon fill="#e58139" fill-opacity="0.800000" points="1691.9985,-143 1588.0005,-143 1588.0005,-93 1691.9985,-93 1691.9985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1639.9995" y="-127.8">mse = 0.034</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1639.9995" y="-113.8">samples = 8160</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1639.9995" y="-99.8">value = 0.944</text>
-</g>
-<!-- 32&#45;&gt;33 -->
-<g class="edge" id="edge33">
-<title>32-&gt;33</title>
-<path d="M1696.2809,-185.8089C1687.0525,-174.6904 1676.7024,-162.2203 1667.4187,-151.0352" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1669.9585,-148.615 1660.8786,-143.1555 1664.5721,-153.0857 1669.9585,-148.615" stroke="#000000"/>
-</g>
-<!-- 34 -->
-<g class="node" id="node35">
-<title>34</title>
-<polygon fill="#e58139" fill-opacity="0.729412" points="1813.9985,-143 1710.0005,-143 1710.0005,-93 1813.9985,-93 1813.9985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1761.9995" y="-127.8">mse = 0.042</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1761.9995" y="-113.8">samples = 8909</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1761.9995" y="-99.8">value = 0.928</text>
-</g>
-<!-- 32&#45;&gt;34 -->
-<g class="edge" id="edge34">
-<title>32-&gt;34</title>
-<path d="M1735.554,-185.8089C1739.6798,-175.2301 1744.2827,-163.4278 1748.4771,-152.6729" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1751.8161,-153.7438 1752.1889,-143.1555 1745.2945,-151.2004 1751.8161,-153.7438" stroke="#000000"/>
-</g>
-<!-- 36 -->
-<g class="node" id="node37">
-<title>36</title>
-<polygon fill="#e58139" fill-opacity="0.749020" points="2008.3218,-350 1789.6772,-350 1789.6772,-286 2008.3218,-286 2008.3218,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-334.8">total_il_high_credit_limit &lt;= -0.213</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-320.8">mse = 0.039</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-306.8">samples = 14157</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1898.9995" y="-292.8">value = 0.933</text>
-</g>
-<!-- 35&#45;&gt;36 -->
-<g class="edge" id="edge36">
-<title>35-&gt;36</title>
-<path d="M1898.9995,-385.8089C1898.9995,-377.6906 1898.9995,-368.8517 1898.9995,-360.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1902.4996,-360.1307 1898.9995,-350.1308 1895.4996,-360.1308 1902.4996,-360.1307" stroke="#000000"/>
-</g>
-<!-- 39 -->
-<g class="node" id="node40">
-<title>39</title>
-<polygon fill="#e58139" fill-opacity="0.654902" points="2249.3218,-350 2030.6772,-350 2030.6772,-286 2249.3218,-286 2249.3218,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-334.8">total_il_high_credit_limit &lt;= -0.367</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-320.8">mse = 0.051</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-306.8">samples = 19837</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-292.8">value = 0.911</text>
-</g>
-<!-- 35&#45;&gt;39 -->
-<g class="edge" id="edge39">
-<title>35-&gt;39</title>
-<path d="M1976.2478,-385.9467C2000.7864,-375.7648 2028.084,-364.438 2053.2462,-353.9972" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2054.8801,-357.1087 2062.7752,-350.0433 2052.1973,-350.6431 2054.8801,-357.1087" stroke="#000000"/>
-</g>
-<!-- 37 -->
-<g class="node" id="node38">
-<title>37</title>
-<polygon fill="#e58139" fill-opacity="0.701961" points="1947.9985,-243 1844.0005,-243 1844.0005,-193 1947.9985,-193 1947.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1895.9995" y="-227.8">mse = 0.045</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1895.9995" y="-213.8">samples = 6272</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="1895.9995" y="-199.8">value = 0.922</text>
-</g>
-<!-- 36&#45;&gt;37 -->
-<g class="edge" id="edge37">
-<title>36-&gt;37</title>
-<path d="M1898.0338,-285.8089C1897.7229,-275.446 1897.3768,-263.909 1897.0595,-253.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1900.5526,-253.0461 1896.7542,-243.1555 1893.5557,-253.256 1900.5526,-253.0461" stroke="#000000"/>
-</g>
-<!-- 38 -->
-<g class="node" id="node39">
-<title>38</title>
-<polygon fill="#e58139" fill-opacity="0.788235" points="2069.9985,-243 1966.0005,-243 1966.0005,-193 2069.9985,-193 2069.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2017.9995" y="-227.8">mse = 0.034</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2017.9995" y="-213.8">samples = 7885</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2017.9995" y="-199.8">value = 0.941</text>
-</g>
-<!-- 36&#45;&gt;38 -->
-<g class="edge" id="edge38">
-<title>36-&gt;38</title>
-<path d="M1937.3069,-285.8089C1951.0518,-274.2586 1966.5323,-261.2497 1980.2312,-249.7381" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="1982.6603,-252.2685 1988.0644,-243.1555 1978.1569,-246.9095 1982.6603,-252.2685" stroke="#000000"/>
-</g>
-<!-- 40 -->
-<g class="node" id="node41">
-<title>40</title>
-<polygon fill="#e58139" fill-opacity="0.533333" points="2191.9985,-243 2088.0005,-243 2088.0005,-193 2191.9985,-193 2191.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-227.8">mse = 0.062</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-213.8">samples = 3735</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2139.9995" y="-199.8">value = 0.885</text>
-</g>
-<!-- 39&#45;&gt;40 -->
-<g class="edge" id="edge40">
-<title>39-&gt;40</title>
-<path d="M2139.9995,-285.8089C2139.9995,-275.446 2139.9995,-263.909 2139.9995,-253.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2143.4996,-253.1555 2139.9995,-243.1555 2136.4996,-253.1556 2143.4996,-253.1555" stroke="#000000"/>
-</g>
-<!-- 41 -->
-<g class="node" id="node42">
-<title>41</title>
-<polygon fill="#e58139" fill-opacity="0.682353" points="2342.4916,-250 2209.5074,-250 2209.5074,-186 2342.4916,-186 2342.4916,-250" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2275.9995" y="-234.8">sub_grade &lt;= -0.145</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2275.9995" y="-220.8">mse = 0.048</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2275.9995" y="-206.8">samples = 16102</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2275.9995" y="-192.8">value = 0.917</text>
-</g>
-<!-- 39&#45;&gt;41 -->
-<g class="edge" id="edge41">
-<title>39-&gt;41</title>
-<path d="M2183.7794,-285.8089C2196.6403,-276.3524 2210.8307,-265.9182 2224.1448,-256.1285" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2226.3185,-258.8745 2232.3017,-250.1308 2222.1718,-253.2349 2226.3185,-258.8745" stroke="#000000"/>
-</g>
-<!-- 42 -->
-<g class="node" id="node43">
-<title>42</title>
-<polygon fill="#e58139" fill-opacity="0.729412" points="2236.9985,-143 2133.0005,-143 2133.0005,-93 2236.9985,-93 2236.9985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2184.9995" y="-127.8">mse = 0.042</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2184.9995" y="-113.8">samples = 8265</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2184.9995" y="-99.8">value = 0.928</text>
-</g>
-<!-- 41&#45;&gt;42 -->
-<g class="edge" id="edge42">
-<title>41-&gt;42</title>
-<path d="M2246.7056,-185.8089C2236.4895,-174.5824 2225.0195,-161.978 2214.7654,-150.7098" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2217.2101,-148.196 2207.8911,-143.1555 2212.0329,-152.9073 2217.2101,-148.196" stroke="#000000"/>
-</g>
-<!-- 43 -->
-<g class="node" id="node44">
-<title>43</title>
-<polygon fill="#e58139" fill-opacity="0.631373" points="2358.9985,-143 2255.0005,-143 2255.0005,-93 2358.9985,-93 2358.9985,-143" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2306.9995" y="-127.8">mse = 0.054</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2306.9995" y="-113.8">samples = 7837</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2306.9995" y="-99.8">value = 0.906</text>
-</g>
-<!-- 41&#45;&gt;43 -->
-<g class="edge" id="edge43">
-<title>41-&gt;43</title>
-<path d="M2285.9787,-185.8089C2289.2247,-175.338 2292.8423,-163.6685 2296.1487,-153.0025" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2299.5833,-153.7435 2299.2013,-143.1555 2292.8972,-151.6708 2299.5833,-153.7435" stroke="#000000"/>
-</g>
-<!-- 45 -->
-<g class="node" id="node46">
-<title>45</title>
-<polygon fill="#e58139" fill-opacity="0.549020" points="2913.8287,-550 2786.1703,-550 2786.1703,-486 2913.8287,-486 2913.8287,-550" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-534.8">sub_grade &lt;= 0.972</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-520.8">mse = 0.064</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-506.8">samples = 82124</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2849.9995" y="-492.8">value = 0.888</text>
-</g>
-<!-- 44&#45;&gt;45 -->
-<g class="edge" id="edge45">
-<title>44-&gt;45</title>
-<path d="M2849.9995,-585.8089C2849.9995,-577.6906 2849.9995,-568.8517 2849.9995,-560.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2853.4996,-560.1307 2849.9995,-550.1308 2846.4996,-560.1308 2853.4996,-560.1307" stroke="#000000"/>
-</g>
-<!-- 62 -->
-<g class="node" id="node63">
-<title>62</title>
-<polygon fill="#e58139" fill-opacity="0.301961" points="3106.4985,-550 2995.5005,-550 2995.5005,-486 3106.4985,-486 3106.4985,-550" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-534.8">dti &lt;= -0.462</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-520.8">mse = 0.094</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-506.8">samples = 22918</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-492.8">value = 0.834</text>
-</g>
-<!-- 44&#45;&gt;62 -->
-<g class="edge" id="edge62">
-<title>44-&gt;62</title>
-<path d="M2910.5787,-587.8611C2934.4606,-575.9796 2961.9338,-562.3113 2986.2111,-550.2331" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2987.9508,-553.2768 2995.345,-545.6888 2984.8328,-547.0096 2987.9508,-553.2768" stroke="#000000"/>
-</g>
-<!-- 46 -->
-<g class="node" id="node47">
-<title>46</title>
-<polygon fill="#e58139" fill-opacity="0.588235" points="2816.4985,-450 2705.5005,-450 2705.5005,-386 2816.4985,-386 2816.4985,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-434.8">dti &lt;= 0.355</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-420.8">mse = 0.059</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-406.8">samples = 56169</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-392.8">value = 0.897</text>
-</g>
-<!-- 45&#45;&gt;46 -->
-<g class="edge" id="edge46">
-<title>45-&gt;46</title>
-<path d="M2821.3495,-485.8089C2813.4095,-476.8877 2804.6952,-467.0963 2796.4187,-457.7968" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2798.8587,-455.2738 2789.5959,-450.1308 2793.6297,-459.9277 2798.8587,-455.2738" stroke="#000000"/>
-</g>
-<!-- 59 -->
-<g class="node" id="node60">
-<title>59</title>
-<polygon fill="#e58139" fill-opacity="0.458824" points="2981.4985,-450 2870.5005,-450 2870.5005,-386 2981.4985,-386 2981.4985,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2925.9995" y="-434.8">dti &lt;= 0.078</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2925.9995" y="-420.8">mse = 0.075</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2925.9995" y="-406.8">samples = 25955</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2925.9995" y="-392.8">value = 0.869</text>
-</g>
-<!-- 45&#45;&gt;59 -->
-<g class="edge" id="edge59">
-<title>45-&gt;59</title>
-<path d="M2874.4647,-485.8089C2881.1093,-477.0661 2888.3889,-467.4876 2895.3295,-458.3553" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2898.3158,-460.2102 2901.5801,-450.1308 2892.7427,-455.9746 2898.3158,-460.2102" stroke="#000000"/>
-</g>
-<!-- 47 -->
-<g class="node" id="node48">
-<title>47</title>
-<polygon fill="#e58139" fill-opacity="0.639216" points="2642.4458,-350 2455.5532,-350 2455.5532,-286 2642.4458,-286 2642.4458,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2548.9995" y="-334.8">D_term_ 36 months &lt;= -3.129</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2548.9995" y="-320.8">mse = 0.054</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2548.9995" y="-306.8">samples = 33335</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2548.9995" y="-292.8">value = 0.908</text>
-</g>
-<!-- 46&#45;&gt;47 -->
-<g class="edge" id="edge47">
-<title>46-&gt;47</title>
-<path d="M2705.299,-391.7262C2681.156,-380.338 2652.4811,-366.8121 2626.3249,-354.4743" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2627.7273,-351.266 2617.1898,-350.1652 2624.7409,-357.597 2627.7273,-351.266" stroke="#000000"/>
-</g>
-<!-- 56 -->
-<g class="node" id="node57">
-<title>56</title>
-<polygon fill="#e58139" fill-opacity="0.513725" points="2861.4253,-350 2660.5737,-350 2660.5737,-286 2861.4253,-286 2861.4253,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-334.8">acc_open_past_24mths &lt;= 0.107</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-320.8">mse = 0.067</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-306.8">samples = 22834</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-292.8">value = 0.881</text>
-</g>
-<!-- 46&#45;&gt;56 -->
-<g class="edge" id="edge56">
-<title>46-&gt;56</title>
-<path d="M2760.9995,-385.8089C2760.9995,-377.6906 2760.9995,-368.8517 2760.9995,-360.3186" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2764.4996,-360.1307 2760.9995,-350.1308 2757.4996,-360.1308 2764.4996,-360.1307" stroke="#000000"/>
-</g>
-<!-- 48 -->
-<g class="node" id="node49">
-<title>48</title>
-<polygon fill="#e58139" fill-opacity="0.376471" points="2463.9985,-243 2360.0005,-243 2360.0005,-193 2463.9985,-193 2463.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2411.9995" y="-227.8">mse = 0.088</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2411.9995" y="-213.8">samples = 1254</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2411.9995" y="-199.8">value = 0.851</text>
-</g>
-<!-- 47&#45;&gt;48 -->
-<g class="edge" id="edge48">
-<title>47-&gt;48</title>
-<path d="M2504.8977,-285.8089C2488.778,-274.0427 2470.5847,-260.7629 2454.5985,-249.0942" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2456.6033,-246.2243 2446.4626,-243.1555 2452.4763,-251.8783 2456.6033,-246.2243" stroke="#000000"/>
-</g>
-<!-- 49 -->
-<g class="node" id="node50">
-<title>49</title>
-<polygon fill="#e58139" fill-opacity="0.647059" points="2687.5878,-250 2482.4112,-250 2482.4112,-186 2687.5878,-186 2687.5878,-250" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2584.9995" y="-234.8">acc_open_past_24mths &lt;= -0.248</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2584.9995" y="-220.8">mse = 0.052</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2584.9995" y="-206.8">samples = 32081</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2584.9995" y="-192.8">value = 0.91</text>
-</g>
-<!-- 47&#45;&gt;49 -->
-<g class="edge" id="edge49">
-<title>47-&gt;49</title>
-<path d="M2560.5883,-285.8089C2563.5751,-277.5122 2566.8329,-268.4628 2569.9672,-259.7565" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2573.3383,-260.7252 2573.4324,-250.1308 2566.7521,-258.3541 2573.3383,-260.7252" stroke="#000000"/>
-</g>
-<!-- 50 -->
-<g class="node" id="node51">
-<title>50</title>
-<polygon fill="#e58139" fill-opacity="0.690196" points="2666.6343,-150 2439.3647,-150 2439.3647,-86 2666.6343,-86 2666.6343,-150" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2552.9995" y="-134.8">D_home_ownership_RENT &lt;= 0.155</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2552.9995" y="-120.8">mse = 0.047</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2552.9995" y="-106.8">samples = 13919</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2552.9995" y="-92.8">value = 0.92</text>
-</g>
-<!-- 49&#45;&gt;50 -->
-<g class="edge" id="edge50">
-<title>49-&gt;50</title>
-<path d="M2574.6984,-185.8089C2572.0434,-177.5122 2569.1476,-168.4628 2566.3616,-159.7565" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2569.6627,-158.5883 2563.2814,-150.1308 2562.9957,-160.7217 2569.6627,-158.5883" stroke="#000000"/>
-</g>
-<!-- 53 -->
-<g class="node" id="node54">
-<title>53</title>
-<polygon fill="#e58139" fill-opacity="0.615686" points="2811.8287,-150 2684.1703,-150 2684.1703,-86 2811.8287,-86 2811.8287,-150" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2747.9995" y="-134.8">sub_grade &lt;= 0.413</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2747.9995" y="-120.8">mse = 0.056</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2747.9995" y="-106.8">samples = 18162</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2747.9995" y="-92.8">value = 0.903</text>
-</g>
-<!-- 49&#45;&gt;53 -->
-<g class="edge" id="edge53">
-<title>49-&gt;53</title>
-<path d="M2637.471,-185.8089C2653.1759,-176.174 2670.5352,-165.5241 2686.7522,-155.575" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2688.9329,-158.3434 2695.6264,-150.1308 2685.2723,-152.3768 2688.9329,-158.3434" stroke="#000000"/>
-</g>
-<!-- 51 -->
-<g class="node" id="node52">
-<title>51</title>
-<polygon fill="#e58139" fill-opacity="0.725490" points="2500.9985,-50 2397.0005,-50 2397.0005,0 2500.9985,0 2500.9985,-50" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2448.9995" y="-34.8">mse = 0.043</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2448.9995" y="-20.8">samples = 6569</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2448.9995" y="-6.8">value = 0.928</text>
-</g>
-<!-- 50&#45;&gt;51 -->
-<g class="edge" id="edge51">
-<title>50-&gt;51</title>
-<path d="M2517.2086,-85.9947C2506.6177,-76.524 2495.03,-66.1619 2484.4601,-56.7099" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2486.7596,-54.0709 2476.9722,-50.014 2482.0934,-59.2889 2486.7596,-54.0709" stroke="#000000"/>
-</g>
-<!-- 52 -->
-<g class="node" id="node53">
-<title>52</title>
-<polygon fill="#e58139" fill-opacity="0.658824" points="2622.9985,-50 2519.0005,-50 2519.0005,0 2622.9985,0 2622.9985,-50" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2570.9995" y="-34.8">mse = 0.051</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2570.9995" y="-20.8">samples = 7350</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2570.9995" y="-6.8">value = 0.912</text>
-</g>
-<!-- 50&#45;&gt;52 -->
-<g class="edge" id="edge52">
-<title>50-&gt;52</title>
-<path d="M2559.1941,-85.9947C2560.8136,-77.6273 2562.5677,-68.5643 2564.2161,-60.0478" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2567.694,-60.4969 2566.1581,-50.014 2560.8216,-59.1667 2567.694,-60.4969" stroke="#000000"/>
-</g>
-<!-- 54 -->
-<g class="node" id="node55">
-<title>54</title>
-<polygon fill="#e58139" fill-opacity="0.682353" points="2780.9985,-50 2677.0005,-50 2677.0005,0 2780.9985,0 2780.9985,-50" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2728.9995" y="-34.8">mse = 0.048</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2728.9995" y="-20.8">samples = 5354</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2728.9995" y="-6.8">value = 0.918</text>
-</g>
-<!-- 53&#45;&gt;54 -->
-<g class="edge" id="edge54">
-<title>53-&gt;54</title>
-<path d="M2741.4608,-85.9947C2739.7513,-77.6273 2737.8997,-68.5643 2736.1598,-60.0478" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2739.5408,-59.111 2734.1099,-50.014 2732.6825,-60.5123 2739.5408,-59.111" stroke="#000000"/>
-</g>
-<!-- 55 -->
-<g class="node" id="node56">
-<title>55</title>
-<polygon fill="#e58139" fill-opacity="0.588235" points="2909.4985,-50 2798.5005,-50 2798.5005,0 2909.4985,0 2909.4985,-50" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2853.9995" y="-34.8">mse = 0.059</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2853.9995" y="-20.8">samples = 12808</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2853.9995" y="-6.8">value = 0.897</text>
-</g>
-<!-- 53&#45;&gt;55 -->
-<g class="edge" id="edge55">
-<title>53-&gt;55</title>
-<path d="M2784.4787,-85.9947C2795.2733,-76.524 2807.0838,-66.1619 2817.857,-56.7099" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2820.2802,-59.2401 2825.4889,-50.014 2815.6636,-53.9782 2820.2802,-59.2401" stroke="#000000"/>
-</g>
-<!-- 57 -->
-<g class="node" id="node58">
-<title>57</title>
-<polygon fill="#e58139" fill-opacity="0.588235" points="2816.4869,-243 2705.5121,-243 2705.5121,-193 2816.4869,-193 2816.4869,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-227.8">mse = 0.059</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-213.8">samples = 11357</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2760.9995" y="-199.8">value = 0.897</text>
-</g>
-<!-- 56&#45;&gt;57 -->
-<g class="edge" id="edge57">
-<title>56-&gt;57</title>
-<path d="M2760.9995,-285.8089C2760.9995,-275.446 2760.9995,-263.909 2760.9995,-253.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2764.4996,-253.1555 2760.9995,-243.1555 2757.4996,-253.1556 2764.4996,-253.1555" stroke="#000000"/>
-</g>
-<!-- 58 -->
-<g class="node" id="node59">
-<title>58</title>
-<polygon fill="#e58139" fill-opacity="0.443137" points="2944.4869,-243 2833.5121,-243 2833.5121,-193 2944.4869,-193 2944.4869,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2888.9995" y="-227.8">mse = 0.074</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2888.9995" y="-213.8">samples = 11477</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2888.9995" y="-199.8">value = 0.865</text>
-</g>
-<!-- 56&#45;&gt;58 -->
-<g class="edge" id="edge58">
-<title>56-&gt;58</title>
-<path d="M2802.2041,-285.8089C2817.1267,-274.1506 2833.9513,-261.0064 2848.7874,-249.4157" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2851.0749,-252.0701 2856.8004,-243.1555 2846.7654,-246.5539 2851.0749,-252.0701" stroke="#000000"/>
-</g>
-<!-- 60 -->
-<g class="node" id="node61">
-<title>60</title>
-<polygon fill="#e58139" fill-opacity="0.525490" points="2990.4985,-343 2879.5005,-343 2879.5005,-293 2990.4985,-293 2990.4985,-343" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2934.9995" y="-327.8">mse = 0.068</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2934.9995" y="-313.8">samples = 12560</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="2934.9995" y="-299.8">value = 0.883</text>
-</g>
-<!-- 59&#45;&gt;60 -->
-<g class="edge" id="edge60">
-<title>59-&gt;60</title>
-<path d="M2928.8967,-385.8089C2929.8294,-375.446 2930.8677,-363.909 2931.8196,-353.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="2935.325,-353.4291 2932.7355,-343.1555 2928.3531,-352.8015 2935.325,-353.4291" stroke="#000000"/>
-</g>
-<!-- 61 -->
-<g class="node" id="node62">
-<title>61</title>
-<polygon fill="#e58139" fill-opacity="0.400000" points="3119.4985,-343 3008.5005,-343 3008.5005,-293 3119.4985,-293 3119.4985,-343" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3063.9995" y="-327.8">mse = 0.08</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3063.9995" y="-313.8">samples = 13395</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3063.9995" y="-299.8">value = 0.855</text>
-</g>
-<!-- 59&#45;&gt;61 -->
-<g class="edge" id="edge61">
-<title>59-&gt;61</title>
-<path d="M2970.4232,-385.8089C2986.6606,-374.0427 3004.9867,-360.7629 3021.0896,-349.0942" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3023.2411,-351.8575 3029.2849,-343.1555 3019.1336,-346.1892 3023.2411,-351.8575" stroke="#000000"/>
-</g>
-<!-- 63 -->
-<g class="node" id="node64">
-<title>63</title>
-<polygon fill="#e58139" fill-opacity="0.439216" points="3102.9985,-443 2999.0005,-443 2999.0005,-393 3102.9985,-393 3102.9985,-443" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-427.8">mse = 0.081</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-413.8">samples = 6825</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3050.9995" y="-399.8">value = 0.864</text>
-</g>
-<!-- 62&#45;&gt;63 -->
-<g class="edge" id="edge63">
-<title>62-&gt;63</title>
-<path d="M3050.9995,-485.8089C3050.9995,-475.446 3050.9995,-463.909 3050.9995,-453.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3054.4996,-453.1555 3050.9995,-443.1555 3047.4996,-453.1556 3054.4996,-453.1555" stroke="#000000"/>
-</g>
-<!-- 64 -->
-<g class="node" id="node65">
-<title>64</title>
-<polygon fill="#e58139" fill-opacity="0.243137" points="3307.4458,-450 3120.5532,-450 3120.5532,-386 3307.4458,-386 3307.4458,-450" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3213.9995" y="-434.8">D_term_ 36 months &lt;= -3.129</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3213.9995" y="-420.8">mse = 0.099</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3213.9995" y="-406.8">samples = 16093</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3213.9995" y="-392.8">value = 0.821</text>
-</g>
-<!-- 62&#45;&gt;64 -->
-<g class="edge" id="edge64">
-<title>62-&gt;64</title>
-<path d="M3103.471,-485.8089C3119.1759,-476.174 3136.5352,-465.5241 3152.7522,-455.575" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3154.9329,-458.3434 3161.6264,-450.1308 3151.2723,-452.3768 3154.9329,-458.3434" stroke="#000000"/>
-</g>
-<!-- 65 -->
-<g class="node" id="node66">
-<title>65</title>
-<polygon fill="transparent" points="3257.9985,-343 3154.0005,-343 3154.0005,-293 3257.9985,-293 3257.9985,-343" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3205.9995" y="-327.8">mse = 0.125</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3205.9995" y="-313.8">samples = 1785</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3205.9995" y="-299.8">value = 0.767</text>
-</g>
-<!-- 64&#45;&gt;65 -->
-<g class="edge" id="edge65">
-<title>64-&gt;65</title>
-<path d="M3211.4242,-385.8089C3210.5952,-375.446 3209.6722,-363.909 3208.8261,-353.3327" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3212.2984,-352.8446 3208.012,-343.1555 3205.3206,-353.4028 3212.2984,-352.8446" stroke="#000000"/>
-</g>
-<!-- 66 -->
-<g class="node" id="node67">
-<title>66</title>
-<polygon fill="#e58139" fill-opacity="0.270588" points="3476.4253,-350 3275.5737,-350 3275.5737,-286 3476.4253,-286 3476.4253,-350" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3375.9995" y="-334.8">acc_open_past_24mths &lt;= 1.173</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3375.9995" y="-320.8">mse = 0.096</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3375.9995" y="-306.8">samples = 14308</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3375.9995" y="-292.8">value = 0.827</text>
-</g>
-<!-- 64&#45;&gt;66 -->
-<g class="edge" id="edge66">
-<title>64-&gt;66</title>
-<path d="M3266.1491,-385.8089C3281.7577,-376.174 3299.0104,-365.5241 3315.1279,-355.575" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3317.2768,-358.3618 3323.9477,-350.1308 3313.5998,-352.4052 3317.2768,-358.3618" stroke="#000000"/>
-</g>
-<!-- 67 -->
-<g class="node" id="node68">
-<title>67</title>
-<polygon fill="#e58139" fill-opacity="0.313725" points="3369.4869,-243 3258.5121,-243 3258.5121,-193 3369.4869,-193 3369.4869,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3313.9995" y="-227.8">mse = 0.092</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3313.9995" y="-213.8">samples = 11240</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3313.9995" y="-199.8">value = 0.836</text>
-</g>
-<!-- 66&#45;&gt;67 -->
-<g class="edge" id="edge67">
-<title>66-&gt;67</title>
-<path d="M3356.041,-285.8089C3349.2814,-274.9063 3341.716,-262.7041 3334.8862,-251.6882" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3337.8401,-249.8103 3329.5959,-243.1555 3331.8907,-253.4989 3337.8401,-249.8103" stroke="#000000"/>
-</g>
-<!-- 68 -->
-<g class="node" id="node69">
-<title>68</title>
-<polygon fill="#e58139" fill-opacity="0.121569" points="3490.9985,-243 3387.0005,-243 3387.0005,-193 3490.9985,-193 3490.9985,-243" stroke="#000000"/>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3438.9995" y="-227.8">mse = 0.109</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3438.9995" y="-213.8">samples = 3068</text>
-<text fill="#000000" font-family="Times,serif" font-size="14.00" text-anchor="middle" x="3438.9995" y="-199.8">value = 0.794</text>
-</g>
-<!-- 66&#45;&gt;68 -->
-<g class="edge" id="edge68">
-<title>66-&gt;68</title>
-<path d="M3396.2799,-285.8089C3403.1486,-274.9063 3410.8359,-262.7041 3417.7759,-251.6882" fill="none" stroke="#000000"/>
-<polygon fill="#000000" points="3420.7824,-253.4821 3423.1515,-243.1555 3414.8598,-249.7508 3420.7824,-253.4821" stroke="#000000"/>
+<title>14-&gt;18</title>
+<path d="M1009.8364,-85.9947C1015.7824,-77.0756 1022.2554,-67.3661 1028.2524,-58.3706" fill="none" stroke="#000000"/>
+<polygon fill="#000000" points="1031.1886,-60.276 1033.8235,-50.014 1025.3643,-56.3931 1031.1886,-60.276" stroke="#000000"/>
 </g>
 </g>
 </svg>
