@@ -408,7 +408,7 @@ To evaluate whether certain demographic features might have influenced whether L
 ![png](EthicalImplications_files/EthicalImplications_62_0.png)
 
 
-The random forest was able to predicted whether the loan decision was accept or reject with 91% accuracy on a separate test set. As we can see from the feature importance chart above, many of the most important features are related to income and ability to pay back, such as debt-to-income ratio, the percentage of the population that falls in certain income brackets, employment length (indicating a stable source of income), and the percentage of the population that has at least a Bachelor's degree (which improves earning potential). Interestingly, the percentage of the population that is Asian is the fourth most important feature. Looking back at **Figure 3**, it seems that a higher Asian percentage of the population is favorable towards a loan acceptance.
+The random forest was able to predict whether the loan decision was accept or reject with 91% accuracy on a separate test set. As we can see from the feature importance chart above, many of the most important features are related to income and ability to pay back, such as debt-to-income ratio, the percentage of the population that falls in certain income brackets, employment length (indicating a stable source of income), and the percentage of the population that has at least a Bachelor's degree (which improves earning potential). Interestingly, the percentage of the population that is Asian is the fourth most important feature. Looking back at **Figure 3**, it seems that a higher Asian percentage of the population is favorable towards a loan acceptance.
 
 
 
@@ -428,7 +428,7 @@ The interest rate that a borrower is charged depends on the grade and sub-grade 
 
 
 
-    The R^2 on the test set is 0.05.
+    The R^2 on the test set is 0.04.
 
 
 
@@ -441,19 +441,19 @@ The interest rate that a borrower is charged depends on the grade and sub-grade 
 <table class="simpletable">
 <caption>OLS Regression Results</caption>
 <tr>
-  <th>Dep. Variable:</th>        <td>sub_grade</td>    <th>  R-squared:         </th>  <td>   0.042</td>  
+  <th>Dep. Variable:</th>        <td>sub_grade</td>    <th>  R-squared:         </th>  <td>   0.043</td>  
 </tr>
 <tr>
   <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th>  <td>   0.042</td>  
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   902.3</td>  
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   917.5</td>  
 </tr>
 <tr>
   <th>Date:</th>             <td>Wed, 12 Dec 2018</td> <th>  Prob (F-statistic):</th>   <td>  0.00</td>   
 </tr>
 <tr>
-  <th>Time:</th>                 <td>02:50:10</td>     <th>  Log-Likelihood:    </th> <td>-1.1519e+06</td>
+  <th>Time:</th>                 <td>19:27:50</td>     <th>  Log-Likelihood:    </th> <td>-1.1520e+06</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>371729</td>      <th>  AIC:               </th>  <td>2.304e+06</td> 
@@ -473,75 +473,75 @@ The interest rate that a borrower is charged depends on the grade and sub-grade 
                <td></td>                  <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>const</th>                       <td>   15.2258</td> <td>    0.896</td> <td>   17.002</td> <td> 0.000</td> <td>   13.471</td> <td>   16.981</td>
+  <th>const</th>                       <td>   15.3605</td> <td>    0.895</td> <td>   17.163</td> <td> 0.000</td> <td>   13.606</td> <td>   17.115</td>
 </tr>
 <tr>
-  <th>annual_inc</th>                  <td> -4.91e-06</td> <td> 1.65e-07</td> <td>  -29.775</td> <td> 0.000</td> <td>-5.23e-06</td> <td>-4.59e-06</td>
+  <th>annual_inc</th>                  <td>-5.496e-06</td> <td> 1.73e-07</td> <td>  -31.778</td> <td> 0.000</td> <td>-5.83e-06</td> <td>-5.16e-06</td>
 </tr>
 <tr>
-  <th>earliest_cr_line</th>            <td>   -0.0003</td> <td> 3.37e-06</td> <td>  -77.131</td> <td> 0.000</td> <td>   -0.000</td> <td>   -0.000</td>
+  <th>earliest_cr_line</th>            <td>   -0.0003</td> <td> 3.38e-06</td> <td>  -76.958</td> <td> 0.000</td> <td>   -0.000</td> <td>   -0.000</td>
 </tr>
 <tr>
-  <th>emp_length</th>                  <td>   -0.0111</td> <td>    0.002</td> <td>   -4.622</td> <td> 0.000</td> <td>   -0.016</td> <td>   -0.006</td>
+  <th>emp_length</th>                  <td>   -0.0095</td> <td>    0.002</td> <td>   -3.963</td> <td> 0.000</td> <td>   -0.014</td> <td>   -0.005</td>
 </tr>
 <tr>
-  <th>loan_amnt</th>                   <td>  1.21e-05</td> <td> 1.24e-06</td> <td>    9.786</td> <td> 0.000</td> <td> 9.67e-06</td> <td> 1.45e-05</td>
+  <th>loan_amnt</th>                   <td> 1.309e-05</td> <td> 1.24e-06</td> <td>   10.524</td> <td> 0.000</td> <td> 1.06e-05</td> <td> 1.55e-05</td>
 </tr>
 <tr>
-  <th>dti</th>                         <td>    0.0909</td> <td>    0.001</td> <td>   79.482</td> <td> 0.000</td> <td>    0.089</td> <td>    0.093</td>
+  <th>dti</th>                         <td>    0.0910</td> <td>    0.001</td> <td>   79.384</td> <td> 0.000</td> <td>    0.089</td> <td>    0.093</td>
 </tr>
 <tr>
-  <th>Population</th>                  <td>-1.679e-08</td> <td> 1.72e-08</td> <td>   -0.974</td> <td> 0.330</td> <td>-5.06e-08</td> <td>  1.7e-08</td>
+  <th>Population</th>                  <td>-9.455e-09</td> <td> 1.72e-08</td> <td>   -0.549</td> <td> 0.583</td> <td>-4.32e-08</td> <td> 2.43e-08</td>
 </tr>
 <tr>
-  <th>High_School_pct</th>             <td>    0.0148</td> <td>    0.005</td> <td>    2.908</td> <td> 0.004</td> <td>    0.005</td> <td>    0.025</td>
+  <th>High_School_pct</th>             <td>    0.0123</td> <td>    0.005</td> <td>    2.407</td> <td> 0.016</td> <td>    0.002</td> <td>    0.022</td>
 </tr>
 <tr>
-  <th>Some_College_pct</th>            <td>    0.0072</td> <td>    0.004</td> <td>    1.640</td> <td> 0.101</td> <td>   -0.001</td> <td>    0.016</td>
+  <th>Some_College_pct</th>            <td>    0.0050</td> <td>    0.004</td> <td>    1.140</td> <td> 0.254</td> <td>   -0.004</td> <td>    0.014</td>
 </tr>
 <tr>
-  <th>Bachelors_Degree_pct</th>        <td>   -0.0146</td> <td>    0.005</td> <td>   -2.809</td> <td> 0.005</td> <td>   -0.025</td> <td>   -0.004</td>
+  <th>Bachelors_Degree_pct</th>        <td>   -0.0146</td> <td>    0.005</td> <td>   -2.803</td> <td> 0.005</td> <td>   -0.025</td> <td>   -0.004</td>
 </tr>
 <tr>
-  <th>Graduate_Degree_pct</th>         <td>   -0.0009</td> <td>    0.005</td> <td>   -0.175</td> <td> 0.861</td> <td>   -0.012</td> <td>    0.010</td>
+  <th>Graduate_Degree_pct</th>         <td>   -0.0036</td> <td>    0.005</td> <td>   -0.664</td> <td> 0.507</td> <td>   -0.014</td> <td>    0.007</td>
 </tr>
 <tr>
-  <th>Family_Poverty_pct</th>          <td>   -0.0100</td> <td>    0.005</td> <td>   -1.910</td> <td> 0.056</td> <td>   -0.020</td> <td>    0.000</td>
+  <th>Family_Poverty_pct</th>          <td>   -0.0143</td> <td>    0.005</td> <td>   -2.737</td> <td> 0.006</td> <td>   -0.025</td> <td>   -0.004</td>
 </tr>
 <tr>
-  <th>Unemployment_Rate_pct</th>       <td>    0.0349</td> <td>    0.007</td> <td>    4.829</td> <td> 0.000</td> <td>    0.021</td> <td>    0.049</td>
+  <th>Unemployment_Rate_pct</th>       <td>    0.0396</td> <td>    0.007</td> <td>    5.470</td> <td> 0.000</td> <td>    0.025</td> <td>    0.054</td>
 </tr>
 <tr>
-  <th>White_pct</th>                   <td>   -0.0130</td> <td>    0.003</td> <td>   -4.116</td> <td> 0.000</td> <td>   -0.019</td> <td>   -0.007</td>
+  <th>White_pct</th>                   <td>   -0.0137</td> <td>    0.003</td> <td>   -4.348</td> <td> 0.000</td> <td>   -0.020</td> <td>   -0.007</td>
 </tr>
 <tr>
-  <th>Black_pct</th>                   <td>   -0.0037</td> <td>    0.003</td> <td>   -1.146</td> <td> 0.252</td> <td>   -0.010</td> <td>    0.003</td>
+  <th>Black_pct</th>                   <td>   -0.0044</td> <td>    0.003</td> <td>   -1.379</td> <td> 0.168</td> <td>   -0.011</td> <td>    0.002</td>
 </tr>
 <tr>
-  <th>Asian_pct</th>                   <td>    0.0053</td> <td>    0.004</td> <td>    1.257</td> <td> 0.209</td> <td>   -0.003</td> <td>    0.013</td>
+  <th>Asian_pct</th>                   <td>    0.0036</td> <td>    0.004</td> <td>    0.864</td> <td> 0.388</td> <td>   -0.005</td> <td>    0.012</td>
 </tr>
 <tr>
-  <th>Hispanic_pct</th>                <td>   -0.0046</td> <td>    0.003</td> <td>   -1.400</td> <td> 0.162</td> <td>   -0.011</td> <td>    0.002</td>
+  <th>Hispanic_pct</th>                <td>   -0.0051</td> <td>    0.003</td> <td>   -1.581</td> <td> 0.114</td> <td>   -0.011</td> <td>    0.001</td>
 </tr>
 <tr>
-  <th>Male_pct</th>                    <td>   -0.0947</td> <td>    0.012</td> <td>   -7.967</td> <td> 0.000</td> <td>   -0.118</td> <td>   -0.071</td>
+  <th>Male_pct</th>                    <td>   -0.0915</td> <td>    0.012</td> <td>   -7.706</td> <td> 0.000</td> <td>   -0.115</td> <td>   -0.068</td>
 </tr>
 <tr>
-  <th>Married_couple_families_pct</th> <td>    0.0075</td> <td>    0.002</td> <td>    3.983</td> <td> 0.000</td> <td>    0.004</td> <td>    0.011</td>
+  <th>Married_couple_families_pct</th> <td>    0.0068</td> <td>    0.002</td> <td>    3.635</td> <td> 0.000</td> <td>    0.003</td> <td>    0.011</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td>14958.557</td> <th>  Durbin-Watson:     </th> <td>   2.001</td> 
+  <th>Omnibus:</th>       <td>15005.882</td> <th>  Durbin-Watson:     </th> <td>   2.001</td> 
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th>  <td> 0.000</td>   <th>  Jarque-Bera (JB):  </th> <td>16269.535</td>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>   <th>  Jarque-Bera (JB):  </th> <td>16351.077</td>
 </tr>
 <tr>
-  <th>Skew:</th>           <td> 0.498</td>   <th>  Prob(JB):          </th> <td>    0.00</td> 
+  <th>Skew:</th>           <td> 0.499</td>   <th>  Prob(JB):          </th> <td>    0.00</td> 
 </tr>
 <tr>
-  <th>Kurtosis:</th>       <td> 2.755</td>   <th>  Cond. No.          </th> <td>1.12e+08</td> 
+  <th>Kurtosis:</th>       <td> 2.759</td>   <th>  Cond. No.          </th> <td>1.12e+08</td> 
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 1.12e+08. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
 
@@ -572,16 +572,16 @@ Of the demographic features, `Bachelors_Degree_pct`, `Unemployment_Rate_pct`, `W
   <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th>  <td>   0.003</td>  
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   86.19</td>  
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   88.55</td>  
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 12 Dec 2018</td> <th>  Prob (F-statistic):</th>  <td>5.31e-231</td> 
+  <th>Date:</th>             <td>Wed, 12 Dec 2018</td> <th>  Prob (F-statistic):</th>  <td>1.39e-237</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>02:53:08</td>     <th>  Log-Likelihood:    </th> <td>-1.1594e+06</td>
+  <th>Time:</th>                 <td>19:27:53</td>     <th>  Log-Likelihood:    </th> <td>-1.1592e+06</td>
 </tr>
 <tr>
-  <th>No. Observations:</th>      <td>371729</td>      <th>  AIC:               </th>  <td>2.319e+06</td> 
+  <th>No. Observations:</th>      <td>371729</td>      <th>  AIC:               </th>  <td>2.318e+06</td> 
 </tr>
 <tr>
   <th>Df Residuals:</th>          <td>371715</td>      <th>  BIC:               </th>  <td>2.319e+06</td> 
@@ -598,60 +598,60 @@ Of the demographic features, `Bachelors_Degree_pct`, `Unemployment_Rate_pct`, `W
                <td></td>                  <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>const</th>                       <td>   14.3117</td> <td>    0.914</td> <td>   15.661</td> <td> 0.000</td> <td>   12.521</td> <td>   16.103</td>
+  <th>const</th>                       <td>   14.4362</td> <td>    0.912</td> <td>   15.824</td> <td> 0.000</td> <td>   12.648</td> <td>   16.224</td>
 </tr>
 <tr>
-  <th>Population</th>                  <td>-3.608e-08</td> <td> 1.76e-08</td> <td>   -2.054</td> <td> 0.040</td> <td>-7.05e-08</td> <td>-1.66e-09</td>
+  <th>Population</th>                  <td>-2.876e-08</td> <td> 1.76e-08</td> <td>   -1.635</td> <td> 0.102</td> <td>-6.32e-08</td> <td> 5.71e-09</td>
 </tr>
 <tr>
-  <th>High_School_pct</th>             <td>    0.0263</td> <td>    0.005</td> <td>    5.045</td> <td> 0.000</td> <td>    0.016</td> <td>    0.036</td>
+  <th>High_School_pct</th>             <td>    0.0258</td> <td>    0.005</td> <td>    4.954</td> <td> 0.000</td> <td>    0.016</td> <td>    0.036</td>
 </tr>
 <tr>
-  <th>Some_College_pct</th>            <td>    0.0175</td> <td>    0.004</td> <td>    3.927</td> <td> 0.000</td> <td>    0.009</td> <td>    0.026</td>
+  <th>Some_College_pct</th>            <td>    0.0193</td> <td>    0.004</td> <td>    4.341</td> <td> 0.000</td> <td>    0.011</td> <td>    0.028</td>
 </tr>
 <tr>
-  <th>Bachelors_Degree_pct</th>        <td>   -0.0119</td> <td>    0.005</td> <td>   -2.246</td> <td> 0.025</td> <td>   -0.022</td> <td>   -0.002</td>
+  <th>Bachelors_Degree_pct</th>        <td>   -0.0148</td> <td>    0.005</td> <td>   -2.795</td> <td> 0.005</td> <td>   -0.025</td> <td>   -0.004</td>
 </tr>
 <tr>
-  <th>Graduate_Degree_pct</th>         <td>   -0.0017</td> <td>    0.006</td> <td>   -0.312</td> <td> 0.755</td> <td>   -0.013</td> <td>    0.009</td>
+  <th>Graduate_Degree_pct</th>         <td>   -0.0009</td> <td>    0.006</td> <td>   -0.167</td> <td> 0.868</td> <td>   -0.012</td> <td>    0.010</td>
 </tr>
 <tr>
-  <th>Family_Poverty_pct</th>          <td>    0.0061</td> <td>    0.005</td> <td>    1.138</td> <td> 0.255</td> <td>   -0.004</td> <td>    0.017</td>
+  <th>Family_Poverty_pct</th>          <td>    0.0062</td> <td>    0.005</td> <td>    1.165</td> <td> 0.244</td> <td>   -0.004</td> <td>    0.017</td>
 </tr>
 <tr>
-  <th>Unemployment_Rate_pct</th>       <td>    0.0061</td> <td>    0.007</td> <td>    0.826</td> <td> 0.409</td> <td>   -0.008</td> <td>    0.021</td>
+  <th>Unemployment_Rate_pct</th>       <td>   -0.0009</td> <td>    0.007</td> <td>   -0.125</td> <td> 0.900</td> <td>   -0.015</td> <td>    0.014</td>
 </tr>
 <tr>
-  <th>White_pct</th>                   <td>   -0.0160</td> <td>    0.003</td> <td>   -4.955</td> <td> 0.000</td> <td>   -0.022</td> <td>   -0.010</td>
+  <th>White_pct</th>                   <td>   -0.0150</td> <td>    0.003</td> <td>   -4.683</td> <td> 0.000</td> <td>   -0.021</td> <td>   -0.009</td>
 </tr>
 <tr>
-  <th>Black_pct</th>                   <td>   -0.0061</td> <td>    0.003</td> <td>   -1.833</td> <td> 0.067</td> <td>   -0.013</td> <td>    0.000</td>
+  <th>Black_pct</th>                   <td>   -0.0051</td> <td>    0.003</td> <td>   -1.537</td> <td> 0.124</td> <td>   -0.011</td> <td>    0.001</td>
 </tr>
 <tr>
-  <th>Asian_pct</th>                   <td>    0.0028</td> <td>    0.004</td> <td>    0.664</td> <td> 0.507</td> <td>   -0.006</td> <td>    0.011</td>
+  <th>Asian_pct</th>                   <td>    0.0048</td> <td>    0.004</td> <td>    1.135</td> <td> 0.256</td> <td>   -0.004</td> <td>    0.013</td>
 </tr>
 <tr>
-  <th>Hispanic_pct</th>                <td>   -0.0065</td> <td>    0.003</td> <td>   -1.949</td> <td> 0.051</td> <td>   -0.013</td> <td> 3.59e-05</td>
+  <th>Hispanic_pct</th>                <td>   -0.0054</td> <td>    0.003</td> <td>   -1.621</td> <td> 0.105</td> <td>   -0.012</td> <td>    0.001</td>
 </tr>
 <tr>
-  <th>Male_pct</th>                    <td>   -0.0851</td> <td>    0.012</td> <td>   -7.025</td> <td> 0.000</td> <td>   -0.109</td> <td>   -0.061</td>
+  <th>Male_pct</th>                    <td>   -0.0875</td> <td>    0.012</td> <td>   -7.224</td> <td> 0.000</td> <td>   -0.111</td> <td>   -0.064</td>
 </tr>
 <tr>
-  <th>Married_couple_families_pct</th> <td>    0.0056</td> <td>    0.002</td> <td>    2.932</td> <td> 0.003</td> <td>    0.002</td> <td>    0.009</td>
+  <th>Married_couple_families_pct</th> <td>    0.0044</td> <td>    0.002</td> <td>    2.296</td> <td> 0.022</td> <td>    0.001</td> <td>    0.008</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td>15456.771</td> <th>  Durbin-Watson:     </th> <td>   1.998</td> 
+  <th>Omnibus:</th>       <td>15383.027</td> <th>  Durbin-Watson:     </th> <td>   1.994</td> 
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th>  <td> 0.000</td>   <th>  Jarque-Bera (JB):  </th> <td>15353.546</td>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>   <th>  Jarque-Bera (JB):  </th> <td>15270.137</td>
 </tr>
 <tr>
-  <th>Skew:</th>           <td> 0.459</td>   <th>  Prob(JB):          </th> <td>    0.00</td> 
+  <th>Skew:</th>           <td> 0.458</td>   <th>  Prob(JB):          </th> <td>    0.00</td> 
 </tr>
 <tr>
-  <th>Kurtosis:</th>       <td> 2.615</td>   <th>  Cond. No.          </th> <td>1.12e+08</td> 
+  <th>Kurtosis:</th>       <td> 2.616</td>   <th>  Cond. No.          </th> <td>1.12e+08</td> 
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 1.12e+08. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
 
@@ -669,12 +669,21 @@ We also ran the linear regression with demographic predictors only (i.e. not con
 
 
 
+    The test accuracy of the RandomForestClassifier with max_depth 25 and 50 trees is 0.88.
 
 
 
 
 
 
+**Figure 11. Feature Importance in Our Proposed Investment Decision Strategy**
 
 
-**Commentary about what's showing up in the top features.**
+
+
+
+
+![png](EthicalImplications_files/EthicalImplications_79_0.png)
+
+
+The random forest, using the same predictors as we used in the acceptance versus rejection classifcation, was able to predict our strategy's invest or not invest decision with 89% accuracy on a separate test set. As we can see from the feature importance chart above, employment length and debt-to-income ratio are the two top features, which makes sense given that our proposed investment strategy incorporates those two variables (among other variables) in its investment decision. While the strategy does not explicitly consider demographic variables to make an investment decision, it appears our investment strategy is inadvertently impacted by demographic features; `White_pct`, `Married_couple_families_pct`, `Asian_pct`, and `Hispanic_pct` show up toward the top of the feature importance list. As NYU Professor Julia Stoyanovich suggested in her lecture, unfair model outcomes can sometimes be the result of actual societal unfairness playing out in the data, and this would be a logical area of further research or next steps for this project. In the context of our project, since we are using `emp_length` and `dti` to make investment decisions, we could look into whether certain racial groups are more or less likely to have longer employment histories or differing debt-to-income ratios.
