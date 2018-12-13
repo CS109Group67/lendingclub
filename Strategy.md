@@ -400,58 +400,78 @@ With the key variables established, we examine decision tree and random forest a
 
 Based on the completed analysis, we postulate the following simple investment strategy to only invest in loans that meet the following criteria. To reduce risk and get the full benefit of diversification, we recommended that the mimimun qualifying investment should be made across as many qualifying loans as possible.
 
-#### No Renters
+#### Non-Renter
 
-Only invest in loans with `'home_ownership' != 'RENT'`
+Only invest in applications from non-renters.
 
 
 
 ```python
 non_renters = (ls['D_home_ownership_RENT'] == 1)
-non_renter_perc = (non_renters).sum() / len(ls)
-print("Percentage of loans that are Non-Renter: {:.1%}".format(non_renter_perc))
-
 ```
 
 
-    Percentage of Non-Renter Loans: 42.3%
+#### Shorter Term
 
-
-#### Short term
-
-Only select loans with `'term' == '36_months'`
-
-#### Few Recent Accounts Opened
-
-Only select loans with `'acc_open_past_24_months' < 4`
-
-#### Low Debt-to-Income Ratio
-
-Only select loans with `'dti' < 0.5`
-
-#### Solidly Employed
-
-Only select loans with `'emp_length' > 5`
-
-#### Low grade
-
-Only select loans with `'sub_grade' < 20`
-
-## 4. Predictive Quality of Model
+Only invest in applications with term of 36 months.
 
 
 
 ```python
-(ls['D_home_ownership_RENT'] == 1).sum() / len(ls)
-
+short_term = (ls['D_term_ 36 months'] == 1)
 ```
 
 
+#### Few Recent Accounts Opened
+
+Only invest in applications from borrowers with less than 4 accounts opened in the last 24 months.
 
 
 
-    0.42331516280905856
+```python
+few_recent_accounts = (ls['acc_open_past_24mths'] < 4)
+```
+
+
+#### Low Debt-to-Income Ratio
+
+Only invest in applications from borrowers with debt-to-equity ratios of less than 20%.
 
 
 
-**Expected Risk and Return**
+```python
+low_dti = (ls['dti'] < 20)
+```
+
+
+#### Solidly Employed
+
+Only invest in applications from borrowers who have been employed over 5 years.
+
+
+
+```python
+solid_emp = (ls['emp_length'] > 5)
+```
+
+
+#### Low Grade
+
+Only invest in loans of grade A, B, C or D
+
+
+
+```python
+low_grade = ls['sub_grade'] <= 20
+```
+
+
+## 4. Predictive Quality of Strategy
+
+
+
+```python
+
+
+```
+
