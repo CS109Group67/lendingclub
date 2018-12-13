@@ -473,17 +473,6 @@ strategy = non_renters & short_term & few_recent_accounts & low_dti & solid_emp 
 
 
 
-```python
-total = len(ls)
-print('Non-Renter: {:.2%} of all loans'.format(sum(non_renters)/total))
-print('Shorter Term: {:.2%} of all loans'.format(sum(short_term)/total))
-print('Few Recent Accounts Opened: {:.2%} of all loans'.format(sum(few_recent_accounts)/total))
-print('Low Debt-to-Income Ratio: {:.2%} of all loans'.format(sum(low_dti)/total))
-print('Solidly Employed: {:.2%} of all loans'.format(sum(solid_emp)/total))
-print('Low Grade: {:.2%} of all loans'.format(sum(low_grade)/total))
-print()
-print('Full Strategy: {:.2%} of all loans'.format(sum(strategy)/total))
-```
 
 
     Non-Renter: 57.67% of all loans
@@ -498,22 +487,6 @@ print('Full Strategy: {:.2%} of all loans'.format(sum(strategy)/total))
 
 
 
-```python
-random = np.random.choice(ls.index.values, size=len(strategy), replace=False)
-outputs = ['OUT_Class', 'OUT_Principle_Repaid_Percentage', 'OUT_Monthly_Rate_Of_Return']
-
-for i in range(3):
-    mean_strategy = np.mean(ls[outputs[i]][strategy])
-    mean_random = np.mean(ls[outputs[i]][random])
-    median_strategy = np.median(ls[outputs[i]][strategy])
-    median_random = np.median(ls[outputs[i]][random])
-    
-    print(outputs[i])
-    print('\tStrategy Mean: {:.4} \n\tRandom Mean: {:.4}'.format(mean_strategy, mean_random))
-    if i == 2:
-        print('\tStrategy Median: {:.4} \n\tRandom Median: {:.4}'.format(median_strategy, median_random))
-    print()
-```
 
 
     OUT_Class
