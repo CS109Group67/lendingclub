@@ -20,8 +20,6 @@ Our goal was to *propose, build and evaluate data-driven modeling to power a pro
 - [Ethical Implications](https://cs109group67.github.io/lendingclub/EthicalImplications.html): investigation of discrimination in the investment strategy and LC's underwriting practices
 
 
-### Results:
+### Key Result:
 
-When applying our [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html) were able to make (about) a 4.12 percent improvement on our main response variable (OUT_Principle_Repaid_Percentage). This is quite an accomplishment considering that a random selection still yields about 92.14 percent. Because the random percentage is already so high (probably due to LendingClub rigorously filtering bad loans), anything more is welcome improvement.
-
-If we were able to consistently make this same profit we would be making our clients substantially more then if they just picked loans to invest in at random.
+The [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html) achieved about 4% improvement on the simply monthly rate of return.

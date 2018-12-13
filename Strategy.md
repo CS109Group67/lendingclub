@@ -1,7 +1,6 @@
 ---
 title: Investment Strategy
 notebook: Strategy.ipynb
-nav_include: 4
 ---
 
 ## Contents
@@ -311,7 +310,7 @@ The classification and regression models did not perform well at predicting the 
 
 The modeling has revealed key variables that should power the investment decisions: those which have significant coefficients across the distinct classification and regression models. These form the subset for our investment strategy formulation. This will aid interpretation and understanding for the investor at the loss of minimal investment efficacy. 
 
-**Top 10 Key Variables**:
+### 2A. Key Variables
 
 
 
@@ -330,14 +329,12 @@ The modeling has revealed key variables that should power the investment decisio
     Name: key_variables, dtype: object
 
 
+### 2B. FULL Key Feature Decision Tree
+
 With the key variables established, we examine decision tree and random forest analysis on this key subset to establish the investment strategy. We focus on the most comprehensive outcome feature of `OUT_Monthly_Rate_Of_Return` since this feature takes into account the total amount repeiad with interest for the effective term of the loan. We visualize both a larger tree (for completeness and demonstrative purposes) and a simplified tree. 
 
 
 
-
-
-
-**FULL Key Feaure Decision Tree**:
 
 
     DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
@@ -348,18 +345,16 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-![svg](Strategy_files/Strategy_24_2.svg)
+![svg](Strategy_files/Strategy_25_1.svg)
 
 
     
 
 
+### 2C. SIMPLIFIED Key Feature Decision Tree
 
 
 
-
-
-**SIMPLIFIED Key Feature Decision Tree**:
 
 
     DecisionTreeRegressor(criterion='mse', max_depth=10, max_features=None,
@@ -370,18 +365,16 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-![svg](Strategy_files/Strategy_25_2.svg)
+![svg](Strategy_files/Strategy_27_1.svg)
 
 
     
 
 
+### 2D. Key Feature Random Forest
 
 
 
-
-
-**Key Feature Random Forest**:
 
 
     RandomForestRegressor(bootstrap=True, criterion='mse', max_depth=None,
@@ -393,7 +386,7 @@ With the key variables established, we examine decision tree and random forest a
 
 
 
-![png](Strategy_files/Strategy_26_2.png)
+![png](Strategy_files/Strategy_29_1.png)
 
 
 ## 3. Investment Strategy
@@ -505,7 +498,7 @@ print('Full Strategy: {:.2%} of all loans'.format(sum(strategy)/total))
 
 
 ```python
-random = np.random.choice(ls.index.values, size=len_strategy, replace=False)
+random = np.random.choice(ls.index.values, size=len(strategy), replace=False)
 outputs = ['OUT_Class', 'OUT_Principle_Repaid_Percentage', 'OUT_Monthly_Rate_Of_Return']
 
 for i in range(3):
@@ -524,22 +517,22 @@ for i in range(3):
 
     OUT_Class
     	Strategy Mean: 0.925 
-    	Random Mean: 0.8627
+    	Random Mean: 0.8645
     
     OUT_Principle_Repaid_Percentage
     	Strategy Mean: 0.9593 
-    	Random Mean: 0.9206
+    	Random Mean: 0.922
     
     OUT_Monthly_Rate_Of_Return
     	Strategy Mean: 0.002064 
-    	Random Mean: -0.001335
+    	Random Mean: -0.001205
     	Strategy Median: 0.005432 
-    	Random Median: 0.006066
+    	Random Median: 0.006085
     
 
 
 The strategy performs well across all of the outcome metrics. 
 
-- The investor can expect 92.5% of loans to be fully repaid, versus 86.5% from investing uniformly, a gain of 6%.
-- The investor can expect 95.9% of principle to be repaid, versus 92.3% from investing uniformly, a gain of 3%.
+- The investor can expect 92.5% of loans to be fully repaid, versus 86.5% from investing randomly, a gain of 6%.
+- The investor can expect 95.9% of principle to be repaid, versus 92.3% from investing randomly, a gain of 3%.
 - The investor can expect a mean monthly return of 0.20% and median monthly return of 0.61%
