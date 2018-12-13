@@ -44,7 +44,7 @@ nav_include: 4
 
 
 
-In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) section we preformed a variety of classifiction and regression models on the three outcome features. A summary of the model scoring metrics is as follows:
+In the [Modeling](https://cs109group67.github.io/lendingclub/Modeling.html) section we performed a variety of classification and regression models on the three outcome features. A summary of the model scoring metrics is as follows:
 
 
 
@@ -462,7 +462,7 @@ low_grade = (ls['sub_grade'] <= 20)
 
 ## 4. Predictive Quality of Strategy
 
-Our predictive strategy reduces the size of potential applications to about 9.6% of loans.
+The investment strategy reduces the size of potential applications to about 9.6% of loans.
 
 
 
