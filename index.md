@@ -22,4 +22,4 @@ Our goal was to *propose, build and evaluate data-driven modeling to power a pro
 
 ### Key Result:
 
-The [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html) achieved about 4% improvement on the simply monthly rate of return.
+The [Investment Strategy](https://cs109group67.github.io/lendingclub/Strategy.html#3-investment-strategy) achieved about 4% improvement on the simply monthly rate of return.
