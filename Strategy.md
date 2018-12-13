@@ -1,6 +1,7 @@
 ---
 title: Investment Strategy
 notebook: Strategy.ipynb
+nav_include: 4
 ---
 
 ## Contents
@@ -329,7 +330,7 @@ The modeling has revealed key variables that should power the investment decisio
     Name: key_variables, dtype: object
 
 
-### 2B. FULL Key Feature Decision Tree
+### 2B. Decision Tree
 
 With the key variables established, we examine decision tree and random forest analysis on this key subset to establish the investment strategy. We focus on the most comprehensive outcome feature of `OUT_Monthly_Rate_Of_Return` since this feature takes into account the total amount repeiad with interest for the effective term of the loan. We visualize both a larger tree (for completeness and demonstrative purposes) and a simplified tree. 
 
@@ -351,7 +352,7 @@ With the key variables established, we examine decision tree and random forest a
     
 
 
-### 2C. SIMPLIFIED Key Feature Decision Tree
+### 2C. Simplified Decision Tree
 
 
 
@@ -371,7 +372,7 @@ With the key variables established, we examine decision tree and random forest a
     
 
 
-### 2D. Key Feature Random Forest
+### 2D. Random Forest
 
 
 
